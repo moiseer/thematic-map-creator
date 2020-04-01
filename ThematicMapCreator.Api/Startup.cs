@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace ThematicMapCreator.Api
 {
@@ -45,6 +46,14 @@ namespace ThematicMapCreator.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSwaggerGen(options => options.SwaggerDoc("v1",
+                new OpenApiInfo
+                {
+                    Version = "v1.0",
+                    Title = "Thematic Map Creator"
+                })
+            );
         }
     }
 }

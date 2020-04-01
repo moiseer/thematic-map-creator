@@ -1,10 +1,14 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ThematicMapCreator.Api.Models;
 
 namespace ThematicMapCreator.Api
 {
@@ -41,6 +45,8 @@ namespace ThematicMapCreator.Api
 
             app.UseSwagger();
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Simple Map"));
+
+            MigrateDatabaseAsync().Wait();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -54,6 +60,26 @@ namespace ThematicMapCreator.Api
                     Title = "Thematic Map Creator"
                 })
             );
+
+            services.AddDbContext<ThematicMapDbContext>(options => options
+                .UseSqlServer(Configuration.GetConnectionString("ThematicMapDb"))
+            );
+
+            services.AddDbContextDesignTimeServices(new ThematicMapDbContext(
+                new DbContextOptionsBuilder<ThematicMapDbContext>()
+                    .UseSqlServer(Configuration.GetConnectionString("ThematicMapDb")).Options
+                )
+            );
+        }
+
+        private async Task MigrateDatabaseAsync()
+        {
+            var context = new ThematicMapDbContext(new DbContextOptionsBuilder<ThematicMapDbContext>()
+                .UseSqlServer(Configuration.GetConnectionString("ThematicMapDb"))
+                .Options
+            );
+
+            await context.Database.MigrateAsync();
         }
     }
 }

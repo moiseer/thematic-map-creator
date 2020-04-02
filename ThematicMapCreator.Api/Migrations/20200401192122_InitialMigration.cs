@@ -46,8 +46,7 @@ namespace ThematicMapCreator.Api.Migrations
                         "FK_map_user_UserId",
                         x => x.UserId,
                         "user",
-                        "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -67,8 +66,7 @@ namespace ThematicMapCreator.Api.Migrations
                         "FK_layer_map_MapId",
                         x => x.MapId,
                         "map",
-                        "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -79,7 +77,6 @@ namespace ThematicMapCreator.Api.Migrations
             migrationBuilder.CreateIndex(
                 "IX_map_UserId",
                 "map",
-                "UserId");
-        }
+                "UserId"); }
     }
 }

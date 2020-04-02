@@ -8,7 +8,6 @@ namespace ThematicMapCreator.Api.Models
     {
         public ThematicMapDbContext(DbContextOptions options) : base(options)
         {
-            Database.MigrateAsync().Wait();
         }
 
         public DbSet<Layer> Layers { get; set; }
@@ -43,7 +42,8 @@ namespace ThematicMapCreator.Api.Models
 
             builder.HasOne(layer => layer.Map)
                 .WithMany(map => map.Layers)
-                .HasForeignKey(layer => layer.MapId);
+                .HasForeignKey(layer => layer.MapId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
         private void ConfigureMapEntity(EntityTypeBuilder<Map> builder)
@@ -63,7 +63,8 @@ namespace ThematicMapCreator.Api.Models
 
             builder.HasOne(map => map.User)
                 .WithMany(user => user.Maps)
-                .HasForeignKey(map => map.UserId);
+                .HasForeignKey(map => map.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
         private void ConfigureUserEntity(EntityTypeBuilder<User> builder)

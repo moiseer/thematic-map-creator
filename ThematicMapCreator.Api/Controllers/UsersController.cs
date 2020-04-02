@@ -9,16 +9,16 @@ namespace ThematicMapCreator.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly ThematicMapDbContext context;
 
-        public UserController(ThematicMapDbContext context)
+        public UsersController(ThematicMapDbContext context)
         {
             this.context = context;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<User>> Get() => await context.Users.ToListAsync();
+        public async Task<IEnumerable<User>> Get() => await context.Users.AsNoTracking().ToListAsync();
     }
 }

@@ -118,7 +118,7 @@ namespace ThematicMapCreator.Api.Migrations
                     b.HasOne("ThematicMapCreator.Api.Models.Map", "Map")
                         .WithMany("Layers")
                         .HasForeignKey("MapId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -128,7 +128,7 @@ namespace ThematicMapCreator.Api.Migrations
                     b.HasOne("ThematicMapCreator.Api.Models.User", "User")
                         .WithMany("Maps")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

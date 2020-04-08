@@ -61,6 +61,10 @@ namespace ThematicMapCreator.Api.Models
                 .HasColumnName("settings")
                 .IsRequired();
 
+            builder.Property(map => map.Description)
+                .HasColumnName("description")
+                .HasMaxLength(1024);
+
             builder.HasOne(map => map.User)
                 .WithMany(user => user.Maps)
                 .HasForeignKey(map => map.UserId)

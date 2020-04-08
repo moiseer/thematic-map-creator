@@ -50,7 +50,7 @@ namespace ThematicMapCreator.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddSwaggerGen(options => options.SwaggerDoc("v1",
                 new OpenApiInfo

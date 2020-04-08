@@ -77,6 +77,7 @@ namespace ThematicMapCreator.Api.Migrations
             migrationBuilder.CreateIndex(
                 "IX_map_UserId",
                 "map",
-                "UserId"); }
+                "UserId");
+        }
     }
 }

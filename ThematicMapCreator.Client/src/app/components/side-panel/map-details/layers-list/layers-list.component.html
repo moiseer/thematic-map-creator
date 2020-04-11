@@ -1,0 +1,30 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+        <h2 class="mat-h2">Слои карты</h2>
+        <div fxFlex></div>
+        <button mat-flat-button (click)="onLayerCreate()">
+            <mat-icon title="Создать слой">add_circle_outline</mat-icon>
+        </button>
+    </div>
+
+    <div id="layers" *ngIf="layers?.length > 0" fxLayout="column" cdkDropList [cdkDropListData]="layers" class="list" (cdkDropListDropped)="drop($event)">
+        <div fxLayoutAlign="row center" class="list-item" *ngFor="let layer of layers; index as layerIndex" cdkDrag cdkDragBoundary="#layers">
+            <span>{{layer.name}}</span>
+            <div fxFlex></div>
+            <button mat-flat-button (click)="onLayerVisibleChange(layer)">
+                <mat-icon *ngIf="layer.visible" title="Скрыть">visibility</mat-icon>
+                <mat-icon *ngIf="!layer.visible" title="Показать">visibility_off</mat-icon>
+            </button>
+            <button mat-flat-button (click)="onLayerEdit(layer)">
+                <mat-icon title="Редактировать">create</mat-icon>
+            </button>
+            <button mat-flat-button (click)="onMapDelete(layerIndex)">
+                <mat-icon title="Удалить">delete</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="layers?.length === 0">
+        <span>Нет слоев</span>
+    </div>
+</div>

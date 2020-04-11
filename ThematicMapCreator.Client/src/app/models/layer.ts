@@ -1,8 +1,9 @@
-import {GeoJSON} from 'leaflet';
+import { GeoJSON } from 'leaflet';
 
 export interface Layer {
     id: string;
     name: string;
-    data: GeoJSON;
+    data: GeoJSON.GeoJsonObject;
+    visible: boolean;
     mapId: string;
 }

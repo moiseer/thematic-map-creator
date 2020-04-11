@@ -1,0 +1,30 @@
+<div fxLayout="column" fxLayoutGap="8px">
+    <ng-container *ngIf="map">
+        <div fxLayout="row" fxLayoutAlign="start start" >
+            <span [title]="map.name" class="mat-h2 title">{{map.name}}</span>
+            <div fxFlex></div>
+            <button mat-flat-button (click)="onMapSave()">
+                <mat-icon title="Сохранить">save</mat-icon>
+            </button>
+            <button mat-flat-button (click)="onMapEdit()">
+                <mat-icon title="Редактировать">create</mat-icon>
+            </button>
+            <button mat-flat-button (click)="onMapDelete()">
+                <mat-icon title="Удалить">delete</mat-icon>
+            </button>
+        </div>
+        <div *ngIf="map.description?.length > 0">
+            <span class="sub-title">{{map.description}}</span>
+        </div>
+        <app-layers-list [mapId]="map.id"></app-layers-list>
+    </ng-container>
+
+    <ng-container *ngIf="!map">
+        <button mat-flat-button color="primary" (click)="onMapCreate()">
+            Создать новую карту
+        </button>
+        <button mat-flat-button color="primary" (click)="onMapOpen()">
+            Открыть карту
+        </button>
+    </ng-container>
+</div>

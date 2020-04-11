@@ -1,5 +1,7 @@
 import { OnInit, Component } from '@angular/core';
-import { latLng, latLngBounds, Layer, MapOptions, tileLayer } from 'leaflet';
+import { geoJSON, GeoJSONOptions, latLng, latLngBounds, Layer, MapOptions, tileLayer } from 'leaflet';
+
+import { MapService } from '../../services/map.service';
 
 @Component({
     selector: 'app-map',
@@ -18,6 +20,19 @@ export class MapComponent implements OnInit {
         )
     };
     baseLayers: {[layerName: string]: Layer};
+
+    geoJsonOptions: GeoJSONOptions = {
+        onEachFeature: this.onEachFeature
+    };
+
+    get layers(): Layer[] {
+        return this.mapService.currentLayers
+            .filter(layer => layer.visible)
+            .map(layer => geoJSON(layer.data, this.geoJsonOptions));
+    }
+
+    constructor(private mapService: MapService) {
+    }
 
     ngOnInit(): void {
         this.addBaseLayers();
@@ -51,5 +66,12 @@ export class MapComponent implements OnInit {
             'CartoDB Voyager': cartoDBVoyager,
             'Thunderforest OpenCycleMap': thunderforestOpenCycleMap
         };
+    }
+
+    onEachFeature(feature, layer) {
+        if (feature.properties && feature.properties.popupContent) {
+            const popupContent = feature.properties.popupContent;
+            layer.bindPopup(popupContent);
+        }
     }
 }

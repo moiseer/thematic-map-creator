@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+
+<mat-dialog-content [formGroup]="layerEditForm" fxLayout="column">
+
+    <mat-form-field>
+        <input matInput formControlName="name" placeholder="Название"/>
+        <mat-error *ngIf="layerName.hasError('required')">
+            Необходимо ввести название.
+        </mat-error>
+        <mat-error *ngIf="layerName.hasError('maxlength')">
+            Название не должно превышать {{layerName.getError('maxlength')?.requiredLength}} символа.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <textarea matInput formControlName="data" placeholder="Данные в формате GeoJson"></textarea>
+    </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close>Отмена</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="getLayer()" [disabled]="!layerEditForm.valid || !layerEditForm.dirty">ОК</button>
+</mat-dialog-actions>

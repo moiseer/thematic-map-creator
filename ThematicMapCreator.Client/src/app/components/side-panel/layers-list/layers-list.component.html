@@ -1,6 +1,6 @@
 <div fxLayout="column">
-    <div fxLayout="row">
-        <h2 class="mat-h2">Слои карты</h2>
+    <div fxLayout="row" fxLayoutAlign="start start">
+        <span class="mat-h2">Слои карты</span>
         <div fxFlex></div>
         <button mat-flat-button (click)="onLayerCreate()">
             <mat-icon title="Создать слой">add_circle_outline</mat-icon>
@@ -15,10 +15,10 @@
                 <mat-icon *ngIf="layer.visible" title="Скрыть">visibility</mat-icon>
                 <mat-icon *ngIf="!layer.visible" title="Показать">visibility_off</mat-icon>
             </button>
-            <button mat-flat-button (click)="onLayerEdit(layer)">
+            <button mat-flat-button (click)="onLayerEdit(layerIndex)">
                 <mat-icon title="Редактировать">create</mat-icon>
             </button>
-            <button mat-flat-button (click)="onMapDelete(layerIndex)">
+            <button mat-flat-button (click)="onLayerDelete(layerIndex)">
                 <mat-icon title="Удалить">delete</mat-icon>
             </button>
         </div>

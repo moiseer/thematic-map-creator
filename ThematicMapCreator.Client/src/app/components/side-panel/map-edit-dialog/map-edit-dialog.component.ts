@@ -36,19 +36,23 @@ export class MapEditDialogComponent implements OnInit {
     formInit(): void {
         this.mapEditForm = this.fb.group({
             name: [
-                this.data.currentMap ? this.data.currentMap.name : null,
+                this.data.currentMap?.name,
                 [Validators.required, Validators.maxLength(64)]
             ],
             description: [
-                this.data.currentMap ? this.data.currentMap.description : null,
+                this.data.currentMap?.description,
                 Validators.maxLength(1024)
             ]
         });
     }
 
     getMap(): Map {
-        const formValue = this.mapEditForm.value;
-        // TODO
-        return {id: '1', ...formValue, userId: '1'};
+        // TODO получение userId и mapId для новой карты.
+        return {
+            id: this.data.currentMap?.id,
+            name: this.mapName.value,
+            description: this.mapDescription.value,
+            userId: this.data.currentMap?.userId ?? this.data.currentUserId
+        };
     }
 }

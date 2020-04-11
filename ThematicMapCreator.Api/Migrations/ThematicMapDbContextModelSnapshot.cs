@@ -8,7 +8,7 @@ using ThematicMapCreator.Api.Models;
 namespace ThematicMapCreator.Api.Migrations
 {
     [DbContext(typeof(ThematicMapDbContext))]
-    partial class ThematicMapDbContextModelSnapshot : ModelSnapshot
+    class ThematicMapDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

@@ -7,7 +7,7 @@ using ThematicMapCreator.Api.Models;
 
 namespace ThematicMapCreator.Api.Migrations
 {
-    public static class DatabaseMigrator
+    public static class DatabaseMigrationExtensions
     {
         public static IApplicationBuilder UseDatabaseMigration(this IApplicationBuilder app)
         {

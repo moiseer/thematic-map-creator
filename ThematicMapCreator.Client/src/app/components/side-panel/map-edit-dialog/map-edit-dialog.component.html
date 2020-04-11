@@ -8,20 +8,20 @@
             Необходимо ввести название.
         </mat-error>
         <mat-error *ngIf="mapName.hasError('maxlength')">
-            Название не должно превышать {{mapName.getError('maxlength')?.requiredLength}} символов.
+            Название не должно превышать {{mapName.getError('maxlength')?.requiredLength}} символа.
         </mat-error>
     </mat-form-field>
 
     <mat-form-field>
         <textarea matInput formControlName="description" placeholder="Описание"></textarea>
         <mat-error *ngIf="mapDescription.hasError('maxlength')">
-            Описание не должно превышать {{mapDescription.getError('maxlength')?.requiredLength}} символов.
+            Описание не должно превышать {{mapDescription.getError('maxlength')?.requiredLength}} символа.
         </mat-error>
     </mat-form-field>
 
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-flat-button [mat-dialog-close]="null">Отмена</button>
-    <button mat-flat-button color="primary" [mat-dialog-close]="getMap()" [disabled]="!mapEditForm.valid">ОК</button>
+    <button mat-flat-button mat-dialog-close>Отмена</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="getMap()" [disabled]="!mapEditForm.valid || !mapEditForm.dirty">ОК</button>
 </mat-dialog-actions>

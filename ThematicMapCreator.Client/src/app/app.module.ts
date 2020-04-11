@@ -18,11 +18,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MapComponent } from './components/map/map.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { ObjectService } from './services/object.service';
 import { SidePanelComponent } from './components/side-panel/side-panel.component';
 import { MapDetailsComponent } from './components/side-panel/map-details/map-details.component';
 import { MapEditDialogComponent } from './components/side-panel/map-edit-dialog/map-edit-dialog.component';
-import { LayersListComponent } from './components/side-panel/map-details/layers-list/layers-list.component';
+import { LayersListComponent } from './components/side-panel/layers-list/layers-list.component';
+import { LayerEditDialogComponent } from './components/side-panel/layer-edit-dialog/layer-edit-dialog.component';
 
 @NgModule({
     declarations: [
@@ -32,9 +32,9 @@ import { LayersListComponent } from './components/side-panel/map-details/layers-
         SidePanelComponent,
         MapDetailsComponent,
         MapEditDialogComponent,
-        LayersListComponent
+        LayersListComponent,
+        LayerEditDialogComponent
     ],
-    entryComponents: [MapEditDialogComponent],
     imports: [
         BrowserModule,
         AppRoutingModule,
@@ -52,7 +52,6 @@ import { LayersListComponent } from './components/side-panel/map-details/layers-
         DragDropModule,
         MatIconModule
     ],
-    providers: [ObjectService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

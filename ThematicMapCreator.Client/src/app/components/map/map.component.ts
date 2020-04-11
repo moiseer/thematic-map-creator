@@ -1,5 +1,17 @@
 import { OnInit, Component } from '@angular/core';
-import { geoJSON, GeoJSONOptions, latLng, latLngBounds, Layer, MapOptions, tileLayer } from 'leaflet';
+import {
+    geoJSON,
+    GeoJSONOptions,
+    icon,
+    LatLng,
+    latLng,
+    latLngBounds,
+    Layer,
+    MapOptions,
+    marker,
+    MarkerOptions,
+    tileLayer
+} from 'leaflet';
 
 import { MapService } from '../../services/map.service';
 
@@ -22,7 +34,8 @@ export class MapComponent implements OnInit {
     baseLayers: {[layerName: string]: Layer};
 
     geoJsonOptions: GeoJSONOptions = {
-        onEachFeature: this.onEachFeature
+        onEachFeature: this.onEachFeature,
+        pointToLayer: this.pointToLayer
     };
 
     get layers(): Layer[] {
@@ -68,10 +81,22 @@ export class MapComponent implements OnInit {
         };
     }
 
-    onEachFeature(feature, layer) {
+    private onEachFeature(feature, layer) {
         if (feature.properties && feature.properties.popupContent) {
             const popupContent = feature.properties.popupContent;
             layer.bindPopup(popupContent);
         }
+    }
+
+    private pointToLayer(_, latlng: LatLng): Layer {
+        const markerOptions: MarkerOptions = {
+            icon: icon({
+                iconSize: [25, 41],
+                iconAnchor: [13, 41],
+                iconUrl: 'leaflet/marker-icon.png',
+                shadowUrl: 'leaflet/marker-shadow.png'
+            })
+        };
+        return marker(latlng, markerOptions);
     }
 }

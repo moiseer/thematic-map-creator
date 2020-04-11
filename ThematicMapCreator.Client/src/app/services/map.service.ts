@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap} from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 import { Map } from '../models/map';
 import { Layer } from '../models/layer';

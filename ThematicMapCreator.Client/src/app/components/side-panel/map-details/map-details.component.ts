@@ -25,9 +25,11 @@ export class MapDetailsComponent implements OnInit {
     }
 
     onMapEdit(): void {
+        // TODO получение userId.
         const dialogParams: MapEditDialogParameters = {
             currentMap: this.map,
-            title: 'Редактирование карты'
+            title: 'Редактирование карты',
+            currentUserId: '1'
         };
 
         this.openMapEditDialog(dialogParams);
@@ -39,9 +41,11 @@ export class MapDetailsComponent implements OnInit {
     }
 
     onMapCreate(): void {
+        // TODO получение userId.
         const dialogParams: MapEditDialogParameters = {
             currentMap: null,
-            title: 'Создание новой карты'
+            title: 'Создание новой карты',
+            currentUserId: '1'
         };
 
         this.openMapEditDialog(dialogParams);

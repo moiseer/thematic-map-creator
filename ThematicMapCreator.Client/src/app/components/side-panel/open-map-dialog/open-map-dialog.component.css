@@ -1,0 +1,7 @@
+.selectable {
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #ddd;
+}

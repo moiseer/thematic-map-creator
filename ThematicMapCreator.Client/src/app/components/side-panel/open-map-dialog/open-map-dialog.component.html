@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Сохраненные карты</h2>
+
+<mat-dialog-content>
+    <mat-table [dataSource]="maps">
+        <ng-container matColumnDef="name" >
+            <mat-cell *matCellDef="let map" [title]="map.description">{{map.name}}</mat-cell>
+        </ng-container>
+
+        <mat-row *matRowDef="let map; columns: tableColumnNames" (click)="onSelectMap(map.id)"
+                 class="selectable" [class]="isSelected(map.id)"></mat-row>
+    </mat-table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Отмена</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="selectedMapId" [disabled]="!selectedMapId">ОК</button>
+</mat-dialog-actions>

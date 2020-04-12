@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{data.title}}</h2>
 
-<mat-dialog-content [formGroup]="mapEditForm" fxLayout="column">
+<mat-dialog-content [formGroup]="editMapForm" fxLayout="column">
 
     <mat-form-field>
         <input matInput formControlName="name" placeholder="Название"/>
@@ -22,6 +22,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close>Отмена</button>
-    <button mat-flat-button color="primary" [mat-dialog-close]="getMap()" [disabled]="!mapEditForm.valid || !mapEditForm.dirty">ОК</button>
+    <button mat-button mat-dialog-close>Отмена</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="map" [disabled]="!editMapForm.valid || !editMapForm.dirty">ОК</button>
 </mat-dialog-actions>

@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,9 +21,10 @@ import { MapComponent } from './components/map/map.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SidePanelComponent } from './components/side-panel/side-panel.component';
 import { MapDetailsComponent } from './components/side-panel/map-details/map-details.component';
-import { MapEditDialogComponent } from './components/side-panel/map-edit-dialog/map-edit-dialog.component';
+import { EditMapDialogComponent } from './components/side-panel/edit-map-dialog/edit-map-dialog.component';
 import { LayersListComponent } from './components/side-panel/layers-list/layers-list.component';
-import { LayerEditDialogComponent } from './components/side-panel/layer-edit-dialog/layer-edit-dialog.component';
+import { EditLayerDialogComponent } from './components/side-panel/edit-layer-dialog/edit-layer-dialog.component';
+import { OpenMapDialogComponent } from './components/side-panel/open-map-dialog/open-map-dialog.component';
 
 @NgModule({
     declarations: [
@@ -31,9 +33,10 @@ import { LayerEditDialogComponent } from './components/side-panel/layer-edit-dia
         NavbarComponent,
         SidePanelComponent,
         MapDetailsComponent,
-        MapEditDialogComponent,
+        EditMapDialogComponent,
         LayersListComponent,
-        LayerEditDialogComponent
+        EditLayerDialogComponent,
+        OpenMapDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -50,7 +53,8 @@ import { LayerEditDialogComponent } from './components/side-panel/layer-edit-dia
         MatFormFieldModule,
         MatInputModule,
         DragDropModule,
-        MatIconModule
+        MatIconModule,
+        MatTableModule
     ],
     bootstrap: [AppComponent]
 })

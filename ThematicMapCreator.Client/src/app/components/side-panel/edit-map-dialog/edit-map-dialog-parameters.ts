@@ -1,7 +1,6 @@
 import { Map } from '../../../models/map';
 
-export interface MapEditDialogParameters {
+export interface EditMapDialogParameters {
     currentMap: Map;
-    currentUserId: string;
     title: string;
 }

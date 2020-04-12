@@ -20,19 +20,19 @@ export class MapService {
     }
 
     getMaps(userId: string): Observable<Map[]> {
-        return of([{id: '1', name: 'New map', description: 'simple description', userId: '1'}]);
         // TODO return this.http.get<Map[]>(`${this.url}/user/${userId}`);
+        return of(this.getExampleMaps(userId));
     }
 
     getMap(mapId: string): Observable<Map> {
-        return of({id: '1', name: 'New map', description: 'simple description', userId: '1'})
         // TODO return this.http.get<Map>(`${this.url}/${mapId}`)
+        return of(this.getExampleMaps('1').find(map => map.id === mapId))
             .pipe(tap(map => this.getMapLayers(map.id).subscribe(layers => this.currentLayers = layers)));
     }
 
     getMapLayers(mapId: string): Observable<Layer[]> {
-        return of([]);
         // TODO return this.http.get<Layer[]>(`${this.url}/${mapId}/layers`);
+        return of(this.getExampleLayers(mapId));
     }
 
     saveMap(map: SaveMapLayersRequest): Observable<any> {
@@ -40,8 +40,32 @@ export class MapService {
     }
 
     deleteMap(mapId: string): Observable<any> {
-        return of(null)
         // TODO return this.http.delete<any>(this.url)
+        return of(null)
             .pipe(tap(() => this.currentLayers = []));
+    }
+
+    private getExampleMaps(userId: string): Map[] {
+        return [
+            {id: '1', name: 'New map 1', description: 'simple description', userId},
+            {id: '2', name: 'New map 2', description: 'simple description', userId},
+            {
+                id: '3',
+                name: 'Very long name Very long name Very long name Very long name',
+                description: 'simple description simple description simple description',
+                userId
+            }
+        ];
+    }
+
+    private getExampleLayers(mapId: string): Layer[] {
+        return [
+            {id: '1', index: 1, name: 'layer 1', visible: true, data: null, mapId},
+            {id: '2', index: 2, name: 'layer 2', visible: true, data: null, mapId},
+            {
+                id: '3', index: 3, visible: false, data: null, mapId,
+                name: 'layer 3 with very long name, layer 3 with very long name'
+            },
+        ];
     }
 }

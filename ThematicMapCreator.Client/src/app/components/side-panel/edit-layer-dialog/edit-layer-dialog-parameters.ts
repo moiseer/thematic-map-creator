@@ -1,7 +1,6 @@
 import { Layer } from '../../../models/layer';
 
-export interface LayerEditDialogParameters {
+export interface EditLayerDialogParameters {
     currentLayer: Layer;
-    currentMapId: string;
     title: string;
 }

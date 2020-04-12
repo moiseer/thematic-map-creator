@@ -2,23 +2,23 @@
     <div fxLayout="row" fxLayoutAlign="start start">
         <span class="mat-h2">Слои карты</span>
         <div fxFlex></div>
-        <button mat-flat-button (click)="onLayerCreate()">
+        <button mat-button (click)="onCreateLayer()">
             <mat-icon title="Создать слой">add_circle_outline</mat-icon>
         </button>
     </div>
 
-    <div id="layers" *ngIf="layers?.length > 0" fxLayout="column" cdkDropList [cdkDropListData]="layers" class="list" (cdkDropListDropped)="drop($event)">
+    <div id="layers" *ngIf="layers?.length > 0" fxLayout="column" cdkDropList [cdkDropListData]="layers" class="list" (cdkDropListDropped)="onDropLayer($event)">
         <div fxLayoutAlign="row center" class="list-item" *ngFor="let layer of layers; index as layerIndex" cdkDrag cdkDragBoundary="#layers">
             <span>{{layer.name}}</span>
             <div fxFlex></div>
-            <button mat-flat-button (click)="onLayerVisibleChange(layer)">
+            <button mat-button (click)="onChangeLayerVisibility(layer)">
                 <mat-icon *ngIf="layer.visible" title="Скрыть">visibility</mat-icon>
                 <mat-icon *ngIf="!layer.visible" title="Показать">visibility_off</mat-icon>
             </button>
-            <button mat-flat-button (click)="onLayerEdit(layerIndex)">
+            <button mat-button (click)="onEditLayer(layerIndex)">
                 <mat-icon title="Редактировать">create</mat-icon>
             </button>
-            <button mat-flat-button (click)="onLayerDelete(layerIndex)">
+            <button mat-button (click)="onDeleteLayer(layerIndex)">
                 <mat-icon title="Удалить">delete</mat-icon>
             </button>
         </div>

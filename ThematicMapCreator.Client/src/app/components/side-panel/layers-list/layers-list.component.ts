@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 
 import { Layer } from '../../../models/layer';
 import { MapService } from '../../../services/map.service';
-import { LayerEditDialogParameters } from '../layer-edit-dialog/layer-edit-dialog-parameters';
-import { LayerEditDialogComponent } from '../layer-edit-dialog/layer-edit-dialog.component';
+import { EditLayerDialogParameters } from '../edit-layer-dialog/edit-layer-dialog-parameters';
+import { EditLayerDialogComponent } from '../edit-layer-dialog/edit-layer-dialog.component';
 
 @Component({
     selector: 'app-layers-list',
@@ -34,73 +34,67 @@ export class LayersListComponent implements OnInit {
         this.checkLayers();
     }
 
-    checkLayers(): void {
-        if (this.layers.some(layer => layer.mapId !== this.mapId)) {
-            this.layers = this.layers.filter(layer => layer.mapId === this.mapId);
-        }
-    }
-
-    drop(event: CdkDragDrop<any[]>) {
+    onDropLayer(event: CdkDragDrop<any[]>) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         this.reorderIndexes(this.layers);
     }
 
-    onLayerCreate() {
-        // TODO диалог создания слоя.
-        /*const data: GeoJSON.Feature = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [-104.99404, 39.75621]
-            }
-        };
-        const layer: Layer = {id: '1', name: 'new layer', visible: true, data, mapId: '1', index: 0};
-*/
-        const dialogParams: LayerEditDialogParameters = {
+    /* Example GeoJson:
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [-104.99404, 39.75621]
+        }
+    }
+    */
+    onCreateLayer() {
+        const dialogParams: EditLayerDialogParameters = {
             currentLayer: null,
-            title: 'Создание нового слоя',
-            currentMapId: this.mapId
+            title: 'Создание нового слоя'
         };
 
-        this.openLayerEditDialog(dialogParams).subscribe(result => {
+        this.openEditLayerDialog(dialogParams).subscribe(result => {
             if (result) {
                 result.index = this.layers.length;
+                result.mapId = this.mapId;
                 this.layers.push(result);
             }
         });
     }
 
-    onLayerEdit(layerIndex: number) {
-        // TODO
-        const dialogParams: LayerEditDialogParameters = {
+    onEditLayer(layerIndex: number) {
+        const dialogParams: EditLayerDialogParameters = {
             currentLayer: this.layers[layerIndex],
-            title: 'Редактирование слоя',
-            currentMapId: this.mapId
+            title: 'Редактирование слоя'
         };
 
-        this.openLayerEditDialog(dialogParams).subscribe(result => result ? this.layers[layerIndex] = result : {});
+        this.openEditLayerDialog(dialogParams).subscribe(result => result ? this.layers[layerIndex] = result : {});
     }
 
-    onLayerDelete(layerIndex: number) {
+    onDeleteLayer(layerIndex: number) {
         // TODO Подтверждение удаления.
         this.layers.splice(layerIndex, 1);
         this.reorderIndexes(this.layers);
     }
 
-    onLayerVisibleChange(layer: Layer) {
+    onChangeLayerVisibility(layer: Layer) {
         layer.visible = !layer.visible;
     }
 
-    reorderIndexes(layers: Layer[]): void {
+    private checkLayers(): void {
+        if (this.layers.some(layer => layer.mapId !== this.mapId)) {
+            this.layers = this.layers.filter(layer => layer.mapId === this.mapId);
+        }
+    }
+
+    private reorderIndexes(layers: Layer[]): void {
         layers.forEach((layer, index) => layer.index = index);
     }
 
-    openLayerEditDialog(dialogParams: LayerEditDialogParameters): Observable<Layer> {
-        const dialogConfig: MatDialogConfig = {
-            data: dialogParams
-        };
-
-        const dialogRef = this.dialogService.open(LayerEditDialogComponent, dialogConfig);
+    private openEditLayerDialog(dialogParams: EditLayerDialogParameters): Observable<Layer> {
+        const dialogConfig: MatDialogConfig = {data: dialogParams};
+        const dialogRef = this.dialogService.open(EditLayerDialogComponent, dialogConfig);
 
         return dialogRef.afterClosed();
     }

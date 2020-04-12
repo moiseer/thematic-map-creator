@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { mergeMap, map, filter } from 'rxjs/operators';
 
 import { Map } from '../../../models/map';
-import { MapEditDialogParameters } from '../map-edit-dialog/map-edit-dialog-parameters';
-import { MapEditDialogComponent } from '../map-edit-dialog/map-edit-dialog.component';
+import { EditMapDialogParameters } from '../edit-map-dialog/edit-map-dialog-parameters';
+import { EditMapDialogComponent } from '../edit-map-dialog/edit-map-dialog.component';
 import { MapService } from '../../../services/map.service';
 import { SaveMapLayersRequest } from '../../../contracts/save-map-layers-request';
+import { UserService } from '../../../services/user.service';
+import { Layer } from '../../../models/layer';
+import { OpenMapDialogComponent } from '../open-map-dialog/open-map-dialog.component';
 
 @Component({
     selector: 'app-map-details',
@@ -14,61 +18,76 @@ import { SaveMapLayersRequest } from '../../../contracts/save-map-layers-request
 })
 export class MapDetailsComponent implements OnInit {
 
-    map: Map;
+    currentMap: Map;
+
+    get currentLayers(): Layer[] {
+        return this.mapService.currentLayers;
+    }
 
     constructor(
         private dialogService: MatDialog,
-        private mapService: MapService) {
+        private mapService: MapService,
+        private userService: UserService) {
     }
 
     ngOnInit(): void {
     }
 
-    onMapEdit(): void {
-        // TODO получение userId.
-        const dialogParams: MapEditDialogParameters = {
-            currentMap: this.map,
-            title: 'Редактирование карты',
-            currentUserId: '1'
+    onEditMap(): void {
+        const dialogParams: EditMapDialogParameters = {
+            currentMap: this.currentMap,
+            title: 'Редактирование карты'
         };
 
-        this.openMapEditDialog(dialogParams);
+        this.openEditMapDialog(dialogParams);
     }
 
-    onMapDelete(): void {
+    onDeleteMap(): void {
         // TODO Подтверждение удаления.
-        this.mapService.deleteMap(this.map.id).subscribe(() => this.map = null);
+        this.mapService.deleteMap(this.currentMap.id).subscribe(() => this.currentMap = null);
     }
 
-    onMapCreate(): void {
-        // TODO получение userId.
-        const dialogParams: MapEditDialogParameters = {
+    onCreateMap(): void {
+        const dialogParams: EditMapDialogParameters = {
             currentMap: null,
-            title: 'Создание новой карты',
-            currentUserId: '1'
+            title: 'Создание новой карты'
         };
 
-        this.openMapEditDialog(dialogParams);
+        this.openEditMapDialog(dialogParams);
     }
 
-    onMapOpen(): void {
-        // TODO Диалог выбора карт.
-        this.mapService.getMap('1').subscribe(map => this.map = map);
+    onOpenMap(): void {
+        const dialogRef = this.dialogService.open(OpenMapDialogComponent);
+
+        dialogRef.afterClosed()
+            .pipe(
+                filter(mapId => mapId),
+                mergeMap(mapId => this.mapService.getMap(mapId)))
+            .subscribe(result => this.currentMap = result);
     }
 
-    onMapSave(): void {
-        const request: SaveMapLayersRequest = { ...this.map, layers: this.mapService.currentLayers };
-
-        this.mapService.saveMap(request).subscribe();
+    onSaveMap(): void {
+        this.userService.getCurrentUserId()
+            .pipe(
+                map(userId => this.MapToSaveMapLayerRequest(userId, this.currentMap, this.currentLayers)),
+                mergeMap(request => this.mapService.saveMap(request)))
+            .subscribe();
     }
 
-    openMapEditDialog(dialogParams: MapEditDialogParameters): void {
-        const dialogConfig: MatDialogConfig = {
-            data: dialogParams
+    private openEditMapDialog(dialogParams: EditMapDialogParameters): void {
+        const dialogConfig: MatDialogConfig = { data: dialogParams };
+        const dialogRef = this.dialogService.open(EditMapDialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe(result => result ? this.currentMap = result : {});
+    }
+
+    private MapToSaveMapLayerRequest(userId: string, savedMap: Map, layers: Layer[]): SaveMapLayersRequest {
+        return {
+            id: savedMap.id,
+            name: savedMap.name,
+            description: savedMap.description,
+            userId,
+            layers
         };
-
-        const dialogRef = this.dialogService.open(MapEditDialogComponent, dialogConfig);
-
-        dialogRef.afterClosed().subscribe(result => result ? this.map = result : {});
     }
 }

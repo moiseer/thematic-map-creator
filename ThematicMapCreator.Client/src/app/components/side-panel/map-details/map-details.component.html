@@ -1,29 +1,29 @@
 <div fxLayout="column" fxLayoutGap="8px">
-    <ng-container *ngIf="map">
+    <ng-container *ngIf="currentMap">
         <div fxLayout="row" fxLayoutAlign="start start" >
-            <span [title]="map.name" class="mat-h2 title">{{map.name}}</span>
+            <span [title]="currentMap.name" class="mat-h2 title">{{currentMap.name}}</span>
             <div fxFlex></div>
-            <button mat-flat-button (click)="onMapSave()">
+            <button mat-button (click)="onSaveMap()">
                 <mat-icon title="Сохранить">save</mat-icon>
             </button>
-            <button mat-flat-button (click)="onMapEdit()">
+            <button mat-button (click)="onEditMap()">
                 <mat-icon title="Редактировать">create</mat-icon>
             </button>
-            <button mat-flat-button (click)="onMapDelete()">
+            <button mat-button (click)="onDeleteMap()">
                 <mat-icon title="Удалить">delete</mat-icon>
             </button>
         </div>
-        <div *ngIf="map.description?.length > 0">
-            <span class="sub-title">{{map.description}}</span>
+        <div *ngIf="currentMap.description?.length > 0">
+            <span class="sub-title">{{currentMap.description}}</span>
         </div>
-        <app-layers-list [mapId]="map.id"></app-layers-list>
+        <app-layers-list [mapId]="currentMap.id"></app-layers-list>
     </ng-container>
 
-    <ng-container *ngIf="!map">
-        <button mat-flat-button color="primary" (click)="onMapCreate()">
+    <ng-container *ngIf="!currentMap">
+        <button mat-flat-button color="primary" (click)="onCreateMap()">
             Создать новую карту
         </button>
-        <button mat-flat-button color="primary" (click)="onMapOpen()">
+        <button mat-flat-button color="primary" (click)="onOpenMap()">
             Открыть карту
         </button>
     </ng-container>

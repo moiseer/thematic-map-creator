@@ -22,15 +22,6 @@ export class EditMapDialogComponent implements OnInit {
         return this.editMapForm.controls.description;
     }
 
-    get map(): Map {
-        return {
-            id: this.data.currentMap?.id,
-            name: this.mapName.value,
-            description: this.mapDescription.value,
-            userId: this.data.currentMap?.userId
-        };
-    }
-
     constructor(
         private dialogRef: MatDialogRef<EditMapDialogComponent>,
         private fb: FormBuilder,
@@ -40,6 +31,17 @@ export class EditMapDialogComponent implements OnInit {
     ngOnInit(): void {
         this.dialogRef.updateSize('420px');
         this.formInit();
+    }
+
+    onSave(): void {
+        const map: Map = {
+            id: this.data.currentMap?.id,
+            name: this.mapName.value,
+            description: this.mapDescription.value,
+            userId: this.data.currentMap?.userId
+        };
+
+        this.dialogRef.close(map);
     }
 
     private formInit(): void {
@@ -54,4 +56,5 @@ export class EditMapDialogComponent implements OnInit {
             ]
         });
     }
+
 }

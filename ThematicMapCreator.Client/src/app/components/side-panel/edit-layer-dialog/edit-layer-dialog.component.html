@@ -14,11 +14,14 @@
 
     <mat-form-field>
         <textarea matInput formControlName="data" placeholder="Данные в формате GeoJson"></textarea>
+        <mat-error *ngIf="layerData.hasError('geojson')">
+            Невалидный GeoJson объект.
+        </mat-error>
     </mat-form-field>
 
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-flat-button color="primary" [mat-dialog-close]="layer" [disabled]="!editLayerForm.valid || !editLayerForm.dirty">ОК</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="!editLayerForm.valid || !editLayerForm.dirty">ОК</button>
 </mat-dialog-actions>

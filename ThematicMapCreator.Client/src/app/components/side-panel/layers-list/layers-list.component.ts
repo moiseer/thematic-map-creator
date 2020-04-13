@@ -94,8 +94,7 @@ export class LayersListComponent implements OnInit {
 
     private openEditLayerDialog(dialogParams: EditLayerDialogParameters): Observable<Layer> {
         const dialogConfig: MatDialogConfig = {data: dialogParams};
-        const dialogRef = this.dialogService.open(EditLayerDialogComponent, dialogConfig);
 
-        return dialogRef.afterClosed();
+        return this.dialogService.open(EditLayerDialogComponent, dialogConfig).afterClosed();
     }
 }

@@ -23,5 +23,5 @@
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-flat-button color="primary" [mat-dialog-close]="map" [disabled]="!editMapForm.valid || !editMapForm.dirty">ОК</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="!editMapForm.valid || !editMapForm.dirty">ОК</button>
 </mat-dialog-actions>

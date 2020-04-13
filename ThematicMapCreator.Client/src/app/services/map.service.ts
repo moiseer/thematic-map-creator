@@ -36,7 +36,8 @@ export class MapService {
     }
 
     saveMap(map: SaveMapLayersRequest): Observable<any> {
-        return this.http.put<any>(this.url, map);
+        // TODO return this.http.put<any>(this.url, map);
+        return of(null);
     }
 
     deleteMap(mapId: string): Observable<any> {

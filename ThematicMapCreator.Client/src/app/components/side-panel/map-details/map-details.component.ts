@@ -57,9 +57,7 @@ export class MapDetailsComponent implements OnInit {
     }
 
     onOpenMap(): void {
-        const dialogRef = this.dialogService.open(OpenMapDialogComponent);
-
-        dialogRef.afterClosed()
+        this.dialogService.open(OpenMapDialogComponent).afterClosed()
             .pipe(
                 filter(mapId => mapId),
                 mergeMap(mapId => this.mapService.getMap(mapId)))
@@ -76,9 +74,9 @@ export class MapDetailsComponent implements OnInit {
 
     private openEditMapDialog(dialogParams: EditMapDialogParameters): void {
         const dialogConfig: MatDialogConfig = { data: dialogParams };
-        const dialogRef = this.dialogService.open(EditMapDialogComponent, dialogConfig);
 
-        dialogRef.afterClosed().subscribe(result => result ? this.currentMap = result : {});
+        this.dialogService.open(EditMapDialogComponent, dialogConfig).afterClosed()
+            .subscribe(result => result ? this.currentMap = result : {});
     }
 
     private MapToSaveMapLayerRequest(userId: string, savedMap: Map, layers: Layer[]): SaveMapLayersRequest {

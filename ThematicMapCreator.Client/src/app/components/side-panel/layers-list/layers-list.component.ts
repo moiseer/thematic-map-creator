@@ -39,6 +39,10 @@ export class LayersListComponent implements OnInit {
         this.reorderIndexes(this.layers);
     }
 
+    onZoomAll(): void {
+        this.mapService.zoomAll$.next(true);
+    }
+
     /* Example GeoJson:
     {
         "type": "Feature",

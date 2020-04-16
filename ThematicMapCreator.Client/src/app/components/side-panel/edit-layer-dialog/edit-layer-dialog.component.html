@@ -12,12 +12,11 @@
         </mat-error>
     </mat-form-field>
 
-    <mat-form-field>
-        <textarea matInput formControlName="data" placeholder="Данные в формате GeoJson"></textarea>
-        <mat-error *ngIf="layerData.hasError('geojson')">
-            Невалидный GeoJson объект.
-        </mat-error>
-    </mat-form-field>
+    <mat-label>Данные в формате GeoJson</mat-label>
+    <input type="file" (change)="onFilesChange($event.target['files'])"/>
+    <mat-error *ngIf="layerData.dirty && layerData.hasError('geojson')">
+        Невалидный GeoJson объект.
+    </mat-error>
 
 </mat-dialog-content>
 

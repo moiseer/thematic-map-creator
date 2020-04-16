@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 
@@ -16,6 +16,8 @@ export class MapService {
 
     public currentLayers: Layer[] = [];
 
+    public zoomAll$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
+
     constructor(private http: HttpClient) {
     }
 
@@ -27,7 +29,11 @@ export class MapService {
     getMap(mapId: string): Observable<Map> {
         // TODO return this.http.get<Map>(`${this.url}/${mapId}`)
         return of(this.getExampleMaps('1').find(map => map.id === mapId))
-            .pipe(tap(map => this.getMapLayers(map.id).subscribe(layers => this.currentLayers = layers)));
+            .pipe(tap(map => this.getMapLayers(map.id)
+                .subscribe(layers => {
+                    this.currentLayers = layers;
+                })
+            ));
     }
 
     getMapLayers(mapId: string): Observable<Layer[]> {

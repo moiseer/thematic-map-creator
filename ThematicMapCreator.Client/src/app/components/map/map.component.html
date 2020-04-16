@@ -1,5 +1,6 @@
 <div leaflet class="map-frame"
      [leafletOptions]="mapOptions"
      [leafletBaseLayers]="baseLayers"
-     [leafletLayers]="layers">
+     [leafletLayer]="layers"
+     (leafletMapReady)="onMapReady($event)">
 </div>

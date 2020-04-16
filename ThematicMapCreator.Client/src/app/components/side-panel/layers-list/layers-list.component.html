@@ -2,6 +2,9 @@
     <div fxLayout="row" fxLayoutAlign="start start">
         <span class="mat-h2">Слои карты</span>
         <div fxFlex></div>
+        <button mat-button (click)="onZoomAll()">
+            <mat-icon title="Перейти к слоям">zoom_out_map</mat-icon>
+        </button>
         <button mat-button (click)="onCreateLayer()">
             <mat-icon title="Создать слой">add_circle_outline</mat-icon>
         </button>

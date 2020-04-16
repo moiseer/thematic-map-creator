@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 
 import { EditLayerDialogParameters } from './edit-layer-dialog-parameters';
 import { Layer } from '../../../models/layer';
-import { geoJsonValidator } from '../../../validators/geojson.validator';
+import { geoJsonStringValidator } from '../../../validators/geojson.validator';
 
 @Component({
     selector: 'app-edit-layer-dialog',
@@ -48,16 +48,26 @@ export class EditLayerDialogComponent implements OnInit {
     }
 
     private formInit(): void {
-        // TODO Валидатор для GeoJson.
         this.editLayerForm = this.fb.group({
             name: [
                 this.data.currentLayer?.name,
                 [Validators.required, Validators.maxLength(64)]
             ],
-            data: [
-                JSON.stringify(this.data.currentLayer?.data, null, 2),
-                geoJsonValidator()
-            ]
+            data: [null, geoJsonStringValidator()]
         });
+    }
+
+    onFilesChange(files: FileList) {
+        if (!files || !files.length) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            this.layerData.setValue(reader.result);
+            this.layerData.markAsDirty();
+        };
+
+        reader.readAsText(files[0]);
     }
 }

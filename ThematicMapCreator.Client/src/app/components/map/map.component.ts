@@ -1,15 +1,13 @@
 import { OnInit, Component } from '@angular/core';
 import {
-    geoJSON,
-    GeoJSONOptions,
+    featureGroup, FeatureGroup,
+    geoJSON, GeoJSONOptions,
     icon,
-    LatLng,
-    latLng,
-    latLngBounds,
+    LatLng, latLng,
+    LatLngBounds, latLngBounds,
     Layer,
-    MapOptions,
-    marker,
-    MarkerOptions,
+    Map, MapOptions,
+    marker, MarkerOptions,
     tileLayer
 } from 'leaflet';
 
@@ -21,6 +19,8 @@ import { MapService } from '../../services/map.service';
     styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
+
+    private map: Map;
 
     mapOptions: MapOptions = {
         zoom: 4,
@@ -38,10 +38,11 @@ export class MapComponent implements OnInit {
         pointToLayer: this.pointToLayer
     };
 
-    get layers(): Layer[] {
-        return this.mapService.currentLayers
+    get layers(): FeatureGroup {
+        console.log('get layers');
+        return featureGroup(this.mapService.currentLayers
             .filter(layer => layer.visible)
-            .map(layer => geoJSON(layer.data, this.geoJsonOptions));
+            .map(layer => geoJSON(layer.data, this.geoJsonOptions)));
     }
 
     constructor(private mapService: MapService) {
@@ -49,6 +50,11 @@ export class MapComponent implements OnInit {
 
     ngOnInit(): void {
         this.addBaseLayers();
+        this.subscribeToZoomAll();
+    }
+
+    onMapReady(map: Map): void {
+        this.map = map;
     }
 
     private addBaseLayers(): void {
@@ -81,9 +87,22 @@ export class MapComponent implements OnInit {
         };
     }
 
+    private subscribeToZoomAll(): void {
+        this.mapService.zoomAll$.subscribe(() => this.fitMapToLayers());
+    }
+
+    private fitMapToLayers(): void {
+        const bounds: LatLngBounds = this.layers.getBounds();
+        if (bounds.isValid() && this.map) {
+            this.map.fitBounds(bounds);
+        }
+    }
+
     private onEachFeature(feature, layer) {
-        if (feature.properties && feature.properties.popupContent) {
-            const popupContent = feature.properties.popupContent;
+        if (feature.properties) {
+            const popupContent: string = JSON.stringify(feature.properties, null, 4)
+                .replace(/\n( *)/g, (match, p1) => '<br>' + '&nbsp;'.repeat(p1.length))
+                .replace(/[{}]/g, () => '');
             layer.bindPopup(popupContent);
         }
     }

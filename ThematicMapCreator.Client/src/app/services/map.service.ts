@@ -14,7 +14,7 @@ export class MapService {
 
     private url = 'api/maps';
 
-    public currentLayers: Layer[] = [];
+    public layers$: BehaviorSubject<Layer[]> = new BehaviorSubject<Layer[]>([]);
 
     public zoomAll$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
@@ -31,7 +31,7 @@ export class MapService {
         return of(this.getExampleMaps('1').find(map => map.id === mapId))
             .pipe(tap(map => this.getMapLayers(map.id)
                 .subscribe(layers => {
-                    this.currentLayers = layers;
+                    this.layers$.next(layers);
                 })
             ));
     }
@@ -49,7 +49,7 @@ export class MapService {
     deleteMap(mapId: string): Observable<any> {
         // TODO return this.http.delete<any>(this.url)
         return of(null)
-            .pipe(tap(() => this.currentLayers = []));
+            .pipe(tap(() => this.layers$.next([])));
     }
 
     private getExampleMaps(userId: string): Map[] {

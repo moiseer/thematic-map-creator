@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { Layer } from '../../../models/layer';
@@ -20,13 +20,7 @@ export class LayersListComponent implements OnInit {
 
     @Input() mapId: string;
 
-    get layers(): Layer[] {
-        return this.mapService.currentLayers;
-    }
-
-    set layers(layers: Layer[]) {
-        this.mapService.currentLayers = layers;
-    }
+    layers: Layer[];
 
     constructor(
         private dialogService: MatDialog,
@@ -34,10 +28,11 @@ export class LayersListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.checkLayers();
+        this.subscribeToLayersChanges()
+            .add(this.checkLayers());
     }
 
-    onDropLayer(event: CdkDragDrop<any[]>) {
+    onDropLayer(event: CdkDragDrop<any[]>): void {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         this.reorderIndexes(this.layers);
     }
@@ -55,7 +50,7 @@ export class LayersListComponent implements OnInit {
         }
     }
     */
-    onCreateLayer() {
+    onCreateLayer(): void {
         const dialogParams: EditLayerDialogParameters = {
             currentLayer: null,
             title: 'Создание нового слоя'
@@ -66,20 +61,26 @@ export class LayersListComponent implements OnInit {
                 result.index = this.layers.length;
                 result.mapId = this.mapId;
                 this.layers.push(result);
+                this.mapService.layers$.next(this.layers);
             }
         });
     }
 
-    onEditLayer(layerIndex: number) {
+    onEditLayer(layerIndex: number): void {
         const dialogParams: EditLayerDialogParameters = {
             currentLayer: this.layers[layerIndex],
             title: 'Редактирование слоя'
         };
 
-        this.openEditLayerDialog(dialogParams).subscribe(result => result ? this.layers[layerIndex] = result : {});
+        this.openEditLayerDialog(dialogParams)
+            .pipe(filter(result => !!result))
+            .subscribe(result => {
+                this.layers[layerIndex] = result;
+                this.mapService.layers$.next(this.layers);
+            });
     }
 
-    onDeleteLayer(layerIndex: number) {
+    onDeleteLayer(layerIndex: number): void {
         const dialogParams: DeleteObjectDialogParameters = {
             objectName: `слой "${this.layers[layerIndex].name}"`
         };
@@ -93,18 +94,25 @@ export class LayersListComponent implements OnInit {
             });
     }
 
-    onChangeLayerVisibility(layer: Layer) {
+    onChangeLayerVisibility(layer: Layer): void {
         layer.visible = !layer.visible;
+        this.mapService.layers$.next(this.layers);
+    }
+
+    private subscribeToLayersChanges(): Subscription {
+        return this.mapService.layers$.subscribe(layers => this.layers = layers);
     }
 
     private checkLayers(): void {
         if (this.layers.some(layer => layer.mapId !== this.mapId)) {
             this.layers = this.layers.filter(layer => layer.mapId === this.mapId);
+            this.mapService.layers$.next(this.layers);
         }
     }
 
     private reorderIndexes(layers: Layer[]): void {
         layers.forEach((layer, index) => layer.index = index);
+        this.mapService.layers$.next(this.layers);
     }
 
     private openEditLayerDialog(dialogParams: EditLayerDialogParameters): Observable<Layer> {

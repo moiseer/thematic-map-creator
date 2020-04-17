@@ -23,7 +23,7 @@ export class MapDetailsComponent implements OnInit {
     currentMap: Map;
 
     get currentLayers(): Layer[] {
-        return this.mapService.currentLayers;
+        return this.mapService.layers$.getValue();
     }
 
     constructor(

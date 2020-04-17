@@ -1,7 +1,7 @@
 import { OnInit, Component } from '@angular/core';
 import {
     featureGroup, FeatureGroup,
-    geoJSON, GeoJSONOptions,
+    GeoJSON, geoJSON, GeoJSONOptions,
     icon,
     LatLng, latLng,
     LatLngBounds, latLngBounds,
@@ -10,6 +10,7 @@ import {
     marker, MarkerOptions,
     tileLayer
 } from 'leaflet';
+import { Subscription } from 'rxjs';
 
 import { MapService } from '../../services/map.service';
 
@@ -22,6 +23,8 @@ export class MapComponent implements OnInit {
 
     private map: Map;
 
+    layers: FeatureGroup;
+
     mapOptions: MapOptions = {
         zoom: 4,
         center: latLng(56.49771, 84.97437), // Tomsk.
@@ -31,25 +34,19 @@ export class MapComponent implements OnInit {
             [90, 200]
         )
     };
-    baseLayers: {[layerName: string]: Layer};
+    baseLayers: { [layerName: string]: Layer };
 
     geoJsonOptions: GeoJSONOptions = {
         onEachFeature: this.onEachFeature,
         pointToLayer: this.pointToLayer
     };
 
-    get layers(): FeatureGroup {
-        console.log('get layers');
-        return featureGroup(this.mapService.currentLayers
-            .filter(layer => layer.visible)
-            .map(layer => geoJSON(layer.data, this.geoJsonOptions)));
-    }
-
     constructor(private mapService: MapService) {
     }
 
     ngOnInit(): void {
         this.addBaseLayers();
+        this.subscribeToLayersChanges();
         this.subscribeToZoomAll();
     }
 
@@ -87,8 +84,16 @@ export class MapComponent implements OnInit {
         };
     }
 
-    private subscribeToZoomAll(): void {
-        this.mapService.zoomAll$.subscribe(() => this.fitMapToLayers());
+    private subscribeToLayersChanges(): Subscription {
+        return this.mapService.layers$.subscribe(layers =>
+            this.layers = featureGroup(layers
+                .filter(layer => layer.visible)
+                .map(layer => geoJSON(layer.data, this.geoJsonOptions)))
+        );
+    }
+
+    private subscribeToZoomAll(): Subscription {
+        return this.mapService.zoomAll$.subscribe(() => this.fitMapToLayers());
     }
 
     private fitMapToLayers(): void {
@@ -98,7 +103,7 @@ export class MapComponent implements OnInit {
         }
     }
 
-    private onEachFeature(feature, layer) {
+    private onEachFeature(feature: GeoJSON.Feature, layer: Layer): void {
         if (feature.properties) {
             const popupContent: string = JSON.stringify(feature.properties, null, 4)
                 .replace(/\n( *)/g, (match, p1) => '<br>' + '&nbsp;'.repeat(p1.length))

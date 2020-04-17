@@ -2,11 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { Layer } from '../../../models/layer';
 import { MapService } from '../../../services/map.service';
 import { EditLayerDialogParameters } from '../edit-layer-dialog/edit-layer-dialog-parameters';
 import { EditLayerDialogComponent } from '../edit-layer-dialog/edit-layer-dialog.component';
+import { DeleteObjectDialogParameters } from '../delete-object-dialog/delete-object-dialog-parameters';
+import { DeleteObjectDialogComponent } from '../delete-object-dialog/delete-object-dialog.component';
 
 @Component({
     selector: 'app-layers-list',
@@ -77,9 +80,17 @@ export class LayersListComponent implements OnInit {
     }
 
     onDeleteLayer(layerIndex: number) {
-        // TODO Подтверждение удаления.
-        this.layers.splice(layerIndex, 1);
-        this.reorderIndexes(this.layers);
+        const dialogParams: DeleteObjectDialogParameters = {
+            objectName: `слой "${this.layers[layerIndex].name}"`
+        };
+        const dialogConfig: MatDialogConfig = {data: dialogParams};
+
+        this.dialogService.open(DeleteObjectDialogComponent, dialogConfig).afterClosed()
+            .pipe(filter(result => result))
+            .subscribe(() => {
+                this.layers.splice(layerIndex, 1);
+                this.reorderIndexes(this.layers);
+            });
     }
 
     onChangeLayerVisibility(layer: Layer) {

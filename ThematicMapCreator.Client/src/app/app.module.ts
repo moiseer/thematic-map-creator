@@ -25,6 +25,7 @@ import { EditMapDialogComponent } from './components/side-panel/edit-map-dialog/
 import { LayersListComponent } from './components/side-panel/layers-list/layers-list.component';
 import { EditLayerDialogComponent } from './components/side-panel/edit-layer-dialog/edit-layer-dialog.component';
 import { OpenMapDialogComponent } from './components/side-panel/open-map-dialog/open-map-dialog.component';
+import { DeleteObjectDialogComponent } from './components/side-panel/delete-object-dialog/delete-object-dialog.component';
 
 @NgModule({
     declarations: [
@@ -36,7 +37,8 @@ import { OpenMapDialogComponent } from './components/side-panel/open-map-dialog/
         EditMapDialogComponent,
         LayersListComponent,
         EditLayerDialogComponent,
-        OpenMapDialogComponent
+        OpenMapDialogComponent,
+        DeleteObjectDialogComponent
     ],
     imports: [
         BrowserModule,

@@ -5,6 +5,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { EditLayerDialogParameters } from './edit-layer-dialog-parameters';
 import { Layer } from '../../../models/layer';
 import { geoJsonStringValidator } from '../../../validators/geojson.validator';
+import { FileService } from '../../../services/file.service';
 
 @Component({
     selector: 'app-edit-layer-dialog',
@@ -24,6 +25,7 @@ export class EditLayerDialogComponent implements OnInit {
     }
 
     constructor(
+        private fileService: FileService,
         private dialogRef: MatDialogRef<EditLayerDialogComponent>,
         private fb: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: EditLayerDialogParameters) {
@@ -62,12 +64,9 @@ export class EditLayerDialogComponent implements OnInit {
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = () => {
-            this.layerData.setValue(reader.result);
+        this.fileService.readFileAsText(files[0]).subscribe(text => {
+            this.layerData.setValue(text);
             this.layerData.markAsDirty();
-        };
-
-        reader.readAsText(files[0]);
+        });
     }
 }

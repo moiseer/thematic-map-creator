@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { mergeMap, map, filter } from 'rxjs/operators';
+import { mergeMap, map, filter, flatMap } from 'rxjs/operators';
 
 import { Map } from '../../../models/map';
 import { EditMapDialogParameters } from '../edit-map-dialog/edit-map-dialog-parameters';
@@ -10,6 +10,8 @@ import { SaveMapLayersRequest } from '../../../contracts/save-map-layers-request
 import { UserService } from '../../../services/user.service';
 import { Layer } from '../../../models/layer';
 import { OpenMapDialogComponent } from '../open-map-dialog/open-map-dialog.component';
+import { DeleteObjectDialogParameters } from '../delete-object-dialog/delete-object-dialog-parameters';
+import { DeleteObjectDialogComponent } from '../delete-object-dialog/delete-object-dialog.component';
 
 @Component({
     selector: 'app-map-details',
@@ -43,8 +45,16 @@ export class MapDetailsComponent implements OnInit {
     }
 
     onDeleteMap(): void {
-        // TODO Подтверждение удаления.
-        this.mapService.deleteMap(this.currentMap.id).subscribe(() => this.currentMap = null);
+        const dialogParams: DeleteObjectDialogParameters = {
+            objectName: `карту "${this.currentMap.name}"`
+        };
+        const dialogConfig: MatDialogConfig = {data: dialogParams};
+
+        this.dialogService.open(DeleteObjectDialogComponent, dialogConfig).afterClosed()
+            .pipe(
+                filter(result => result),
+                flatMap(() => this.mapService.deleteMap(this.currentMap.id)))
+            .subscribe(() => this.currentMap = null);
     }
 
     onCreateMap(): void {

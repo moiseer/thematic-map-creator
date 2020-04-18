@@ -6,8 +6,10 @@ namespace ThematicMapCreator.Api.Contracts
     {
         public string Data { get; set; }
         public Guid Id { get; set; }
+        public int Index { get; set; }
         public Guid MapId { get; set; }
         public string Name { get; set; }
         public string Settings { get; set; }
+        public bool Visible { get; set; }
     }
 }

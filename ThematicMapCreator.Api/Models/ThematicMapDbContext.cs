@@ -27,6 +27,10 @@ namespace ThematicMapCreator.Api.Models
 
             builder.Property(layer => layer.Id).HasDefaultValueSql("newid()");
 
+            builder.Property(layer => layer.Index)
+                .HasColumnName("index")
+                .IsRequired();
+
             builder.Property(layer => layer.Name)
                 .HasColumnName("name")
                 .HasMaxLength(64)
@@ -38,6 +42,10 @@ namespace ThematicMapCreator.Api.Models
 
             builder.Property(layer => layer.Data)
                 .HasColumnName("data")
+                .IsRequired();
+
+            builder.Property(layer => layer.Visible)
+                .HasColumnName("visible")
                 .IsRequired();
 
             builder.HasOne(layer => layer.Map)
@@ -91,6 +99,9 @@ namespace ThematicMapCreator.Api.Models
                 .HasColumnName("password")
                 .HasMaxLength(64)
                 .IsRequired();
+
+            builder.HasIndex(user => user.Name).IsUnique();
+            builder.HasIndex(user => user.Email).IsUnique();
         }
     }
 }

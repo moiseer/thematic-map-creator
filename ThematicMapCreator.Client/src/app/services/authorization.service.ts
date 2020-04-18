@@ -29,7 +29,8 @@ export class AuthorizationService {
         return of(this.getExampleUser())
             .pipe(
                 tap(user => this.currentUser$.next(user)),
-                map(user => !!user));
+                map(user => !!user)
+            );
     }
 
     logout(): Observable<boolean> {

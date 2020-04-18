@@ -37,6 +37,9 @@
 
     <mat-form-field>
         <input matInput type="password" placeholder="Подтверждение пароля" formControlName="confirmPass">
+        <mat-error *ngIf="confirmPass.hasError('equals')">
+            Пароли не совпадают.
+        </mat-error>
     </mat-form-field>
 
     <mat-error *ngIf="regError">Логин и/или почта уже заняты. {{regErrorText}}</mat-error>

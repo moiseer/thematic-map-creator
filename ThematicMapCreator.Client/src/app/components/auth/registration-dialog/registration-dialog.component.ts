@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { AuthorizationService } from '../../../services/authorization.service';
 import { RegistrationContract } from '../../../contracts/registration-contract';
+import { equalsValidator } from '../../../validators/equals.validator';
 
 @Component({
     selector: 'app-registration-dialog',
@@ -56,10 +57,15 @@ export class RegistrationDialogComponent implements OnInit {
             password: [
                 null,
                 [Validators.required, Validators.maxLength(64)]
-            ],
-            // TODO Подтверждение пароля
-            confirmPass: null
+            ]
         });
+
+        this.registrationForm.addControl('confirmPass',
+            new FormControl(
+                null,
+                [Validators.required, equalsValidator(this.registrationForm, 'password')]
+            )
+        );
     }
 
     signin(): void {

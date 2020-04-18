@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { flatMap, tap } from 'rxjs/operators';
 
 import { Map } from '../models/map';
 import { Layer } from '../models/layer';
@@ -34,8 +34,13 @@ export class MapService {
         return of(this.getExampleMaps('1').find(map => map.id === mapId))
             .pipe(
                 tap(map => this.map$.next(map)),
-                tap(map => this.getMapLayers(map.id)
-                    .subscribe(layers => this.layers$.next(layers))));
+                flatMap(map => this.getMapLayers(map.id)
+                    .pipe(
+                        tap(layers => this.layers$.next(layers)),
+                        flatMap(() => of(map))
+                    )
+                )
+            );
     }
 
     getMapLayers(mapId: string): Observable<Layer[]> {

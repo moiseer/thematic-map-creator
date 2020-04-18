@@ -88,7 +88,8 @@ export class MapComponent implements OnInit {
         return this.mapService.layers$.subscribe(layers =>
             this.layers = featureGroup(layers
                 .filter(layer => layer.visible)
-                .map(layer => geoJSON(layer.data, this.geoJsonOptions)))
+                .map(layer => geoJSON(layer.data, this.geoJsonOptions))
+            )
         );
     }
 

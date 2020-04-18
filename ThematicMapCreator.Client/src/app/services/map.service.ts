@@ -14,6 +14,7 @@ export class MapService {
 
     private url = 'api/maps';
 
+    public map$: BehaviorSubject<Map> = new BehaviorSubject<Map>(null);
     public layers$: BehaviorSubject<Layer[]> = new BehaviorSubject<Layer[]>([]);
 
     public zoomAll$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
@@ -31,9 +32,10 @@ export class MapService {
         // TODO return this.http.get<Map>(`${this.url}/${mapId}`)
         console.log('getMap');
         return of(this.getExampleMaps('1').find(map => map.id === mapId))
-            .pipe(tap(map => this.getMapLayers(map.id)
-                .subscribe(layers => this.layers$.next(layers))
-            ));
+            .pipe(
+                tap(map => this.map$.next(map)),
+                tap(map => this.getMapLayers(map.id)
+                    .subscribe(layers => this.layers$.next(layers))));
     }
 
     getMapLayers(mapId: string): Observable<Layer[]> {
@@ -52,7 +54,12 @@ export class MapService {
         // TODO return this.http.delete<any>(this.url)
         console.log('deleteMap');
         return of(null)
-            .pipe(tap(() => this.layers$.next([])));
+            .pipe(tap(() => this.closeMap()));
+    }
+
+    closeMap(): void {
+        this.map$.next(null);
+        this.layers$.next([]);
     }
 
     private getExampleMaps(userId: string): Map[] {

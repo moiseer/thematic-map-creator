@@ -5,6 +5,9 @@ import { AuthorizationService } from '../../services/authorization.service';
 import { User } from '../../models/user';
 import { AuthorizationDialogComponent } from '../auth/authorization-dialog/authorization-dialog.component';
 import { RegistrationDialogComponent } from '../auth/registration-dialog/registration-dialog.component';
+import { OpenMapDialogComponent } from '../side-panel/open-map-dialog/open-map-dialog.component';
+import { flatMap, takeWhile } from 'rxjs/operators';
+import { MapService } from '../../services/map.service';
 
 @Component({
     selector: 'app-navbar',
@@ -20,6 +23,7 @@ export class NavbarComponent {
 
     constructor(
         private dialogService: MatDialog,
+        private mapService: MapService,
         private authorizationService: AuthorizationService) {
     }
 
@@ -28,7 +32,11 @@ export class NavbarComponent {
     }
 
     onOpenMap(): void {
-        // TODO Открытие списка карт
+        this.dialogService.open(OpenMapDialogComponent).afterClosed()
+            .pipe(
+                takeWhile(mapId => !!mapId),
+                flatMap(mapId => this.mapService.getMap(mapId)))
+            .subscribe();
     }
 
     logout(): void {
@@ -40,7 +48,8 @@ export class NavbarComponent {
     }
 
     openRegDialog(): void {
-        // TODO Сообщение об успешной регистрации.
-        this.dialogService.open(RegistrationDialogComponent);
+        this.dialogService.open(RegistrationDialogComponent).afterClosed()
+            .pipe(takeWhile(result => result))
+            .subscribe(() => alert('Регистрация прошла успешно.'));
     }
 }

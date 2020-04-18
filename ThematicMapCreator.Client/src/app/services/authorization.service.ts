@@ -15,6 +15,7 @@ export class AuthorizationService {
     private url = 'api/authorization';
 
     public currentUser$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+    public logout$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
     constructor(private http: HttpClient) {
     }
@@ -34,7 +35,12 @@ export class AuthorizationService {
     logout(): Observable<boolean> {
         // TODO return this.http.get<boolean>(`${this.url}/logout`)
         return of(true)
-            .pipe(tap(result => result ? this.currentUser$.next(null) : {}));
+            .pipe(tap(result => {
+                if (result) {
+                    this.currentUser$.next(null);
+                    this.logout$.next(true);
+                }
+            }));
     }
 
     signin(reg: RegistrationContract): Observable<boolean> {

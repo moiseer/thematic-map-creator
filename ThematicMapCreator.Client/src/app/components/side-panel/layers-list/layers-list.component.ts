@@ -33,6 +33,9 @@ export class LayersListComponent implements OnInit {
     }
 
     onDropLayer(event: CdkDragDrop<any[]>): void {
+        if (event.previousIndex === event.currentIndex) {
+            return;
+        }
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         this.reorderIndexes(this.layers);
     }

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { mergeMap, map, filter, flatMap } from 'rxjs/operators';
+import { map, flatMap, takeWhile } from 'rxjs/operators';
 
 import { Map } from '../../../models/map';
 import { EditMapDialogParameters } from '../edit-map-dialog/edit-map-dialog-parameters';
 import { EditMapDialogComponent } from '../edit-map-dialog/edit-map-dialog.component';
 import { MapService } from '../../../services/map.service';
 import { SaveMapLayersRequest } from '../../../contracts/save-map-layers-request';
-import { UserService } from '../../../services/user.service';
+import { AuthorizationService } from '../../../services/authorization.service';
 import { Layer } from '../../../models/layer';
 import { OpenMapDialogComponent } from '../open-map-dialog/open-map-dialog.component';
 import { DeleteObjectDialogParameters } from '../delete-object-dialog/delete-object-dialog-parameters';
@@ -29,7 +29,7 @@ export class MapDetailsComponent implements OnInit {
     constructor(
         private dialogService: MatDialog,
         private mapService: MapService,
-        private userService: UserService) {
+        private authorizationService: AuthorizationService) {
     }
 
     ngOnInit(): void {
@@ -52,7 +52,7 @@ export class MapDetailsComponent implements OnInit {
 
         this.dialogService.open(DeleteObjectDialogComponent, dialogConfig).afterClosed()
             .pipe(
-                filter(result => result),
+                takeWhile(result => result),
                 flatMap(() => this.mapService.deleteMap(this.currentMap.id)))
             .subscribe(() => this.currentMap = null);
     }
@@ -67,18 +67,35 @@ export class MapDetailsComponent implements OnInit {
     }
 
     onOpenMap(): void {
-        this.dialogService.open(OpenMapDialogComponent).afterClosed()
+        // TODO Проверка авторизации пользователя.
+        this.authorizationService.getCurrentUserId()
             .pipe(
-                filter(mapId => mapId),
-                mergeMap(mapId => this.mapService.getMap(mapId)))
+                /*flatMap(userId => userId
+                    ? of(userId)
+                    : this.dialogService.open(AuthorizationDialogComponent).afterClosed()
+                        .pipe(
+                            takeWhile(result => result),
+                            flatMap(() => this.authorizationService.getCurrentUserId()))
+                ),*/
+                takeWhile(userId => !!userId),
+                flatMap(() => this.dialogService.open(OpenMapDialogComponent).afterClosed()),
+                takeWhile(mapId => !!mapId),
+                flatMap(mapId => this.mapService.getMap(mapId)))
             .subscribe(result => this.currentMap = result);
     }
 
     onSaveMap(): void {
-        this.userService.getCurrentUserId()
+        // TODO Проверка авторизации пользователя.
+        this.authorizationService.getCurrentUserId()
             .pipe(
+                /*flatMap(userId => userId
+                    ? of(userId)
+                    : this.dialogService.open(AuthorizationDialogComponent).afterClosed()
+                        .pipe(flatMap(() => this.authorizationService.getCurrentUserId()))
+                ),*/
+                takeWhile(userId => !!userId),
                 map(userId => this.MapToSaveMapLayerRequest(userId, this.currentMap, this.currentLayers)),
-                mergeMap(request => this.mapService.saveMap(request)))
+                flatMap(request => this.mapService.saveMap(request)))
             .subscribe();
     }
 
@@ -86,7 +103,8 @@ export class MapDetailsComponent implements OnInit {
         const dialogConfig: MatDialogConfig = { data: dialogParams };
 
         this.dialogService.open(EditMapDialogComponent, dialogConfig).afterClosed()
-            .subscribe(result => result ? this.currentMap = result : {});
+            .pipe(takeWhile(result => result))
+            .subscribe(result => this.currentMap = result);
     }
 
     private MapToSaveMapLayerRequest(userId: string, savedMap: Map, layers: Layer[]): SaveMapLayersRequest {

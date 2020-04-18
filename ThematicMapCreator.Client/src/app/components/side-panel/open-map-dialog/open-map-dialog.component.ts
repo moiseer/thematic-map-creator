@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, takeWhile } from 'rxjs/operators';
 
 import { MapService } from '../../../services/map.service';
-import { UserService } from '../../../services/user.service';
+import { AuthorizationService } from '../../../services/authorization.service';
 import { Map } from '../../../models/map';
 
 @Component({
@@ -21,7 +21,7 @@ export class OpenMapDialogComponent implements OnInit {
     constructor(
         private dialogRef: MatDialogRef<OpenMapDialogComponent>,
         private mapService: MapService,
-        private userService: UserService) {
+        private authorizationService: AuthorizationService) {
     }
 
     ngOnInit(): void {
@@ -34,8 +34,10 @@ export class OpenMapDialogComponent implements OnInit {
     }
 
     private loadMaps(): void {
-        this.userService.getCurrentUserId()
-            .pipe(mergeMap(userId => this.mapService.getMaps(userId)))
+        this.authorizationService.getCurrentUserId()
+            .pipe(
+                takeWhile(userId => !!userId),
+                mergeMap(userId => this.mapService.getMaps(userId)))
             .subscribe(maps => this.maps = maps);
     }
 

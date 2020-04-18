@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Вход</h2>
+
+<mat-dialog-content [formGroup]="registrationForm"  fxLayout="column">
+
+    <mat-form-field>
+        <input matInput placeholder="Логин" formControlName="name">
+        <mat-error *ngIf="name.hasError('required')">
+            Необходимо ввести логин.
+        </mat-error>
+        <mat-error *ngIf="name.hasError('maxlength')">
+            Логин не должен превышать {{name.getError('maxlength')?.requiredLength}} символа.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput placeholder="Электронная почта" formControlName="email">
+        <mat-error *ngIf="email.hasError('required')">
+            Необходимо ввести адрес электронной почты.
+        </mat-error>
+        <mat-error *ngIf="email.hasError('email')">
+            Неверный формат адреса электронной почты.
+        </mat-error>
+        <mat-error *ngIf="email.hasError('maxlength')">
+            Адрес почты не должен превышать {{email.getError('maxlength')?.requiredLength}} символа.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="password" placeholder="Пароль" formControlName="password">
+        <mat-error *ngIf="password.hasError('required')">
+            Необходимо ввести пароль.
+        </mat-error>
+        <mat-error *ngIf="password.hasError('maxlength')">
+            Пароль не должен превышать {{password.getError('maxlength')?.requiredLength}} символа.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="password" placeholder="Подтверждение пароля" formControlName="confirmPass">
+    </mat-form-field>
+
+    <mat-error *ngIf="regError">Логин и/или почта уже заняты. {{regErrorText}}</mat-error>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Отмена</button>
+    <button mat-flat-button color="primary" (click)="signin()" [disabled]="!registrationForm.valid">Зарегистрироваться</button>
+</mat-dialog-actions>

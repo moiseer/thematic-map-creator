@@ -23,31 +23,34 @@ export class MapService {
 
     getMaps(userId: string): Observable<Map[]> {
         // TODO return this.http.get<Map[]>(`${this.url}/user/${userId}`);
+        console.log('getMaps');
         return of(this.getExampleMaps(userId));
     }
 
     getMap(mapId: string): Observable<Map> {
         // TODO return this.http.get<Map>(`${this.url}/${mapId}`)
+        console.log('getMap');
         return of(this.getExampleMaps('1').find(map => map.id === mapId))
             .pipe(tap(map => this.getMapLayers(map.id)
-                .subscribe(layers => {
-                    this.layers$.next(layers);
-                })
+                .subscribe(layers => this.layers$.next(layers))
             ));
     }
 
     getMapLayers(mapId: string): Observable<Layer[]> {
         // TODO return this.http.get<Layer[]>(`${this.url}/${mapId}/layers`);
+        console.log('getMapLayers');
         return of(this.getExampleLayers(mapId));
     }
 
     saveMap(map: SaveMapLayersRequest): Observable<any> {
         // TODO return this.http.put<any>(this.url, map);
+        console.log('saveMap');
         return of(null);
     }
 
     deleteMap(mapId: string): Observable<any> {
         // TODO return this.http.delete<any>(this.url)
+        console.log('deleteMap');
         return of(null)
             .pipe(tap(() => this.layers$.next([])));
     }

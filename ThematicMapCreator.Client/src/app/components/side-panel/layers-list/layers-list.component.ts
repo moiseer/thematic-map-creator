@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 
 import { Layer } from '../../../models/layer';
 import { MapService } from '../../../services/map.service';
@@ -41,29 +41,20 @@ export class LayersListComponent implements OnInit {
         this.mapService.zoomAll$.next(true);
     }
 
-    /* Example GeoJson:
-    {
-        "type": "Feature",
-        "geometry": {
-            "type": "Point",
-            "coordinates": [-104.99404, 39.75621]
-        }
-    }
-    */
     onCreateLayer(): void {
         const dialogParams: EditLayerDialogParameters = {
             currentLayer: null,
             title: 'Создание нового слоя'
         };
 
-        this.openEditLayerDialog(dialogParams).subscribe(result => {
-            if (result) {
+        this.openEditLayerDialog(dialogParams)
+            .pipe(takeWhile(result => !!result))
+            .subscribe(result => {
                 result.index = this.layers.length;
                 result.mapId = this.mapId;
                 this.layers.push(result);
                 this.mapService.layers$.next(this.layers);
-            }
-        });
+            });
     }
 
     onEditLayer(layerIndex: number): void {
@@ -73,7 +64,7 @@ export class LayersListComponent implements OnInit {
         };
 
         this.openEditLayerDialog(dialogParams)
-            .pipe(filter(result => !!result))
+            .pipe(takeWhile(result => !!result))
             .subscribe(result => {
                 this.layers[layerIndex] = result;
                 this.mapService.layers$.next(this.layers);
@@ -87,7 +78,7 @@ export class LayersListComponent implements OnInit {
         const dialogConfig: MatDialogConfig = {data: dialogParams};
 
         this.dialogService.open(DeleteObjectDialogComponent, dialogConfig).afterClosed()
-            .pipe(filter(result => result))
+            .pipe(takeWhile(result => result))
             .subscribe(() => {
                 this.layers.splice(layerIndex, 1);
                 this.reorderIndexes(this.layers);

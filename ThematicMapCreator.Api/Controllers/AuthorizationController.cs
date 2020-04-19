@@ -20,7 +20,7 @@ namespace ThematicMapCreator.Api.Controllers
             this.context = context;
         }
 
-        [HttpPut("login")]
+        [HttpPost("login")]
         public async Task<ActionResult<UserOverview>> Login(AuthorizationRequest request)
         {
             var response = await context.Users
@@ -41,7 +41,7 @@ namespace ThematicMapCreator.Api.Controllers
             return Ok(true);
         }
 
-        [HttpPut("signin")]
+        [HttpPost("signin")]
         public async Task<ActionResult<UserOverview>> Signin(RegistrationRequest request)
         {
             var nameExists = await context.Users.AnyAsync(user => user.Name == request.Name);
@@ -62,7 +62,7 @@ namespace ThematicMapCreator.Api.Controllers
             await context.Users.AddAsync(newUser);
             await context.SaveChangesAsync();
 
-            return Json(newUser);
+            return Json(newUser.Adapt<UserOverview>());
         }
     }
 }

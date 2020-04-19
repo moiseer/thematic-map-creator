@@ -1,10 +1,11 @@
 ﻿using System;
+using BAMCIS.GeoJSON;
 
 namespace ThematicMapCreator.Api.Contracts
 {
     public class LayerOverview
     {
-        public string Data { get; set; }
+        public GeoJson Data { get; set; }
         public Guid Id { get; set; }
         public int Index { get; set; }
         public Guid MapId { get; set; }

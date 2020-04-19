@@ -37,8 +37,7 @@ namespace ThematicMapCreator.Api.Models
                 .IsRequired();
 
             builder.Property(layer => layer.Settings)
-                .HasColumnName("settings")
-                .IsRequired();
+                .HasColumnName("settings");
 
             builder.Property(layer => layer.Data)
                 .HasColumnName("data")
@@ -66,8 +65,7 @@ namespace ThematicMapCreator.Api.Models
                 .IsRequired();
 
             builder.Property(map => map.Settings)
-                .HasColumnName("settings")
-                .IsRequired();
+                .HasColumnName("settings");
 
             builder.Property(map => map.Description)
                 .HasColumnName("description")

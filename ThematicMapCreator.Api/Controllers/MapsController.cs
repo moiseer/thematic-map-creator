@@ -68,7 +68,7 @@ namespace ThematicMapCreator.Api.Controllers
         public async Task SaveMap([FromBody] SaveMapRequest request)
         {
             Map existingMap = request.Id != Guid.Empty
-                ? await context.Maps.FirstOrDefaultAsync(map => map.Id == request.Id)
+                ? await context.Maps.AsNoTracking().FirstOrDefaultAsync(map => map.Id == request.Id)
                 : null;
 
             if (existingMap == null || existingMap.UserId != request.UserId)
@@ -109,7 +109,7 @@ namespace ThematicMapCreator.Api.Controllers
                 layer.MapId = map.Id;
             }
 
-            var oldLayers = await context.Layers.Where(layer => layer.MapId == map.Id).ToListAsync();
+            var oldLayers = await context.Layers.AsNoTracking().Where(layer => layer.MapId == map.Id).ToListAsync();
 
             var newLayers = layers.Where(layer => oldLayers.All(old => old.Id != layer.Id));
             foreach (var layer in newLayers)

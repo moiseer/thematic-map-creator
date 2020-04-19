@@ -12,7 +12,7 @@ import { RegistrationContract } from '../contracts/registration-contract';
 })
 export class AuthorizationService {
 
-    private url = 'api/authorization';
+    private url = 'https://localhost:5001/api/authorization';
 
     public currentUser$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     public logout$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
@@ -25,8 +25,8 @@ export class AuthorizationService {
     }
 
     login(auth: AuthorizationContract): Observable<boolean> {
-        // TODO return this.http.post<User>(`${this.url}/login`, auth)
-        return of(this.getExampleUser())
+        return this.http.post<User>(`${this.url}/login`, auth)
+        // return of(this.getExampleUser())
             .pipe(
                 tap(user => this.currentUser$.next(user)),
                 map(user => !!user)
@@ -34,8 +34,8 @@ export class AuthorizationService {
     }
 
     logout(): Observable<boolean> {
-        // TODO return this.http.get<boolean>(`${this.url}/logout`)
-        return of(true)
+        return this.http.get<boolean>(`${this.url}/logout`)
+        // return of(true)
             .pipe(tap(result => {
                 if (result) {
                     this.currentUser$.next(null);
@@ -45,8 +45,9 @@ export class AuthorizationService {
     }
 
     signin(reg: RegistrationContract): Observable<boolean> {
-        // TODO return this.http.post<User>(`${this.url}/signin`, reg);
-        return of(true);
+        return this.http.post<User>(`${this.url}/signin`, reg)
+            .pipe(map(user => !!user));
+        // return of(true);
     }
 
     private getExampleUser(): User {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { AuthorizationService } from '../../../services/authorization.service';
@@ -50,21 +50,20 @@ export class AuthorizationDialogComponent implements OnInit {
 
     login(): void {
         const auth: AuthorizationContract = this.authorizationForm.value;
-        this.authorizationService.login(auth)
-            .subscribe(
-                result => {
-                    if (result) {
-                        this.dialogRef.close(true);
-                    } else {
-                        this.authErrorText = '';
-                        this.authError = true;
-                    }
-                },
-                error => {
-                    this.authErrorText = error.error;
+        this.authorizationService.login(auth).subscribe(
+            result => {
+                if (result) {
+                    this.dialogRef.close(true);
+                } else {
+                    this.authErrorText = '';
                     this.authError = true;
                 }
-            );
+            },
+            error => {
+                this.authErrorText = error.error;
+                this.authError = true;
+            }
+        );
     }
 
     rememberPass() {

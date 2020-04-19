@@ -37,6 +37,7 @@ export class EditMapDialogComponent implements OnInit {
         const map: Map = {
             id: this.data.currentMap?.id,
             name: this.mapName.value,
+            settings: this.data.currentMap?.settings,
             description: this.mapDescription.value,
             userId: this.data.currentMap?.userId
         };

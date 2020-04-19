@@ -60,30 +60,27 @@ export class RegistrationDialogComponent implements OnInit {
             ]
         });
 
-        this.registrationForm.addControl('confirmPass',
-            new FormControl(
-                null,
-                [Validators.required, equalsValidator(this.registrationForm, 'password')]
-            )
-        );
+        this.registrationForm.addControl('confirmPass', new FormControl(
+            null,
+            [Validators.required, equalsValidator(this.registrationForm, 'password')]
+        ));
     }
 
     signin(): void {
         const reg: RegistrationContract = this.registrationForm.value;
-        this.authorizationService.signin(reg)
-            .subscribe(
-                result => {
-                    if (result) {
-                        this.dialogRef.close(true);
-                    } else {
-                        this.regErrorText = '';
-                        this.regError = true;
-                    }
-                },
-                error => {
-                    this.regErrorText = error.error;
+        this.authorizationService.signin(reg).subscribe(
+            result => {
+                if (result) {
+                    this.dialogRef.close(true);
+                } else {
+                    this.regErrorText = '';
                     this.regError = true;
                 }
-            );
+            },
+            error => {
+                this.regErrorText = error.error;
+                this.regError = true;
+            }
+        );
     }
 }

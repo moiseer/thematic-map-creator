@@ -12,7 +12,7 @@ import { SaveMapRequest } from '../contracts/save-map-request';
 })
 export class MapService {
 
-    private url = 'api/maps';
+    private url = 'https://localhost:5001/api/maps';
 
     public map$: BehaviorSubject<Map> = new BehaviorSubject<Map>(null);
     public layers$: BehaviorSubject<Layer[]> = new BehaviorSubject<Layer[]>([]);
@@ -23,15 +23,15 @@ export class MapService {
     }
 
     getMaps(userId: string): Observable<Map[]> {
-        // TODO return this.http.get<Map[]>(`${this.url}/user/${userId}`);
-        console.log('getMaps');
-        return of(this.getExampleMaps(userId));
+        // console.log('getMaps');
+        // return of(this.getExampleMaps(userId));
+        return this.http.get<Map[]>(`${this.url}/user/${userId}`);
     }
 
     getMap(mapId: string): Observable<Map> {
-        // TODO return this.http.get<Map>(`${this.url}/${mapId}`)
-        console.log('getMap');
-        return of(this.getExampleMaps('1').find(map => map.id === mapId))
+        // console.log('getMap');
+        // return of(this.getExampleMaps('1').find(map => map.id === mapId))
+        return this.http.get<Map>(`${this.url}/${mapId}`)
             .pipe(
                 tap(map => this.map$.next(map)),
                 flatMap(map => this.getMapLayers(map.id)
@@ -44,21 +44,21 @@ export class MapService {
     }
 
     getMapLayers(mapId: string): Observable<Layer[]> {
-        // TODO return this.http.get<Layer[]>(`${this.url}/${mapId}/layers`);
-        console.log('getMapLayers');
-        return of(this.getExampleLayers(mapId));
+        // console.log('getMapLayers');
+        // return of(this.getExampleLayers(mapId));
+        return this.http.get<Layer[]>(`${this.url}/${mapId}/layers`);
     }
 
     saveMap(map: SaveMapRequest): Observable<any> {
-        // TODO return this.http.put<any>(this.url, map);
-        console.log('saveMap');
-        return of(null);
+        // console.log('saveMap');
+        // return of(null);
+        return this.http.put<any>(this.url, map);
     }
 
     deleteMap(mapId: string): Observable<any> {
-        // TODO return this.http.delete<any>(`${this.url}/${mapId}`)
-        console.log('deleteMap');
-        return of(null)
+        // console.log('deleteMap');
+        // return of(null)
+        return this.http.delete<any>(`${this.url}/${mapId}`)
             .pipe(tap(() => this.closeMap()));
     }
 
@@ -69,11 +69,12 @@ export class MapService {
 
     private getExampleMaps(userId: string): Map[] {
         return [
-            {id: '1', name: 'New map 1', description: 'simple description', userId},
-            {id: '2', name: 'New map 2', description: 'simple description', userId},
+            {id: '1', name: 'New map 1', settings: '', description: 'simple description', userId},
+            {id: '2', name: 'New map 2', settings: '', description: 'simple description', userId},
             {
                 id: '3',
                 name: 'Very long name Very long name Very long name Very long name',
+                settings: '',
                 description: 'simple description simple description simple description',
                 userId
             }

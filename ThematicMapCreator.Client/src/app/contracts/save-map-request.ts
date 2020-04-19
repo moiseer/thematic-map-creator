@@ -1,6 +1,6 @@
 import { Layer } from '../models/layer';
 
-export interface SaveMapLayersRequest {
+export interface SaveMapRequest {
     id: string;
     name: string;
     description: string;

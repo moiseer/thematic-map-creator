@@ -81,7 +81,7 @@ export class RegistrationDialogComponent implements OnInit {
                     }
                 },
                 error => {
-                    this.regErrorText = error.error.errorText;
+                    this.regErrorText = error.error;
                     this.regError = true;
                 }
             );

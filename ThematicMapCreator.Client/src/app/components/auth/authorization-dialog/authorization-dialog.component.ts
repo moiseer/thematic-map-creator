@@ -61,7 +61,7 @@ export class AuthorizationDialogComponent implements OnInit {
                     }
                 },
                 error => {
-                    this.authErrorText = error.error.errorText;
+                    this.authErrorText = error.error;
                     this.authError = true;
                 }
             );

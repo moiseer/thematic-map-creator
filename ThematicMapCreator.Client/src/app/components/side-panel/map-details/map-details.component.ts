@@ -7,7 +7,7 @@ import { Map } from '../../../models/map';
 import { EditMapDialogParameters } from '../edit-map-dialog/edit-map-dialog-parameters';
 import { EditMapDialogComponent } from '../edit-map-dialog/edit-map-dialog.component';
 import { MapService } from '../../../services/map.service';
-import { SaveMapLayersRequest } from '../../../contracts/save-map-layers-request';
+import { SaveMapRequest } from '../../../contracts/save-map-request';
 import { AuthorizationService } from '../../../services/authorization.service';
 import { Layer } from '../../../models/layer';
 import { OpenMapDialogComponent } from '../open-map-dialog/open-map-dialog.component';
@@ -97,7 +97,7 @@ export class MapDetailsComponent implements OnInit {
                         .pipe(flatMap(() => this.authorizationService.getCurrentUserId()))
                 ),
                 takeWhile(userId => !!userId),
-                map(userId => this.MapToSaveMapLayerRequest(userId, this.currentMap, this.currentLayers)),
+                map(userId => this.MapToSaveMapRequest(userId, this.currentMap, this.currentLayers)),
                 flatMap(request => this.mapService.saveMap(request)))
             .subscribe();
     }
@@ -115,7 +115,7 @@ export class MapDetailsComponent implements OnInit {
             .subscribe(() => this.mapService.closeMap());
     }
 
-    private MapToSaveMapLayerRequest(userId: string, savedMap: Map, layers: Layer[]): SaveMapLayersRequest {
+    private MapToSaveMapRequest(userId: string, savedMap: Map, layers: Layer[]): SaveMapRequest {
         return {
             id: savedMap.id,
             name: savedMap.name,

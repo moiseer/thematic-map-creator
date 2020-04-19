@@ -37,7 +37,10 @@
 
     <mat-form-field>
         <input matInput type="password" placeholder="Подтверждение пароля" formControlName="confirmPass">
-        <mat-error *ngIf="confirmPass.hasError('equals')">
+        <mat-error *ngIf="confirmPass.hasError('required')">
+            Необходимо подтвердить пароль.
+        </mat-error>
+        <mat-error *ngIf="confirmPass.hasError('equals') && !confirmPass.hasError('required')">
             Пароли не совпадают.
         </mat-error>
     </mat-form-field>

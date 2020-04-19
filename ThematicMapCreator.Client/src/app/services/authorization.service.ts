@@ -45,7 +45,7 @@ export class AuthorizationService {
     }
 
     signin(reg: RegistrationContract): Observable<boolean> {
-        // TODO return this.http.post<boolean>(`${this.url}/signin`, reg);
+        // TODO return this.http.post<User>(`${this.url}/signin`, reg);
         return of(true);
     }
 

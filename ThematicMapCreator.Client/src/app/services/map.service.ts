@@ -5,7 +5,7 @@ import { flatMap, tap } from 'rxjs/operators';
 
 import { Map } from '../models/map';
 import { Layer } from '../models/layer';
-import { SaveMapLayersRequest } from '../contracts/save-map-layers-request';
+import { SaveMapRequest } from '../contracts/save-map-request';
 
 @Injectable({
     providedIn: 'root'
@@ -49,14 +49,14 @@ export class MapService {
         return of(this.getExampleLayers(mapId));
     }
 
-    saveMap(map: SaveMapLayersRequest): Observable<any> {
+    saveMap(map: SaveMapRequest): Observable<any> {
         // TODO return this.http.put<any>(this.url, map);
         console.log('saveMap');
         return of(null);
     }
 
     deleteMap(mapId: string): Observable<any> {
-        // TODO return this.http.delete<any>(this.url)
+        // TODO return this.http.delete<any>(`${this.url}/${mapId}`)
         console.log('deleteMap');
         return of(null)
             .pipe(tap(() => this.closeMap()));

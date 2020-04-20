@@ -24,13 +24,13 @@
             Пароль не должен превышать {{password.getError('maxlength')?.requiredLength}} символа.
         </mat-error>
     </mat-form-field>
-    <a routerLink="remember" (click)="rememberPass()">Забыли пароль?</a>
+    <a routerLink="#" (click)="rememberPass()">Забыли пароль?</a>
 
-    <mat-error *ngIf="authError">Неверные адреc почты и/или пароль. {{authErrorText}}</mat-error>
+    <mat-error *ngIf="authError">{{authError.text}}</mat-error>
 
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-flat-button color="primary" (click)="login()" [disabled]="!authorizationForm.valid">Войти</button>
+    <button mat-flat-button color="primary" [class.spinner]="loading" (click)="login()" [disabled]="!authorizationForm.valid || loading">Войти</button>
 </mat-dialog-actions>

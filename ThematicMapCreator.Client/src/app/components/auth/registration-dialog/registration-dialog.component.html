@@ -45,11 +45,11 @@
         </mat-error>
     </mat-form-field>
 
-    <mat-error *ngIf="regError">Логин и/или почта уже заняты. {{regErrorText}}</mat-error>
+    <mat-error *ngIf="regError">{{regError.text}}</mat-error>
 
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-flat-button color="primary" (click)="signin()" [disabled]="!registrationForm.valid">Зарегистрироваться</button>
+    <button mat-flat-button color="primary" [class.spinner]="loading" (click)="signin()" [disabled]="!registrationForm.valid || loading">Зарегистрироваться</button>
 </mat-dialog-actions>

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { map, flatMap, takeWhile, first } from 'rxjs/operators';
+import { map, flatMap, takeWhile, tap, finalize } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Map } from '../../../models/map';
 import { EditMapDialogParameters } from '../edit-map-dialog/edit-map-dialog-parameters';
@@ -11,8 +12,6 @@ import { SaveMapRequest } from '../../../contracts/save-map-request';
 import { AuthorizationService } from '../../../services/authorization.service';
 import { Layer } from '../../../models/layer';
 import { OpenMapDialogComponent } from '../open-map-dialog/open-map-dialog.component';
-import { DeleteObjectDialogParameters } from '../delete-object-dialog/delete-object-dialog-parameters';
-import { DeleteObjectDialogComponent } from '../delete-object-dialog/delete-object-dialog.component';
 import { AuthorizationDialogComponent } from '../../auth/authorization-dialog/authorization-dialog.component';
 
 @Component({
@@ -21,6 +20,10 @@ import { AuthorizationDialogComponent } from '../../auth/authorization-dialog/au
     styleUrls: ['./map-details.component.css']
 })
 export class MapDetailsComponent implements OnInit {
+
+    get loading(): boolean {
+        return this.mapService.loading$.getValue();
+    }
 
     get currentMap(): Map {
         return this.mapService.map$.getValue();
@@ -31,6 +34,7 @@ export class MapDetailsComponent implements OnInit {
     }
 
     constructor(
+        private snackBar: MatSnackBar,
         private dialogService: MatDialog,
         private mapService: MapService,
         private authorizationService: AuthorizationService) {
@@ -49,17 +53,8 @@ export class MapDetailsComponent implements OnInit {
         this.openEditMapDialog(dialogParams);
     }
 
-    onDeleteMap(): void {
-        const dialogParams: DeleteObjectDialogParameters = {
-            objectName: `карту "${this.currentMap.name}"`
-        };
-        const dialogConfig: MatDialogConfig = {data: dialogParams};
-
-        this.dialogService.open(DeleteObjectDialogComponent, dialogConfig).afterClosed()
-            .pipe(
-                takeWhile(result => result),
-                flatMap(() => this.mapService.deleteMap(this.currentMap.id)))
-            .subscribe();
+    onCloseMap(): void {
+        this.mapService.closeMap();
     }
 
     onCreateMap(): void {
@@ -74,7 +69,6 @@ export class MapDetailsComponent implements OnInit {
     onOpenMap(): void {
         this.authorizationService.getCurrentUserId()
             .pipe(
-                first(),
                 flatMap(userId => userId
                     ? of(userId)
                     : this.dialogService.open(AuthorizationDialogComponent).afterClosed()
@@ -83,14 +77,16 @@ export class MapDetailsComponent implements OnInit {
                 takeWhile(userId => !!userId),
                 flatMap(() => this.dialogService.open(OpenMapDialogComponent).afterClosed()),
                 takeWhile(mapId => !!mapId),
-                flatMap(mapId => this.mapService.getMap(mapId)))
+                tap(() => this.mapService.loading$.next(true)),
+                flatMap(mapId => this.mapService.getMap(mapId)),
+                finalize(() => this.mapService.loading$.next(false))
+            )
             .subscribe();
     }
 
     onSaveMap(): void {
         this.authorizationService.getCurrentUserId()
             .pipe(
-                first(),
                 flatMap(userId => userId
                     ? of(userId)
                     : this.dialogService.open(AuthorizationDialogComponent).afterClosed()
@@ -98,8 +94,11 @@ export class MapDetailsComponent implements OnInit {
                 ),
                 takeWhile(userId => !!userId),
                 map(userId => this.MapToSaveMapRequest(userId, this.currentMap, this.currentLayers)),
-                flatMap(request => this.mapService.saveMap(request)))
-            .subscribe();
+                tap(() => this.mapService.loading$.next(true)),
+                flatMap(request => this.mapService.saveMap(request)),
+                finalize(() => this.mapService.loading$.next(false))
+            )
+            .subscribe(() => this.snackBar.open('Карта сохранена'));
     }
 
     private openEditMapDialog(dialogParams: EditMapDialogParameters): void {

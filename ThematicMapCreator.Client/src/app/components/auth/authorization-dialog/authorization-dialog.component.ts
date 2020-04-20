@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { finalize } from 'rxjs/operators';
 
 import { AuthorizationService } from '../../../services/authorization.service';
 import { AuthorizationContract } from '../../../contracts/authorization-contract';
@@ -13,8 +14,8 @@ import { AuthorizationContract } from '../../../contracts/authorization-contract
 export class AuthorizationDialogComponent implements OnInit {
 
     authorizationForm: FormGroup;
-    authErrorText: string;
-    authError: boolean;
+    authError: { text: string };
+    loading: boolean;
 
     get email(): AbstractControl {
         return this.authorizationForm.controls.email;
@@ -50,20 +51,21 @@ export class AuthorizationDialogComponent implements OnInit {
 
     login(): void {
         const auth: AuthorizationContract = this.authorizationForm.value;
-        this.authorizationService.login(auth).subscribe(
-            result => {
-                if (result) {
-                    this.dialogRef.close(true);
-                } else {
-                    this.authErrorText = '';
-                    this.authError = true;
+        this.loading = true;
+        this.authorizationService.login(auth)
+            .pipe(finalize(() => this.loading = false))
+            .subscribe(
+                result => {
+                    if (result) {
+                        this.dialogRef.close(true);
+                    } else {
+                        this.authError = {text: 'Неверные адреc почты и/или пароль.'};
+                    }
+                },
+                error => {
+                    this.authError = {text: error.error};
                 }
-            },
-            error => {
-                this.authErrorText = error.error;
-                this.authError = true;
-            }
-        );
+            );
     }
 
     rememberPass() {

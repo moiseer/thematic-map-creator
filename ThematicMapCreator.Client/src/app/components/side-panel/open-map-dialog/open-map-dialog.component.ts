@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { mergeMap, takeWhile } from 'rxjs/operators';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { finalize, flatMap, mergeMap, takeWhile, tap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { MapService } from '../../../services/map.service';
 import { AuthorizationService } from '../../../services/authorization.service';
 import { Map } from '../../../models/map';
+import { DeleteObjectDialogParameters } from '../delete-object-dialog/delete-object-dialog-parameters';
+import { DeleteObjectDialogComponent } from '../delete-object-dialog/delete-object-dialog.component';
 
 @Component({
     selector: 'app-open-map-dialog',
@@ -13,13 +16,17 @@ import { Map } from '../../../models/map';
 })
 export class OpenMapDialogComponent implements OnInit {
 
+    loading: boolean;
+
     maps: Map[];
     selectedMapId: string;
 
-    tableColumnNames: string[] = ['name'];
+    tableColumnNames: string[] = ['name', 'delete'];
 
     constructor(
+        private snackBar: MatSnackBar,
         private dialogRef: MatDialogRef<OpenMapDialogComponent>,
+        private dialogService: MatDialog,
         private mapService: MapService,
         private authorizationService: AuthorizationService) {
     }
@@ -33,15 +40,31 @@ export class OpenMapDialogComponent implements OnInit {
         this.selectedMapId = mapId;
     }
 
+    onDeleteMap(mapId: string): void {
+        const map = this.maps.find(m => m.id === mapId);
+        const dialogParams: DeleteObjectDialogParameters = {
+            objectName: `карту "${map.name}"`
+        };
+        const dialogConfig: MatDialogConfig = {data: dialogParams};
+
+        this.dialogService.open(DeleteObjectDialogComponent, dialogConfig).afterClosed()
+            .pipe(
+                takeWhile(result => result),
+                flatMap(() => this.mapService.deleteMap(mapId)),
+                tap(() => this.selectedMapId = null),
+                tap(() => this.snackBar.open('Карта удалена'))
+            )
+            .subscribe(() => this.loadMaps());
+    }
+
     private loadMaps(): void {
         this.authorizationService.getCurrentUserId()
             .pipe(
                 takeWhile(userId => !!userId),
-                mergeMap(userId => this.mapService.getMaps(userId)))
+                tap(() => this.loading = true),
+                mergeMap(userId => this.mapService.getMaps(userId)),
+                finalize(() => this.loading = false)
+            )
             .subscribe(maps => this.maps = maps);
-    }
-
-    isSelected(mapId: string): string {
-        return mapId === this.selectedMapId ? 'selected' : '';
     }
 }

@@ -2,32 +2,31 @@
     <div fxLayout="row" fxLayoutAlign="start start">
         <span class="mat-h2">Слои карты</span>
         <div fxFlex></div>
-        <button mat-button (click)="onZoomAll()">
-            <mat-icon title="Перейти к слоям">zoom_out_map</mat-icon>
+        <button mat-button matTooltip="Перейти к слоям" (click)="onZoomAll()">
+            <mat-icon>zoom_out_map</mat-icon>
         </button>
-        <button mat-button (click)="onCreateLayer()">
-            <mat-icon title="Создать слой">add_circle_outline</mat-icon>
+        <button mat-button matTooltip="Создать слой" (click)="onCreateLayer()">
+            <mat-icon>add_circle_outline</mat-icon>
         </button>
     </div>
 
-    <div id="layers" *ngIf="layers?.length > 0" fxLayout="column" cdkDropList [cdkDropListData]="layers" class="list" (cdkDropListDropped)="onDropLayer($event)">
+    <div id="layers" *ngIf="layers?.length; else empty" fxLayout="column" cdkDropList [cdkDropListData]="layers" class="list" (cdkDropListDropped)="onDropLayer($event)">
         <div fxLayoutAlign="row center" class="list-item" *ngFor="let layer of layers; index as layerIndex" cdkDrag cdkDragBoundary="#layers">
             <span>{{layer.name}}</span>
             <div fxFlex></div>
-            <button mat-button (click)="onChangeLayerVisibility(layer)">
-                <mat-icon *ngIf="layer.visible" title="Скрыть">visibility</mat-icon>
-                <mat-icon *ngIf="!layer.visible" title="Показать">visibility_off</mat-icon>
+            <button mat-button [matTooltip]="layer.visible?'Скрыть':'Показать'" (click)="onChangeLayerVisibility(layer)">
+                <mat-icon>{{layer.visible?'visibility':'visibility_off'}}</mat-icon>
             </button>
-            <button mat-button (click)="onEditLayer(layerIndex)">
-                <mat-icon title="Редактировать">create</mat-icon>
+            <button mat-button matTooltip="Редактировать" (click)="onEditLayer(layerIndex)">
+                <mat-icon>create</mat-icon>
             </button>
-            <button mat-button (click)="onDeleteLayer(layerIndex)">
-                <mat-icon title="Удалить">delete</mat-icon>
+            <button mat-button matTooltip="Удалить" (click)="onDeleteLayer(layerIndex)">
+                <mat-icon>delete</mat-icon>
             </button>
         </div>
     </div>
 
-    <div *ngIf="layers?.length === 0">
+    <ng-template #empty>
         <span>Нет слоев</span>
-    </div>
+    </ng-template>
 </div>

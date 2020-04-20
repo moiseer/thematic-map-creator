@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
+
 import { User } from '../models/user';
 import { AuthorizationContract } from '../contracts/authorization-contract';
 import { RegistrationContract } from '../contracts/registration-contract';
@@ -12,7 +14,8 @@ import { RegistrationContract } from '../contracts/registration-contract';
 })
 export class AuthorizationService {
 
-    private url = 'https://localhost:5001/api/authorization';
+    private apiUrl = environment.appUrl;
+    private url = `${this.apiUrl}/api/authorization`;
 
     public currentUser$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     public logout$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
@@ -21,7 +24,7 @@ export class AuthorizationService {
     }
 
     getCurrentUserId(): Observable<string> {
-        return this.currentUser$.pipe(map(user => user?.id));
+        return of(this.currentUser$.getValue()?.id);
     }
 
     login(auth: AuthorizationContract): Observable<boolean> {

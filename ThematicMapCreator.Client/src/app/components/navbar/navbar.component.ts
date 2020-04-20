@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { finalize, flatMap, takeWhile, tap } from 'rxjs/operators';
 
 import { AuthorizationService } from '../../services/authorization.service';
 import { User } from '../../models/user';
 import { AuthorizationDialogComponent } from '../auth/authorization-dialog/authorization-dialog.component';
 import { RegistrationDialogComponent } from '../auth/registration-dialog/registration-dialog.component';
 import { OpenMapDialogComponent } from '../side-panel/open-map-dialog/open-map-dialog.component';
-import { flatMap, takeWhile } from 'rxjs/operators';
 import { MapService } from '../../services/map.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class NavbarComponent {
     }
 
     constructor(
+        private snackBar: MatSnackBar,
         private dialogService: MatDialog,
         private mapService: MapService,
         private authorizationService: AuthorizationService) {
@@ -35,7 +37,10 @@ export class NavbarComponent {
         this.dialogService.open(OpenMapDialogComponent).afterClosed()
             .pipe(
                 takeWhile(mapId => !!mapId),
-                flatMap(mapId => this.mapService.getMap(mapId)))
+                tap(() => this.mapService.loading$.next(true)),
+                flatMap(mapId => this.mapService.getMap(mapId)),
+                finalize(() => this.mapService.loading$.next(false))
+            )
             .subscribe();
     }
 
@@ -50,6 +55,6 @@ export class NavbarComponent {
     openRegDialog(): void {
         this.dialogService.open(RegistrationDialogComponent).afterClosed()
             .pipe(takeWhile(result => result))
-            .subscribe(() => alert('Регистрация прошла успешно.'));
+            .subscribe(() => this.snackBar.open('Регистрация прошла успешно.'));
     }
 }

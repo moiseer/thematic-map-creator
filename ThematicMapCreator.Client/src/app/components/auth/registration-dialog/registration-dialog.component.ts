@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { finalize } from 'rxjs/operators';
 
 import { AuthorizationService } from '../../../services/authorization.service';
 import { RegistrationContract } from '../../../contracts/registration-contract';
@@ -14,8 +15,8 @@ import { equalsValidator } from '../../../validators/equals.validator';
 export class RegistrationDialogComponent implements OnInit {
 
     registrationForm: FormGroup;
-    regErrorText: string;
-    regError: boolean;
+    regError: { text: string };
+    loading: boolean;
 
     get name(): AbstractControl {
         return this.registrationForm.controls.name;
@@ -68,19 +69,20 @@ export class RegistrationDialogComponent implements OnInit {
 
     signin(): void {
         const reg: RegistrationContract = this.registrationForm.value;
-        this.authorizationService.signin(reg).subscribe(
-            result => {
-                if (result) {
-                    this.dialogRef.close(true);
-                } else {
-                    this.regErrorText = '';
-                    this.regError = true;
+        this.loading = true;
+        this.authorizationService.signin(reg)
+            .pipe(finalize(() => this.loading = false))
+            .subscribe(
+                result => {
+                    if (result) {
+                        this.dialogRef.close(true);
+                    } else {
+                        this.regError = {text: 'Логин и/или почта уже заняты.'};
+                    }
+                },
+                error => {
+                    this.regError = {text: error.error};
                 }
-            },
-            error => {
-                this.regErrorText = error.error;
-                this.regError = true;
-            }
-        );
+            );
     }
 }

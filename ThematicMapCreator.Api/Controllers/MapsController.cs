@@ -65,25 +65,28 @@ namespace ThematicMapCreator.Api.Controllers
         }
 
         [HttpPut]
-        public async Task SaveMap([FromBody] SaveMapRequest request)
+        public async Task<Guid> SaveMap([FromBody] SaveMapRequest request)
         {
             Map existingMap = request.Id != Guid.Empty
                 ? await context.Maps.AsNoTracking().FirstOrDefaultAsync(map => map.Id == request.Id)
                 : null;
 
+            Guid mapId;
             if (existingMap == null || existingMap.UserId != request.UserId)
             {
-                await AddMap(request);
+                mapId = await AddMap(request);
             }
             else
             {
-                await UpdateMap(request);
+                mapId = await UpdateMap(request);
             }
 
             await context.SaveChangesAsync();
+
+            return mapId;
         }
 
-        private async Task AddMap(SaveMapRequest request)
+        private async Task<Guid> AddMap(SaveMapRequest request)
         {
             var map = request.Adapt<Map>();
             map.Id = Guid.NewGuid();
@@ -97,9 +100,11 @@ namespace ThematicMapCreator.Api.Controllers
 
             await context.Maps.AddAsync(map);
             await context.Layers.AddRangeAsync(layers);
+
+            return map.Id;
         }
 
-        private async Task UpdateMap(SaveMapRequest request)
+        private async Task<Guid> UpdateMap(SaveMapRequest request)
         {
             var map = request.Adapt<Map>();
 
@@ -124,6 +129,8 @@ namespace ThematicMapCreator.Api.Controllers
             await context.Layers.AddRangeAsync(newLayers);
             context.Layers.UpdateRange(updatedLayers);
             context.Layers.RemoveRange(deletedLayers);
+
+            return map.Id;
         }
     }
 }

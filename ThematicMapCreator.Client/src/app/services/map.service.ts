@@ -3,6 +3,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { flatMap, tap } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
+
 import { Map } from '../models/map';
 import { Layer } from '../models/layer';
 import { SaveMapRequest } from '../contracts/save-map-request';
@@ -12,24 +14,24 @@ import { SaveMapRequest } from '../contracts/save-map-request';
 })
 export class MapService {
 
-    private url = 'https://localhost:5001/api/maps';
+    private apiUrl = environment.appUrl;
+    private url = `${this.apiUrl}/api/maps`;
 
     public map$: BehaviorSubject<Map> = new BehaviorSubject<Map>(null);
     public layers$: BehaviorSubject<Layer[]> = new BehaviorSubject<Layer[]>([]);
 
-    public zoomAll$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
+    public zoomAll$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(private http: HttpClient) {
     }
 
     getMaps(userId: string): Observable<Map[]> {
-        // console.log('getMaps');
         // return of(this.getExampleMaps(userId));
         return this.http.get<Map[]>(`${this.url}/user/${userId}`);
     }
 
     getMap(mapId: string): Observable<Map> {
-        // console.log('getMap');
         // return of(this.getExampleMaps('1').find(map => map.id === mapId))
         return this.http.get<Map>(`${this.url}/${mapId}`)
             .pipe(
@@ -44,22 +46,24 @@ export class MapService {
     }
 
     getMapLayers(mapId: string): Observable<Layer[]> {
-        // console.log('getMapLayers');
         // return of(this.getExampleLayers(mapId));
         return this.http.get<Layer[]>(`${this.url}/${mapId}/layers`);
     }
 
-    saveMap(map: SaveMapRequest): Observable<any> {
-        // console.log('saveMap');
+    saveMap(map: SaveMapRequest): Observable<Map> {
         // return of(null);
-        return this.http.put<any>(this.url, map);
+        return this.http.put<string>(this.url, map)
+            .pipe(flatMap(mapId => this.getMap(mapId)));
     }
 
     deleteMap(mapId: string): Observable<any> {
-        // console.log('deleteMap');
         // return of(null)
+        if (!mapId) {
+            return of(null).pipe(tap(() => this.closeMap()));
+        }
+
         return this.http.delete<any>(`${this.url}/${mapId}`)
-            .pipe(tap(() => this.closeMap()));
+            .pipe(tap(() => mapId === this.map$.getValue().id ? this.closeMap() : {}));
     }
 
     closeMap(): void {

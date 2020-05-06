@@ -42,6 +42,7 @@ export class EditLayerDialogComponent implements OnInit {
             index: this.data.currentLayer?.index ?? 0,
             name: this.layerName.value,
             data: this.layerData.dirty ? JSON.parse(this.layerData.value) : this.data.currentLayer?.data,
+            options: null,
             visible: this.data.currentLayer?.visible ?? true,
             mapId: this.data.currentLayer?.mapId
         };

@@ -77,11 +77,20 @@ namespace ThematicMapCreator.Api
         {
             TypeAdapterConfig<Layer, LayerOverview>.NewConfig()
                 .Map(dest => dest.Data, source => JsonConvert.DeserializeObject<GeoJson>(source.Data));
+                // TODO Проверить маппинг настроек
             TypeAdapterConfig<LayerOverview, Layer>.NewConfig()
-                .Map(dest => dest.Data, source => JsonConvert.SerializeObject(source.Data));
+                .Map(dest => dest.Data, source => JsonConvert.SerializeObject(source.Data))
+                .Map(dest => dest.Options, source => MapToLayerOptions(source));
 
             TypeAdapterConfig<SaveMapRequest, Map>.NewConfig()
                 .Map(dest => dest.Layers, source => null as object);
+        }
+
+        private static LayerOptions MapToLayerOptions(LayerOverview layerOverview)
+        {
+            var options = layerOverview.Options.Adapt<LayerOptions>();
+            options.LayerId = layerOverview.Id;
+            return options;
         }
     }
 }

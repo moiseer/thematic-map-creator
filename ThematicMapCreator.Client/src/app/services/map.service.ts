@@ -87,10 +87,10 @@ export class MapService {
 
     private getExampleLayers(mapId: string): Layer[] {
         return [
-            {id: '1', index: 1, name: 'layer 1', visible: true, data: null, mapId},
-            {id: '2', index: 2, name: 'layer 2', visible: true, data: null, mapId},
+            {id: '1', index: 1, name: 'layer 1', visible: true, options: null, data: null, mapId},
+            {id: '2', index: 2, name: 'layer 2', visible: true, options: null, data: null, mapId},
             {
-                id: '3', index: 3, visible: false, data: null, mapId,
+                id: '3', index: 3, visible: false, options: null, data: null, mapId,
                 name: 'layer 3 with very long name, layer 3 with very long name'
             },
         ];

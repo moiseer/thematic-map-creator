@@ -3,14 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ThematicMapCreator.Api.Models;
 
 namespace ThematicMapCreator.Api.Migrations
 {
     [DbContext(typeof(ThematicMapDbContext))]
-    internal class ThematicMapDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200506152834_AddLayerOptionsTable")]
+    partial class AddLayerOptionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -18,8 +21,7 @@ namespace ThematicMapCreator.Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ThematicMapCreator.Api.Models.Layer",
-                b =>
+            modelBuilder.Entity("ThematicMapCreator.Api.Models.Layer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,8 +59,7 @@ namespace ThematicMapCreator.Api.Migrations
                     b.ToTable("layer");
                 });
 
-            modelBuilder.Entity("ThematicMapCreator.Api.Models.LayerOptions",
-                b =>
+            modelBuilder.Entity("ThematicMapCreator.Api.Models.LayerOptions", b =>
                 {
                     b.Property<Guid>("LayerId")
                         .HasColumnName("layer_id")
@@ -75,8 +76,7 @@ namespace ThematicMapCreator.Api.Migrations
                     b.ToTable("layer_options");
                 });
 
-            modelBuilder.Entity("ThematicMapCreator.Api.Models.Map",
-                b =>
+            modelBuilder.Entity("ThematicMapCreator.Api.Models.Map", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,8 +110,7 @@ namespace ThematicMapCreator.Api.Migrations
                     b.ToTable("map");
                 });
 
-            modelBuilder.Entity("ThematicMapCreator.Api.Models.User",
-                b =>
+            modelBuilder.Entity("ThematicMapCreator.Api.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,8 +147,7 @@ namespace ThematicMapCreator.Api.Migrations
                     b.ToTable("user");
                 });
 
-            modelBuilder.Entity("ThematicMapCreator.Api.Models.Layer",
-                b =>
+            modelBuilder.Entity("ThematicMapCreator.Api.Models.Layer", b =>
                 {
                     b.HasOne("ThematicMapCreator.Api.Models.Map", "Map")
                         .WithMany("Layers")
@@ -158,8 +156,7 @@ namespace ThematicMapCreator.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ThematicMapCreator.Api.Models.LayerOptions",
-                b =>
+            modelBuilder.Entity("ThematicMapCreator.Api.Models.LayerOptions", b =>
                 {
                     b.HasOne("ThematicMapCreator.Api.Models.Layer", "Layer")
                         .WithOne("Options")
@@ -168,8 +165,7 @@ namespace ThematicMapCreator.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ThematicMapCreator.Api.Models.Map",
-                b =>
+            modelBuilder.Entity("ThematicMapCreator.Api.Models.Map", b =>
                 {
                     b.HasOne("ThematicMapCreator.Api.Models.User", "User")
                         .WithMany("Maps")

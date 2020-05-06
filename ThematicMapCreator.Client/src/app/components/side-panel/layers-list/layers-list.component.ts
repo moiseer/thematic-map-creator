@@ -57,6 +57,7 @@ export class LayersListComponent implements OnInit {
                 result.mapId = this.mapId;
                 this.layers.push(result);
                 this.mapService.layers$.next(this.layers);
+                this.onZoomAll();
             });
     }
 

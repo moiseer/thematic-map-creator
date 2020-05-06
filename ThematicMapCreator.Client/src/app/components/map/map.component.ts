@@ -98,8 +98,8 @@ export class MapComponent implements OnInit {
     }
 
     private fitMapToLayers(): void {
-        const bounds: LatLngBounds = this.layers.getBounds();
-        if (bounds.isValid() && this.map) {
+        const bounds: LatLngBounds = this.layers?.getBounds();
+        if (bounds?.isValid() && this.map) {
             this.map.fitBounds(bounds);
         }
     }
@@ -107,8 +107,8 @@ export class MapComponent implements OnInit {
     private onEachFeature(feature: GeoJSON.Feature, layer: Layer): void {
         if (feature.properties) {
             const popupContent: string = JSON.stringify(feature.properties, null, 4)
-                .replace(/\n( *)/g, (match, p1) => '<br>' + '&nbsp;'.repeat(p1.length))
-                .replace(/[{}]/g, () => '');
+                .replace(/\n( *)/g, (_, p1) => '<br>' + '&nbsp;'.repeat(p1.length))
+                .replace(/[{}\[\]]/g, () => '');
             layer.bindPopup(popupContent);
         }
     }

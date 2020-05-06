@@ -65,6 +65,9 @@ export class EditLayerDialogComponent implements OnInit {
         }
 
         this.fileService.readFileAsText(files[0]).subscribe(text => {
+            if (!this.layerName.value?.lenght) {
+                this.layerName.setValue(files[0].name);
+            }
             this.layerData.setValue(text);
             this.layerData.markAsDirty();
         });

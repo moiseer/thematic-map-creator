@@ -1,0 +1,1725 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          37.457852635,
+          55.775756347
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Хорошёво-Мнёвники",
+          "Address": "город Москва, Карамышевская набережная, дом 66",
+          "UNOM": "9361",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004089",
+          "NameOfBusinessEntity": "ООО УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "20.12.2017",
+          "global_id": 904240914
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.448553071,
+          55.779887554
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Хорошёво-Мнёвники",
+          "Address": "город Москва, проспект Маршала Жукова, дом 78, корпус 3",
+          "UNOM": "3305496",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004090",
+          "NameOfBusinessEntity": "ООО УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "20.12.2017",
+          "global_id": 904241135
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.409893931,
+          55.813471893
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Строгино",
+          "Address": "город Москва, улица Исаковского, дом 16, корпус 1",
+          "UNOM": "73133",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004091",
+          "NameOfBusinessEntity": "ООО УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "20.12.2017",
+          "global_id": 904241307
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.505421946,
+          55.710208182
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Западный административный округ",
+          "District": "район Раменки",
+          "Address": "город Москва, Мосфильмовская улица, дом 74",
+          "UNOM": "15284",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004092",
+          "NameOfBusinessEntity": "ООО УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "20.12.2017",
+          "global_id": 904241537
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.472916983,
+          55.710910737
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Западный административный округ",
+          "District": "район Очаково-Матвеевское",
+          "Address": "город Москва, Нежинская улица, дом 8, корпус 4",
+          "UNOM": "310027",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004093",
+          "NameOfBusinessEntity": "ООО УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "20.12.2017",
+          "global_id": 904241809
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.698196318,
+          55.608618203
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Южный административный округ",
+          "District": "район Орехово-Борисово Северное",
+          "Address": "город Москва, Шипиловский проезд, владение 39, строение 1",
+          "UNOM": "3803966",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331759,
+            "value": "Природно-исторический парк «Царицыно»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004094",
+          "NameOfBusinessEntity": "ИП Ванцян Самвел",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "20.12.2017",
+          "global_id": 904242092
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.505310425,
+          55.710198217
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Бахчевой базар",
+          "AdmArea": "Западный административный округ",
+          "District": "район Раменки",
+          "Address": "город Москва, Мосфильмовская улица, дом 74",
+          "UNOM": "15284",
+          "FacilityArea": 7.5,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "бахчевой развал",
+          "Specialization": [
+            "бахчевые культуры"
+          ],
+          "PeriodOfPlacement": "с 1 августа по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-04-003986",
+          "NameOfBusinessEntity": "ИП Алиев Алимамед",
+          "ContractBegin": "09.06.2017",
+          "ContractEnd": "01.10.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "01.08.2017",
+          "global_id": 904242362
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.677038923,
+          55.591276136
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Южный административный округ",
+          "District": "район Бирюлёво Восточное",
+          "Address": "город Москва, Липецкая улица, дом 26",
+          "UNOM": "13139",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331759,
+            "value": "Природно-исторический парк «Царицыно»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004262",
+          "NameOfBusinessEntity": "ООО Горзеленхоз",
+          "ContractBegin": "01.08.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "02.08.2017",
+          "global_id": 904242580
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.674490578,
+          55.591680673
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Южный административный округ",
+          "District": "район Бирюлёво Восточное",
+          "Address": "город Москва, Липецкая улица, дом 26",
+          "UNOM": "13139",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331759,
+            "value": "Природно-исторический парк «Царицыно»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004269",
+          "NameOfBusinessEntity": "ООО Горзеленхоз",
+          "ContractBegin": "01.08.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "02.08.2017",
+          "global_id": 904242762
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.678854768,
+          55.593206608
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Южный административный округ",
+          "District": "район Бирюлёво Восточное",
+          "Address": "город Москва, Липецкая улица, владение 5А",
+          "UNOM": "3808886",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331759,
+            "value": "Природно-исторический парк «Царицыно»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004268",
+          "NameOfBusinessEntity": "ООО Горзеленхоз",
+          "ContractBegin": "01.08.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "02.08.2017",
+          "global_id": 904242921
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.629063247,
+          55.866670488
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Северо-Восточный административный округ",
+          "District": "район Отрадное",
+          "Address": "город Москва, Юрловский проезд, владение 6А",
+          "UNOM": "2304227",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331762,
+            "value": "Природно-исторический парк «Останкино»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004280",
+          "NameOfBusinessEntity": "ООО Город мечты",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "06.09.2017",
+          "global_id": 904243058
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.631115224,
+          55.860057051
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Северо-Восточный административный округ",
+          "District": "район Свиблово",
+          "Address": "город Москва, Сельскохозяйственная улица, дом 64А",
+          "UNOM": "2305507",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331762,
+            "value": "Природно-исторический парк «Останкино»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004274",
+          "NameOfBusinessEntity": "ООО Город мечты",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "06.09.2017",
+          "global_id": 904243189
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.647068865,
+          55.868879235
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Северо-Восточный административный округ",
+          "District": "район Южное Медведково",
+          "Address": "город Москва, Заповедная улица, дом 28",
+          "UNOM": "8043",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331762,
+            "value": "Природно-исторический парк «Останкино»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004281",
+          "NameOfBusinessEntity": "ООО Город мечты",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "06.09.2017",
+          "global_id": 904243344
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.463063833,
+          55.651772262
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Юго-Западный административный округ",
+          "District": "район Тёплый Стан",
+          "Address": "город Москва, улица Академика Виноградова, дом 12",
+          "UNOM": "3902",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331766,
+            "value": "Ландшафтный заказник «Тёплый Стан»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004283",
+          "NameOfBusinessEntity": "ИП Канарский Михаил",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "06.09.2017",
+          "global_id": 904243498
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.54992787,
+          55.601240557
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Юго-Западный административный округ",
+          "District": "район Ясенево",
+          "Address": "город Москва, Новоясеневский тупик, дом 1, строение 1",
+          "UNOM": "3000130",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331744,
+            "value": "Природно-исторический парк «Битцевский лес»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004284",
+          "NameOfBusinessEntity": "ИП Канарский Михаил",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "06.09.2017",
+          "global_id": 904243787
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.545108599,
+          55.637836357
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Юго-Западный административный округ",
+          "District": "район Черёмушки",
+          "Address": "город Москва, Севастопольский проспект, дом 44, корпус 1",
+          "UNOM": "23046",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331744,
+            "value": "Природно-исторический парк «Битцевский лес»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004282",
+          "NameOfBusinessEntity": "ИП Ченцова Татьяна",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "06.09.2017",
+          "global_id": 904244165
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.508706689,
+          55.720263785
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Западный административный округ",
+          "District": "район Раменки",
+          "Address": "город Москва, улица Довженко, дом 12, корпус 1",
+          "UNOM": "6851",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004278",
+          "NameOfBusinessEntity": "Мир спорта",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "06.09.2017",
+          "global_id": 904244309
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.508745979,
+          55.720267339
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Кукуруза",
+          "AdmArea": "Западный административный округ",
+          "District": "район Раменки",
+          "Address": "город Москва, улица Довженко, дом 12, корпус 1",
+          "UNOM": "6851",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004554",
+          "NameOfBusinessEntity": "ИП Ильичев Борис",
+          "ContractBegin": "08.11.2017",
+          "ContractEnd": "01.10.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "09.11.2017",
+          "global_id": 904244463
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.857825863,
+          55.719991055
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Прокат",
+          "AdmArea": "Восточный административный округ",
+          "District": "район Косино-Ухтомский",
+          "Address": "город Москва, Большая Косинская улица, дом 43",
+          "UNOM": "50144",
+          "FacilityArea": 9.5,
+          "ParkName": {
+            "global_id": 4331765,
+            "value": "Природно-исторический парк «Косинский»"
+          },
+          "ObjectType": "киоск",
+          "Specialization": [
+            "прокат"
+          ],
+          "PeriodOfPlacement": "с 1 января по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "4-РП/2017",
+          "NameOfBusinessEntity": "ООО Азалия",
+          "ContractBegin": "26.07.2017",
+          "ContractEnd": "26.07.2032",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "01.08.2017",
+          "global_id": 904244793
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.857967785,
+          55.720093485
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Продукция общественного питания",
+          "AdmArea": "Восточный административный округ",
+          "District": "район Косино-Ухтомский",
+          "Address": "город Москва, Большая Косинская улица, дом 43",
+          "UNOM": "50144",
+          "FacilityArea": 26.5,
+          "ParkName": {
+            "global_id": 4331765,
+            "value": "Природно-исторический парк «Косинский»"
+          },
+          "ObjectType": "павильон",
+          "Specialization": [
+            "продукция общественного питания"
+          ],
+          "PeriodOfPlacement": "с 1 января по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "4-РП/2017",
+          "NameOfBusinessEntity": "ООО Азалия",
+          "ContractBegin": "26.07.2017",
+          "ContractEnd": "26.07.2032",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "01.08.2017",
+          "global_id": 904244968
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.418994528,
+          55.802926715
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Продукция общественного питания",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Строгино",
+          "Address": "город Москва, улица Маршала Катукова, дом 24, корпус 3, строение 1",
+          "UNOM": "3306150",
+          "FacilityArea": 382,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "павильон",
+          "Specialization": [
+            "продукция общественного питания"
+          ],
+          "PeriodOfPlacement": "с 1 января по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "2-РП/2017",
+          "NameOfBusinessEntity": "ООО Юнат",
+          "ContractBegin": "02.03.2017",
+          "ContractEnd": "02.03.2032",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "01.04.2017",
+          "global_id": 904245439
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.420613583,
+          55.802285745
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Продукция общественного питания",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Строгино",
+          "Address": "город Москва, улица Маршала Катукова, дом 24, корпус 1",
+          "UNOM": "330603",
+          "FacilityArea": 25,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "павильон",
+          "Specialization": [
+            "продукция общественного питания"
+          ],
+          "PeriodOfPlacement": "с 1 января по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "2-РП/2017",
+          "NameOfBusinessEntity": "ООО Юнат",
+          "ContractBegin": "02.03.2017",
+          "ContractEnd": "02.03.2032",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "03.04.2017",
+          "global_id": 904245641
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.423312244,
+          55.803394339
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Продукция общественного питания",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Строгино",
+          "Address": "город Москва, улица Маршала Катукова, дом 24, корпус 1",
+          "UNOM": "330603",
+          "FacilityArea": 774,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "павильон",
+          "Specialization": [
+            "продукция общественного питания"
+          ],
+          "PeriodOfPlacement": "с 1 января по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "2-РП/2017",
+          "NameOfBusinessEntity": "ООО Юнат",
+          "ContractBegin": "02.03.2017",
+          "ContractEnd": "02.03.2032",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "03.04.2017",
+          "global_id": 904245793
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.424580355,
+          55.802806027
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Продукция общественного питания",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Строгино",
+          "Address": "город Москва, улица Маршала Катукова, владение 24, корпус 2",
+          "UNOM": "5012523",
+          "FacilityArea": 1152,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "павильон",
+          "Specialization": [
+            "продукция общественного питания"
+          ],
+          "PeriodOfPlacement": "с 1 января по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "2-РП/2017",
+          "NameOfBusinessEntity": "ООО Юнат",
+          "ContractBegin": "02.03.2017",
+          "ContractEnd": "02.03.2032",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "03.04.2017",
+          "global_id": 904246014
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.646206163640116,
+          55.86904672581039
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Северо-Восточный административный округ",
+          "District": "район Южное Медведково",
+          "Address": "город Москва, Заповедная улица, дом 28",
+          "UNOM": "8043",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331762,
+            "value": "Природно-исторический парк «Останкино»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004281",
+          "NameOfBusinessEntity": "ООО «ГОРОД МЕЧТЫ»",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "05.09.2017",
+          "global_id": 1028702335
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.545697,
+          55.637412
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Мороженое",
+          "AdmArea": "Юго-Западный административный округ",
+          "District": "район Ясенево",
+          "Address": "город Москва, Севастопольский проспект, дом 95Б",
+          "UNOM": "2802722",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331744,
+            "value": "Природно-исторический парк «Битцевский лес»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004282",
+          "NameOfBusinessEntity": "Ченцова Татьяна Михайловна",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "05.09.2017",
+          "global_id": 1028702337
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.631115224,
+          55.860057051
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Тележка «Мороженое»",
+          "AdmArea": "Северо-Восточный административный округ",
+          "District": "район Свиблово",
+          "Address": "город Москва, Сельскохозяйственная улица, владение 64, строение 6",
+          "UNOM": "2304004",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331762,
+            "value": "Природно-исторический парк «Останкино»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004274",
+          "NameOfBusinessEntity": "ООО «ГОРОД МЕЧТЫ»",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "05.09.2017",
+          "global_id": 1028702343
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.629063247,
+          55.866670488
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Тележка «Мороженое»",
+          "AdmArea": "Северо-Восточный административный округ",
+          "District": "район Отрадное",
+          "Address": "город Москва, Юрловский проезд, дом 6",
+          "UNOM": "2304797",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331762,
+            "value": "Природно-исторический парк «Останкино»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004280",
+          "NameOfBusinessEntity": "ООО «ГОРОД МЕЧТЫ»",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "05.09.2017",
+          "global_id": 1028702344
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.508706689,
+          55.720263785
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Тележка «Мороженое»",
+          "AdmArea": "Западный административный округ",
+          "District": "район Раменки",
+          "Address": "город Москва, улица Довженко, дом 12, корпус 1",
+          "UNOM": "6851",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004278",
+          "NameOfBusinessEntity": "МИР СПОРТА",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "05.09.2017",
+          "global_id": 1028702346
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.54992787,
+          55.601240557
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Тележка «Мороженое»",
+          "AdmArea": "Юго-Западный административный округ",
+          "District": "район Ясенево",
+          "Address": "город Москва, Новоясеневский проспект, владение 44",
+          "UNOM": "5051829",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331744,
+            "value": "Природно-исторический парк «Битцевский лес»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004284",
+          "NameOfBusinessEntity": "Канарский Михаил Михайлович",
+          "ContractBegin": "05.09.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": "05.09.2017",
+          "global_id": 1028702347
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.505310425,
+          55.710198217
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Бахчевой развал на Мосфильмовской",
+          "AdmArea": "Западный административный округ",
+          "District": "район Раменки",
+          "Address": "город Москва, Мосфильмовская улица, дом 74",
+          "UNOM": "15284",
+          "FacilityArea": 7.5,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "бахчевой развал",
+          "Specialization": [
+            "бахчевой развал"
+          ],
+          "PeriodOfPlacement": "с 1 августа по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-04-003986",
+          "NameOfBusinessEntity": "АЛИЕВ АЛИМАМЕД ШАБАН ОГЛЫ",
+          "ContractBegin": "09.06.2017",
+          "ContractEnd": "01.10.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723164
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.457852635,
+          55.775756347
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Хорошёво-Мнёвники",
+          "Address": "город Москва, Карамышевская набережная, дом 66",
+          "UNOM": "9361",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004089",
+          "NameOfBusinessEntity": "УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723166
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.409893931,
+          55.813471893
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Строгино",
+          "Address": "город Москва, улица Исаковского, дом 16, корпус 1",
+          "UNOM": "73133",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004091",
+          "NameOfBusinessEntity": "УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723169
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.698196318,
+          55.608618203
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Южный административный округ",
+          "District": "район Орехово-Борисово Северное",
+          "Address": "город Москва, Шипиловский проезд, дом 49/1",
+          "UNOM": "29479",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331759,
+            "value": "Природно-исторический парк «Царицыно»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004094",
+          "NameOfBusinessEntity": "Ванцян Самвел Ониикович",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723171
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.448553071,
+          55.779887554
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Северо-Западный административный округ",
+          "District": "район Хорошёво-Мнёвники",
+          "Address": "город Москва, проспект Маршала Жукова, дом 78, корпус 3",
+          "UNOM": "3305496",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331781,
+            "value": "Природно-исторический парк «Москворецкий»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004090",
+          "NameOfBusinessEntity": "УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723174
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.472916983,
+          55.710910737
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Западный административный округ",
+          "District": "район Очаково-Матвеевское",
+          "Address": "город Москва, Нежинская улица, дом 8, корпус 4",
+          "UNOM": "310027",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004093",
+          "NameOfBusinessEntity": "УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723176
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.505421946,
+          55.710208182
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Елочный базар",
+          "AdmArea": "Западный административный округ",
+          "District": "район Раменки",
+          "Address": "город Москва, Мосфильмовская улица, дом 74",
+          "UNOM": "15284",
+          "FacilityArea": 15,
+          "ParkName": {
+            "global_id": 4331779,
+            "value": "Природный заказник «Долина реки Сетунь»"
+          },
+          "ObjectType": "елочный базар",
+          "Specialization": [
+            "ели, сосны, лапник (в том числе елочные базары)"
+          ],
+          "PeriodOfPlacement": "с 20 декабря по 31 декабря",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-05-004092",
+          "NameOfBusinessEntity": "УКА",
+          "ContractBegin": "09.01.2017",
+          "ContractEnd": "31.12.2021",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723179
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.671615,
+          55.591543
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Тележка «Мороженое»",
+          "AdmArea": "Южный административный округ",
+          "District": "район Бирюлёво Восточное",
+          "Address": "город Москва, Липецкая улица, дом 26",
+          "UNOM": "13139",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331759,
+            "value": "Природно-исторический парк «Царицыно»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 апреля по 1 ноября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004262",
+          "NameOfBusinessEntity": "Горзеленхоз",
+          "ContractBegin": "01.08.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723184
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.678854768,
+          55.593206608
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Тележка «Мороженое»",
+          "AdmArea": "Южный административный округ",
+          "District": "район Бирюлёво Восточное",
+          "Address": "город Москва, Липецкая улица, владение 5А",
+          "UNOM": "3808886",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331759,
+            "value": "Природно-исторический парк «Царицыно»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004268",
+          "NameOfBusinessEntity": "Горзеленхоз",
+          "ContractBegin": "01.08.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723187
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          37.674490578,
+          55.591680673
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "DatasetId": 61355,
+        "VersionNumber": 1,
+        "ReleaseNumber": 8,
+        "RowId": null,
+        "Attributes": {
+          "Name": "Тележка «Мороженое»",
+          "AdmArea": "Южный административный округ",
+          "District": "район Бирюлёво Восточное",
+          "Address": "город Москва, Липецкая улица, дом 26",
+          "UNOM": "13139",
+          "FacilityArea": 1.52,
+          "ParkName": {
+            "global_id": 4331759,
+            "value": "Природно-исторический парк «Царицыно»"
+          },
+          "ObjectType": "передвижной торговый объект (тележки, лотки, палатки и иные специальные приспособления)",
+          "Specialization": [
+            "мороженое"
+          ],
+          "PeriodOfPlacement": "с 1 мая по 1 октября",
+          "ContractType": "договор на размещение",
+          "ContractStatus": "действует",
+          "ContractNumber": "НТО-05-06-004269",
+          "NameOfBusinessEntity": "Горзеленхоз",
+          "ContractBegin": "01.08.2017",
+          "ContractEnd": "30.09.2022",
+          "ContractBasis": "Результат аукциона (победитель)",
+          "ObjectPhoto": null,
+          "StartDateTrading": null,
+          "global_id": 1034723191
+        }
+      },
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+}

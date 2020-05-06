@@ -79,6 +79,7 @@ export class MapDetailsComponent implements OnInit {
                 takeWhile(mapId => !!mapId),
                 tap(() => this.mapService.loading$.next(true)),
                 flatMap(mapId => this.mapService.getMap(mapId)),
+                tap(() => this.mapService.zoomAll$.next(true)),
                 finalize(() => this.mapService.loading$.next(false))
             )
             .subscribe();

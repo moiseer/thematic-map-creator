@@ -119,7 +119,6 @@ export class MapDetailsComponent implements OnInit {
         return {
             id: savedMap.id,
             name: savedMap.name,
-            settings: savedMap.settings,
             description: savedMap.description,
             userId,
             layers

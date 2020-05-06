@@ -19,7 +19,6 @@ namespace ThematicMapCreator.Api.Models
             modelBuilder.Entity<User>(ConfigureUserEntity);
             modelBuilder.Entity<Map>(ConfigureMapEntity);
             modelBuilder.Entity<Layer>(ConfigureLayerEntity);
-            modelBuilder.Entity<LayerOptions>(ConfigureLayerOptionsEntity);
         }
 
         private void ConfigureLayerEntity(EntityTypeBuilder<Layer> builder)
@@ -39,6 +38,11 @@ namespace ThematicMapCreator.Api.Models
                 .HasMaxLength(64)
                 .IsRequired();
 
+            builder.Property(layer => layer.Type)
+                .HasColumnName("type")
+                .HasDefaultValue(LayerType.Default)
+                .IsRequired();
+
             builder.Property(layer => layer.Data)
                 .HasColumnName("data")
                 .IsRequired();
@@ -54,24 +58,6 @@ namespace ThematicMapCreator.Api.Models
                 .WithMany(map => map.Layers)
                 .HasForeignKey(layer => layer.MapId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasOne(layer => layer.Options)
-                .WithOne(options => options.Layer)
-                .HasForeignKey<LayerOptions>(options => options.LayerId)
-                .OnDelete(DeleteBehavior.Cascade);
-        }
-
-        private void ConfigureLayerOptionsEntity(EntityTypeBuilder<LayerOptions> builder)
-        {
-            builder.ToTable("layer_options").HasKey(options => options.LayerId);
-
-            builder.Property(layer => layer.LayerId)
-                .HasColumnName("layer_id");
-
-            builder.Property(layer => layer.Type)
-                .HasColumnName("type")
-                .HasDefaultValue(LayerType.Default)
-                .IsRequired();
         }
 
         private void ConfigureMapEntity(EntityTypeBuilder<Map> builder)
@@ -86,9 +72,6 @@ namespace ThematicMapCreator.Api.Models
                 .HasColumnName("name")
                 .HasMaxLength(64)
                 .IsRequired();
-
-            builder.Property(map => map.Settings)
-                .HasColumnName("settings");
 
             builder.Property(map => map.Description)
                 .HasColumnName("description")

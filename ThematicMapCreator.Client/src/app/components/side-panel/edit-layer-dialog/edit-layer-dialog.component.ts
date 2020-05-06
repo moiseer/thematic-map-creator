@@ -20,6 +20,10 @@ export class EditLayerDialogComponent implements OnInit {
         return this.editLayerForm.controls.name;
     }
 
+    get layerType(): AbstractControl {
+        return this.editLayerForm.controls.type;
+    }
+
     get layerData(): AbstractControl {
         return this.editLayerForm.controls.data;
     }
@@ -42,7 +46,7 @@ export class EditLayerDialogComponent implements OnInit {
             index: this.data.currentLayer?.index ?? 0,
             name: this.layerName.value,
             data: this.layerData.dirty ? JSON.parse(this.layerData.value) : this.data.currentLayer?.data,
-            options: null,
+            type: this.layerType.value,
             visible: this.data.currentLayer?.visible ?? true,
             mapId: this.data.currentLayer?.mapId
         };
@@ -56,6 +60,7 @@ export class EditLayerDialogComponent implements OnInit {
                 this.data.currentLayer?.name,
                 [Validators.required, Validators.maxLength(64)]
             ],
+            type: [this.data.currentLayer?.type, Validators.required],
             data: [null, geoJsonStringValidator()]
         });
     }

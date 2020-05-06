@@ -1,12 +1,12 @@
 import { GeoJSON } from 'leaflet';
-import { LayerOptions } from './layer-options';
+import { LayerType } from './layer-type.enum';
 
 export interface Layer {
     id: string;
     index: number;
     name: string;
     data: GeoJSON.GeoJsonObject;
-    options: LayerOptions;
+    type: LayerType;
     visible: boolean;
     mapId: string;
 }

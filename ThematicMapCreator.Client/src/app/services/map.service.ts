@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 import { Map } from '../models/map';
 import { Layer } from '../models/layer';
 import { SaveMapRequest } from '../contracts/save-map-request';
+import { LayerType } from '../models/layer-type.enum';
 
 @Injectable({
     providedIn: 'root'
@@ -73,12 +74,11 @@ export class MapService {
 
     private getExampleMaps(userId: string): Map[] {
         return [
-            {id: '1', name: 'New map 1', settings: '', description: 'simple description', userId},
-            {id: '2', name: 'New map 2', settings: '', description: 'simple description', userId},
+            {id: '1', name: 'New map 1', description: 'simple description', userId},
+            {id: '2', name: 'New map 2', description: 'simple description', userId},
             {
                 id: '3',
                 name: 'Very long name Very long name Very long name Very long name',
-                settings: '',
                 description: 'simple description simple description simple description',
                 userId
             }
@@ -87,10 +87,10 @@ export class MapService {
 
     private getExampleLayers(mapId: string): Layer[] {
         return [
-            {id: '1', index: 1, name: 'layer 1', visible: true, options: null, data: null, mapId},
-            {id: '2', index: 2, name: 'layer 2', visible: true, options: null, data: null, mapId},
+            {id: '1', index: 1, name: 'layer 1', visible: true, type: LayerType.Default, data: null, mapId},
+            {id: '2', index: 2, name: 'layer 2', visible: true, type: LayerType.Default, data: null, mapId},
             {
-                id: '3', index: 3, visible: false, options: null, data: null, mapId,
+                id: '3', index: 3, visible: false, type: LayerType.Default, data: null, mapId,
                 name: 'layer 3 with very long name, layer 3 with very long name'
             },
         ];

@@ -6,10 +6,10 @@ import { takeWhile } from 'rxjs/operators';
 
 import { Layer } from '../../../models/layer';
 import { MapService } from '../../../services/map.service';
-import { EditLayerDialogParameters } from '../edit-layer-dialog/edit-layer-dialog-parameters';
-import { EditLayerDialogComponent } from '../edit-layer-dialog/edit-layer-dialog.component';
 import { DeleteObjectDialogParameters } from '../delete-object-dialog/delete-object-dialog-parameters';
 import { DeleteObjectDialogComponent } from '../delete-object-dialog/delete-object-dialog.component';
+import { EditLayerDialogParameters } from '../edit-layer-dialog/edit-layer-dialog-parameters';
+import { EditLayerDialogComponent } from '../edit-layer-dialog/edit-layer-dialog.component';
 
 @Component({
     selector: 'app-layers-list',
@@ -46,6 +46,7 @@ export class LayersListComponent implements OnInit {
 
     onCreateLayer(): void {
         const dialogParams: EditLayerDialogParameters = {
+            currentMapId: this.mapId,
             currentLayer: null,
             title: 'Создание нового слоя'
         };
@@ -63,6 +64,7 @@ export class LayersListComponent implements OnInit {
 
     onEditLayer(layerIndex: number): void {
         const dialogParams: EditLayerDialogParameters = {
+            currentMapId: this.mapId,
             currentLayer: this.layers[layerIndex],
             title: 'Редактирование слоя'
         };

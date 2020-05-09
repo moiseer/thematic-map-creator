@@ -1,22 +1,17 @@
 ﻿import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { geoJSON } from 'leaflet';
 
-export function geoJsonStringValidator(): ValidatorFn {
+export function geoJsonStringValidator(nullable: boolean = false): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-        return validateGeoJson(control.value);
-    };
-}
+        const error = {geojson: {valid: false}};
 
-export function validateGeoJson(value: string): ValidationErrors | null  {
-    const error = {geojson: {valid: false}};
-
-    try {
-        const object = JSON.parse(value);
-        if (object) {
-            return geoJSON(object) ? null : error;
+        try {
+            const object = JSON.parse(control.value);
+            return object
+                ? geoJSON(object) ? null : error
+                : nullable ? null : error;
+        } catch {
+            return error;
         }
-        return error;
-    } catch {
-        return error;
-    }
+    };
 }

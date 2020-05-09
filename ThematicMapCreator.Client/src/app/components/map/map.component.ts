@@ -1,4 +1,4 @@
-import { OnInit, Component } from '@angular/core';
+import { OnInit, Component, Predicate } from '@angular/core';
 import {
     featureGroup, FeatureGroup,
     GeoJSON, geoJSON, GeoJSONOptions,
@@ -13,6 +13,8 @@ import {
 import { Subscription } from 'rxjs';
 
 import { MapService } from '../../services/map.service';
+import { LayerType } from '../../models/layer-type.enum';
+import * as Models from '../../models/layer';
 
 @Component({
     selector: 'app-map',
@@ -35,11 +37,6 @@ export class MapComponent implements OnInit {
         )
     };
     baseLayers: { [layerName: string]: Layer };
-
-    geoJsonOptions: GeoJSONOptions = {
-        onEachFeature: this.onEachFeature,
-        pointToLayer: this.pointToLayer
-    };
 
     constructor(private mapService: MapService) {
     }
@@ -88,7 +85,7 @@ export class MapComponent implements OnInit {
         return this.mapService.layers$.subscribe(layers =>
             this.layers = featureGroup(layers
                 .filter(layer => layer.visible)
-                .map(layer => geoJSON(layer.data, this.geoJsonOptions))
+                .map(layer => geoJSON(layer.data, this.getGeoJsonOptions(layer)))
             )
         );
     }
@@ -102,6 +99,14 @@ export class MapComponent implements OnInit {
         if (bounds?.isValid() && this.map) {
             this.map.fitBounds(bounds);
         }
+    }
+
+    private getGeoJsonOptions(layer: Models.Layer): GeoJSONOptions {
+        return {
+            onEachFeature: this.onEachFeature,
+            pointToLayer: this.pointToLayer,
+            filter: this.filter(layer.type)
+        };
     }
 
     private onEachFeature(feature: GeoJSON.Feature, layer: Layer): void {
@@ -123,5 +128,27 @@ export class MapComponent implements OnInit {
             })
         };
         return marker(latlng, markerOptions);
+    }
+
+    private filter(layerType: LayerType): Predicate<GeoJSON.Feature> {
+        if (layerType === LayerType.Default) {
+            return () => true;
+        }
+
+        return (feature: GeoJSON.Feature): boolean => {
+            switch (feature.geometry.type) {
+                case 'Point':
+                case 'MultiPoint':
+                    return layerType === LayerType.Point;
+                case 'LineString':
+                case 'MultiLineString':
+                    return layerType === LayerType.Line;
+                case 'Polygon':
+                case 'MultiPolygon':
+                    return layerType === LayerType.Polygon;
+                case 'GeometryCollection':
+                    return true;
+            }
+        };
     }
 }

@@ -12,6 +12,15 @@
         </mat-error>
     </mat-form-field>
 
+    <mat-form-field>
+        <mat-select formControlName="type" placeholder="Тип слоя">
+            <mat-option *ngFor="let type of layerTypeOptions" [value]="type">{{getLayerTypeOptionName(type)}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="layerType.hasError('required') || layerType.hasError('min')">
+            Необходимо выбрать тип слоя.
+        </mat-error>
+    </mat-form-field>
+
     <mat-label>Данные в формате GeoJson</mat-label>
     <input type="file" (change)="onFilesChange($event.target['files'])"/>
     <mat-error *ngIf="layerData.dirty && layerData.hasError('geojson')">

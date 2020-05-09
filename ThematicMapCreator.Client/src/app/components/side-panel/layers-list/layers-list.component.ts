@@ -10,6 +10,9 @@ import { DeleteObjectDialogParameters } from '../delete-object-dialog/delete-obj
 import { DeleteObjectDialogComponent } from '../delete-object-dialog/delete-object-dialog.component';
 import { EditLayerDialogParameters } from '../edit-layer-dialog/edit-layer-dialog-parameters';
 import { EditLayerDialogComponent } from '../edit-layer-dialog/edit-layer-dialog.component';
+import { EditLayerDialogType } from '../edit-layer-dialog/edit-layer-dialog-type.enum';
+import { getLayerTypeName, LayerType } from '../../../models/layer-type.enum';
+import { getLayerStyleName, LayerStyle } from '../../../models/layer-style.enum';
 
 @Component({
     selector: 'app-layers-list',
@@ -20,19 +23,24 @@ export class LayersListComponent implements OnInit {
 
     @Input() mapId: string;
 
-    layers: Layer[];
+    public layers: Layer[];
 
     constructor(
         private dialogService: MatDialog,
         private mapService: MapService) {
     }
 
-    ngOnInit(): void {
+    public getLayerTypeOptionName: (type: LayerType) => string;
+    public getLayerStyleOptionName: (style: LayerStyle) => string;
+
+    public ngOnInit(): void {
+        this.getLayerTypeOptionName = getLayerTypeName;
+        this.getLayerStyleOptionName = getLayerStyleName;
         this.subscribeToLayersChanges()
             .add(this.checkLayers());
     }
 
-    onDropLayer(event: CdkDragDrop<any[]>): void {
+    public onDropLayer(event: CdkDragDrop<any[]>): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }
@@ -40,15 +48,15 @@ export class LayersListComponent implements OnInit {
         this.reorderIndexes(this.layers);
     }
 
-    onZoomAll(): void {
+    public onZoomAll(): void {
         this.mapService.zoomAll$.next(true);
     }
 
-    onCreateLayer(): void {
+    public onCreateLayer(): void {
         const dialogParams: EditLayerDialogParameters = {
             currentMapId: this.mapId,
             currentLayer: null,
-            title: 'Создание нового слоя'
+            type: EditLayerDialogType.Create
         };
 
         this.openEditLayerDialog(dialogParams)
@@ -62,11 +70,11 @@ export class LayersListComponent implements OnInit {
             });
     }
 
-    onEditLayer(layerIndex: number): void {
+    public onEditLayer(layerIndex: number): void {
         const dialogParams: EditLayerDialogParameters = {
             currentMapId: this.mapId,
             currentLayer: this.layers[layerIndex],
-            title: 'Редактирование слоя'
+            type: EditLayerDialogType.Edit
         };
 
         this.openEditLayerDialog(dialogParams)
@@ -77,7 +85,7 @@ export class LayersListComponent implements OnInit {
             });
     }
 
-    onDeleteLayer(layerIndex: number): void {
+    public onDeleteLayer(layerIndex: number): void {
         const dialogParams: DeleteObjectDialogParameters = {
             objectName: `слой "${this.layers[layerIndex].name}"`
         };
@@ -91,7 +99,7 @@ export class LayersListComponent implements OnInit {
             });
     }
 
-    onChangeLayerVisibility(layer: Layer): void {
+    public onChangeLayerVisibility(layer: Layer): void {
         layer.visible = !layer.visible;
         this.mapService.layers$.next(this.layers);
     }

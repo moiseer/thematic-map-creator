@@ -130,8 +130,9 @@ export class MapComponent implements OnInit {
         return marker(latlng, markerOptions);
     }
 
+    // TODO Попробовать фильтровать при выборе типа.
     private filter(layerType: LayerType): Predicate<GeoJSON.Feature> {
-        if (layerType === LayerType.Default) {
+        if (layerType === LayerType.None) {
             return () => true;
         }
 

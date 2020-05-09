@@ -9,6 +9,7 @@ import { Map } from '../models/map';
 import { Layer } from '../models/layer';
 import { SaveMapRequest } from '../contracts/save-map-request';
 import { LayerType } from '../models/layer-type.enum';
+import { LayerStyle } from '../models/layer-style.enum';
 
 @Injectable({
     providedIn: 'root'
@@ -87,10 +88,10 @@ export class MapService {
 
     private getExampleLayers(mapId: string): Layer[] {
         return [
-            {id: '1', index: 1, name: 'layer 1', visible: true, type: LayerType.Default, data: null, mapId},
-            {id: '2', index: 2, name: 'layer 2', visible: true, type: LayerType.Default, data: null, mapId},
+            {id: '1', index: 1, name: 'layer 1', visible: true, type: LayerType.None, style: LayerStyle.None, data: null, mapId},
+            {id: '2', index: 2, name: 'layer 2', visible: true, type: LayerType.None, style: LayerStyle.None, data: null, mapId},
             {
-                id: '3', index: 3, visible: false, type: LayerType.Default, data: null, mapId,
+                id: '3', index: 3, visible: false, type: LayerType.None, style: LayerStyle.None, data: null, mapId,
                 name: 'layer 3 with very long name, layer 3 with very long name'
             },
         ];

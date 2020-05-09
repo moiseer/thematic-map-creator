@@ -1,5 +1,5 @@
 export enum LayerType {
-    Default = 0,
+    None = 0,
     Point = 1,
     Line = 2,
     Polygon = 4
@@ -13,7 +13,7 @@ export function getLayerTypeName(type: LayerType): string {
             return 'Линейный';
         case LayerType.Polygon:
             return 'Полигональный';
-        case LayerType.Default:
+        case LayerType.None:
         default:
             return 'Неизвестно';
     }

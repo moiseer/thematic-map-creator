@@ -12,7 +12,10 @@
 
     <div id="layers" *ngIf="layers?.length; else empty" fxLayout="column" cdkDropList [cdkDropListData]="layers" class="list" (cdkDropListDropped)="onDropLayer($event)">
         <div fxLayoutAlign="row center" class="list-item" *ngFor="let layer of layers; index as layerIndex" cdkDrag cdkDragBoundary="#layers">
-            <span>{{layer.name}}</span>
+            <div fxLayout="column" class="layer-text">
+                <span>{{layer.name}}</span>
+                <small class="layer-options">{{getLayerTypeOptionName(layer.type)}} | {{getLayerStyleOptionName(layer.style)}}</small>
+            </div>
             <div fxFlex></div>
             <button mat-button [matTooltip]="layer.visible?'Скрыть':'Показать'" (click)="onChangeLayerVisibility(layer)">
                 <mat-icon>{{layer.visible?'visibility':'visibility_off'}}</mat-icon>

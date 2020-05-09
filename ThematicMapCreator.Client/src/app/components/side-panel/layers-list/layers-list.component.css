@@ -49,3 +49,12 @@ span {
     word-break: break-word;
 }
 
+.layer-text {
+    overflow: hidden;
+}
+
+.layer-options {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

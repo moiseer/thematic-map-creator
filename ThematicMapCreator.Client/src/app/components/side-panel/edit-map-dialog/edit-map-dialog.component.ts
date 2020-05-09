@@ -15,17 +15,18 @@ export class EditMapDialogComponent implements OnInit {
     editMapForm: FormGroup;
 
     get mapName(): AbstractControl {
-        return this.editMapForm.controls.name;
+        return this.editMapForm.get('name');
     }
 
     get mapDescription(): AbstractControl {
-        return this.editMapForm.controls.description;
+        return this.editMapForm.get('description');
     }
 
     constructor(
         private dialogRef: MatDialogRef<EditMapDialogComponent>,
-        private fb: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) public data: EditMapDialogParameters) {
+        private formBuilder: FormBuilder,
+        @Inject(MAT_DIALOG_DATA)
+        public data: EditMapDialogParameters) {
     }
 
     ngOnInit(): void {
@@ -45,7 +46,7 @@ export class EditMapDialogComponent implements OnInit {
     }
 
     private formInit(): void {
-        this.editMapForm = this.fb.group({
+        this.editMapForm = this.formBuilder.group({
             name: [
                 this.data.currentMap?.name,
                 [Validators.required, Validators.maxLength(64)]

@@ -38,9 +38,14 @@ namespace ThematicMapCreator.Api.Models
                 .HasMaxLength(64)
                 .IsRequired();
 
+            builder.Property(layer => layer.Style)
+                .HasColumnName("style")
+                .HasDefaultValue(LayerStyle.None)
+                .IsRequired();
+
             builder.Property(layer => layer.Type)
                 .HasColumnName("type")
-                .HasDefaultValue(LayerType.Default)
+                .HasDefaultValue(LayerType.None)
                 .IsRequired();
 
             builder.Property(layer => layer.Data)

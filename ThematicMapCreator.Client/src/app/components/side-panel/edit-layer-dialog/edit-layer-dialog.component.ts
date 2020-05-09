@@ -1,12 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { geoJSON, GeoJSON, GeoJSONOptions } from 'leaflet';
 
 import { EditLayerDialogParameters } from './edit-layer-dialog-parameters';
+import { EditLayerDialogType } from './edit-layer-dialog-type.enum';
 import { Layer } from '../../../models/layer';
-import { geoJsonStringValidator } from '../../../validators/geojson.validator';
 import { FileService } from '../../../services/file.service';
-import { LayerType, getLayerTypeName } from '../../../models/layer-type.enum';
+import { getLayerTypeName, LayerType } from '../../../models/layer-type.enum';
+import { getLayerStyleName, LayerStyle } from '../../../models/layer-style.enum';
 
 @Component({
     selector: 'app-edit-layer-dialog',
@@ -15,47 +17,63 @@ import { LayerType, getLayerTypeName } from '../../../models/layer-type.enum';
 })
 export class EditLayerDialogComponent implements OnInit {
 
-    get layerName(): AbstractControl {
+    public get layerName(): AbstractControl {
         return this.editLayerForm.get('name');
     }
 
-    get layerType(): AbstractControl {
+    public get layerType(): AbstractControl {
         return this.editLayerForm.get('type');
     }
 
-    get layerData(): AbstractControl {
+    public get layerData(): AbstractControl {
         return this.editLayerForm.get('data');
+    }
+
+    public get layerStyle(): AbstractControl {
+        return this.editLayerForm.get('style');
+    }
+
+    public get title(): string {
+        switch (this.data.type) {
+            case EditLayerDialogType.Create:
+                return 'Создание нового слоя';
+            case EditLayerDialogType.Edit:
+                return 'Редактирование слоя';
+        }
     }
 
     constructor(
         private fileService: FileService,
         private dialogRef: MatDialogRef<EditLayerDialogComponent>,
-        private fb: FormBuilder,
+        private formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA)
         public data: EditLayerDialogParameters) {
     }
 
     public editLayerForm: FormGroup;
-    public layerTypeOptions: LayerType[] = [
-        LayerType.Point,
-        LayerType.Line,
-        LayerType.Polygon
-    ];
-    public getLayerTypeOptionName: (type: LayerType) => string;
+    public layerTypeOptions: LayerType[];
+    public layerStyleOptions: LayerStyle[];
+    public availableFileExtensions = '.json, .geojson';
 
-    ngOnInit(): void {
+    public getLayerTypeOptionName: (type: LayerType) => string;
+    public getLayerStyleOptionName: (style: LayerStyle) => string;
+
+    public ngOnInit(): void {
         this.dialogRef.updateSize('420px');
         this.getLayerTypeOptionName = getLayerTypeName;
+        this.getLayerStyleOptionName = getLayerStyleName;
+        this.layerStyleOptions = this.getAvailableStylesForLayerType(this.data.currentLayer?.type);
         this.formInit();
     }
 
-    onSave(): void {
+    public onSave(): void {
         const layer: Layer = {
             id: this.data.currentLayer?.id,
             index: this.data.currentLayer?.index ?? 0,
             name: this.layerName.value,
-            data: this.layerData.value?.length ? JSON.parse(this.layerData.value) : this.data.currentLayer?.data,
+            data: this.layerData.value ?? this.data.currentLayer?.data,
             type: this.layerType.value,
+            style: this.layerStyle.value,
             visible: this.data.currentLayer?.visible ?? true,
             mapId: this.data.currentMapId ?? this.data.currentLayer?.mapId
         };
@@ -63,31 +81,95 @@ export class EditLayerDialogComponent implements OnInit {
         this.dialogRef.close(layer);
     }
 
-    onFilesChange(files: FileList) {
-        if (!files || !files.length) {
+    public onFilesChange(files: FileList): void {
+        if (!files?.length) {
             return;
         }
 
-        this.fileService.readFileAsText(files[0]).subscribe(text => {
-            if (!this.layerName.value?.length) {
+        this.fileService.readFileAsGeoJson(files[0]).subscribe(geojson => {
+            if (geojson && !this.layerName.value?.length) {
                 this.layerName.setValue(files[0].name);
             }
-            this.layerData.setValue(text);
+
+            this.layerData.setValue(geojson);
             this.layerData.markAsDirty();
+
+            this.layerTypeOptions = this.getAvailableTypesForLayer(geojson);
+            if (this.layerTypeOptions.length === 1) {
+                this.layerType.setValue(this.layerTypeOptions[0]);
+            }
         });
     }
 
     private formInit(): void {
-        this.editLayerForm = this.fb.group({
+        this.editLayerForm = this.formBuilder.group({
             name: [
                 this.data.currentLayer?.name,
                 [Validators.required, Validators.maxLength(64)]
             ],
             type: [
                 this.data.currentLayer?.type,
-                [Validators.required, Validators.min(1)]
+                Validators.required
             ],
-            data: [null, geoJsonStringValidator(!!this.data.currentLayer?.data)]
+            data: [null, !!this.data.currentLayer?.data ? [] : Validators.required],
+            style: this.data.currentLayer?.style ?? LayerStyle.None
         });
+    }
+
+    // TODO попробовать получать доступные типы при парсинге файла.
+    private getAvailableTypesForLayer(data: GeoJSON.GeoJsonObject): LayerType[] {
+        if (!data) {
+            return [];
+        }
+
+        const availableTypes: {key: LayerType; value: boolean}[] = [
+            {key: LayerType.Point, value: false},
+            {key: LayerType.Line, value: false},
+            {key: LayerType.Polygon, value: false}
+        ];
+
+        const geoJsonOptions: GeoJSONOptions = {
+            onEachFeature(feature: GeoJSON.Feature, _) {
+                switch (feature.geometry.type) {
+                    case 'Point':
+                    case 'MultiPoint':
+                        availableTypes.find(x => x.key === LayerType.Point).value = true;
+                        break;
+                    case 'LineString':
+                    case 'MultiLineString':
+                        availableTypes.find(x => x.key === LayerType.Line).value = true;
+                        break;
+                    case 'Polygon':
+                    case 'MultiPolygon':
+                        availableTypes.find(x => x.key === LayerType.Polygon).value = true;
+                        break;
+                }
+            }
+        };
+
+        geoJSON(data, geoJsonOptions);
+
+        return availableTypes.filter(x => x.value).map(x => x.key);
+    }
+
+    private getAvailableStylesForLayerType(type: LayerType): LayerStyle[] {
+        const commonStyles: LayerStyle[] = [
+            LayerStyle.None,
+            LayerStyle.UniqueValues,
+            LayerStyle.GraduatedColors,
+            LayerStyle.ChartDiagram
+        ];
+
+        switch (type) {
+            case LayerType.Point:
+                return [...commonStyles, LayerStyle.GraduatedCharacters];
+            case LayerType.Line:
+                return commonStyles;
+            case LayerType.Polygon:
+                return [...commonStyles, LayerStyle.DensityMap];
+            case LayerType.None:
+            default:
+                return [];
+        }
     }
 }

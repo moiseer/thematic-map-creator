@@ -33,6 +33,18 @@ export class EditLayerDialogComponent implements OnInit {
         return this.editLayerForm.get('style');
     }
 
+    public get layerSize(): AbstractControl {
+        return this.editLayerForm.get('size');
+    }
+
+    public get layerColor(): AbstractControl {
+        return this.editLayerForm.get('color');
+    }
+
+    public get layerFillColor(): AbstractControl {
+        return this.editLayerForm.get('fillColor');
+    }
+
     public get title(): string {
         switch (this.data.type) {
             case EditLayerDialogType.Create:
@@ -74,6 +86,11 @@ export class EditLayerDialogComponent implements OnInit {
             data: this.layerData.value ?? this.data.currentLayer?.data,
             type: this.layerType.value,
             style: this.layerStyle.value,
+            styleOptions: {
+                color: this.layerColor.value,
+                fillColor: this.layerFillColor.value,
+                size: this.layerSize.value
+            },
             visible: this.data.currentLayer?.visible ?? true,
             mapId: this.data.currentMapId ?? this.data.currentLayer?.mapId
         };
@@ -112,7 +129,10 @@ export class EditLayerDialogComponent implements OnInit {
                 Validators.required
             ],
             data: [null, !!this.data.currentLayer?.data ? [] : Validators.required],
-            style: this.data.currentLayer?.style ?? LayerStyle.None
+            style: this.data.currentLayer?.style ?? LayerStyle.None,
+            size: this.data.currentLayer?.styleOptions?.size ?? 3,
+            color: this.data.currentLayer?.styleOptions?.color ?? '#000',
+            fillColor: this.data.currentLayer?.styleOptions?.fillColor ?? '#000'
         });
     }
 
@@ -153,6 +173,9 @@ export class EditLayerDialogComponent implements OnInit {
     }
 
     private getAvailableStylesForLayerType(type: LayerType): LayerStyle[] {
+        // TODO доступный сейчас метод.
+        return [LayerStyle.None];
+
         const commonStyles: LayerStyle[] = [
             LayerStyle.None,
             LayerStyle.UniqueValues,

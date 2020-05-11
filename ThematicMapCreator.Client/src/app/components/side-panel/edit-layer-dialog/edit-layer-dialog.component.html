@@ -36,11 +36,25 @@
         </ng-template>
 
         <ng-template ngSwitchCase="Edit">
+
             <mat-form-field>
                 <mat-select formControlName="style" placeholder="Стиль отображения">
                     <mat-option *ngFor="let style of layerStyleOptions" [value]="style">{{getLayerStyleOptionName(style)}}</mat-option>
                 </mat-select>
             </mat-form-field>
+
+            <mat-form-field>
+                <input matInput type="number" min="1" max="64" formControlName="size" placeholder="Размер"/>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput type="color" formControlName="color" placeholder="Цвет обводки"/>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput type="color" formControlName="fillColor" placeholder="Цвет заливки"/>
+            </mat-form-field>
+
         </ng-template>
     </ng-container>
 

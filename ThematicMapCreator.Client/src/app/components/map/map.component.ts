@@ -1,20 +1,21 @@
-import { OnInit, Component, Predicate } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
+    circleMarker, CircleMarkerOptions,
     featureGroup, FeatureGroup,
     GeoJSON, geoJSON, GeoJSONOptions,
-    icon,
     LatLng, latLng,
     LatLngBounds, latLngBounds,
     Layer,
     Map, MapOptions,
-    marker, MarkerOptions,
+    PathOptions,
     tileLayer
 } from 'leaflet';
 import { Subscription } from 'rxjs';
 
 import { MapService } from '../../services/map.service';
-import { LayerType } from '../../models/layer-type.enum';
 import * as Models from '../../models/layer';
+import { LayerType } from '../../models/layer-type.enum';
+import { LayerStyleOptions } from '../../models/layer-style-options';
 
 @Component({
     selector: 'app-map',
@@ -104,8 +105,9 @@ export class MapComponent implements OnInit {
     private getGeoJsonOptions(layer: Models.Layer): GeoJSONOptions {
         return {
             onEachFeature: this.onEachFeature,
-            pointToLayer: this.pointToLayer,
-            filter: this.filter(layer.type)
+            pointToLayer: this.pointToLayer(layer.styleOptions),
+            filter: this.getFilter(layer.type),
+            style: this.getStyle(layer.type, layer.styleOptions),
         };
     }
 
@@ -118,20 +120,18 @@ export class MapComponent implements OnInit {
         }
     }
 
-    private pointToLayer(_, latlng: LatLng): Layer {
-        const markerOptions: MarkerOptions = {
-            icon: icon({
-                iconSize: [25, 41],
-                iconAnchor: [13, 41],
-                iconUrl: 'leaflet/marker-icon.png',
-                shadowUrl: 'leaflet/marker-shadow.png'
-            })
+    private pointToLayer(styleOptions: LayerStyleOptions): (_, latlng: LatLng) => Layer {
+        const markerOptions: CircleMarkerOptions = {
+            radius: styleOptions?.size
         };
-        return marker(latlng, markerOptions);
+
+        return (_, latlng: LatLng): Layer => {
+            return circleMarker(latlng, markerOptions);
+        };
     }
 
     // TODO Попробовать фильтровать при выборе типа.
-    private filter(layerType: LayerType): Predicate<GeoJSON.Feature> {
+    private getFilter(layerType: LayerType): (feature: GeoJSON.Feature) => boolean {
         if (layerType === LayerType.None) {
             return () => true;
         }
@@ -150,6 +150,15 @@ export class MapComponent implements OnInit {
                 case 'GeometryCollection':
                     return true;
             }
+        };
+    }
+
+    private getStyle(type: LayerType, styleOptions: LayerStyleOptions): PathOptions {
+        return {
+            color: styleOptions?.color,
+            fillColor: styleOptions?.fillColor,
+            weight: type === LayerType.Point ? 1 : styleOptions?.size,
+            fillOpacity: 0.5
         };
     }
 }

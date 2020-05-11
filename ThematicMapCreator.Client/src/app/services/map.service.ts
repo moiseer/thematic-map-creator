@@ -28,12 +28,12 @@ export class MapService {
     constructor(private http: HttpClient) {
     }
 
-    getMaps(userId: string): Observable<Map[]> {
+    public getMaps(userId: string): Observable<Map[]> {
         // return of(this.getExampleMaps(userId));
         return this.http.get<Map[]>(`${this.url}/user/${userId}`);
     }
 
-    getMap(mapId: string): Observable<Map> {
+    public getMap(mapId: string): Observable<Map> {
         // return of(this.getExampleMaps('1').find(map => map.id === mapId))
         return this.http.get<Map>(`${this.url}/${mapId}`)
             .pipe(
@@ -47,18 +47,17 @@ export class MapService {
             );
     }
 
-    getMapLayers(mapId: string): Observable<Layer[]> {
+    public getMapLayers(mapId: string): Observable<Layer[]> {
         // return of(this.getExampleLayers(mapId));
         return this.http.get<Layer[]>(`${this.url}/${mapId}/layers`);
     }
 
-    saveMap(map: SaveMapRequest): Observable<Map> {
+    public saveMap(map: SaveMapRequest): Observable<string> {
         // return of(null);
-        return this.http.put<string>(this.url, map)
-            .pipe(flatMap(mapId => this.getMap(mapId)));
+        return this.http.put<string>(this.url, map);
     }
 
-    deleteMap(mapId: string): Observable<any> {
+    public deleteMap(mapId: string): Observable<any> {
         // return of(null)
         if (!mapId) {
             return of(null).pipe(tap(() => this.closeMap()));
@@ -68,7 +67,7 @@ export class MapService {
             .pipe(tap(() => mapId === this.map$.getValue().id ? this.closeMap() : {}));
     }
 
-    closeMap(): void {
+    public closeMap(): void {
         this.map$.next(null);
         this.layers$.next([]);
     }
@@ -87,13 +86,23 @@ export class MapService {
     }
 
     private getExampleLayers(mapId: string): Layer[] {
-        return [
-            {id: '1', index: 1, name: 'layer 1', visible: true, type: LayerType.None, style: LayerStyle.None, data: null, mapId},
-            {id: '2', index: 2, name: 'layer 2', visible: true, type: LayerType.None, style: LayerStyle.None, data: null, mapId},
-            {
-                id: '3', index: 3, visible: false, type: LayerType.None, style: LayerStyle.None, data: null, mapId,
-                name: 'layer 3 with very long name, layer 3 with very long name'
+        const common = {
+            visible: true,
+            type: LayerType.None,
+            style: LayerStyle.None,
+            styleOptions: {
+                color: '#3388ff',
+                fillColor: '#3388ff',
+                size: 3
             },
+            data: null,
+            mapId
+        };
+
+        return [
+            {id: '1', index: 1, name: 'layer 1', ...common},
+            {id: '2', index: 2, name: 'layer 2', ...common},
+            {id: '3', index: 3, name: 'layer 3 with very long name, layer 3 with very long name', ...common},
         ];
     }
 }

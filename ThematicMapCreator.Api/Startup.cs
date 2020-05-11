@@ -76,9 +76,11 @@ namespace ThematicMapCreator.Api
         private static void ConfigureMapping()
         {
             TypeAdapterConfig<Layer, LayerOverview>.NewConfig()
-                .Map(dest => dest.Data, source => JsonConvert.DeserializeObject<GeoJson>(source.Data));
+                .Map(dest => dest.Data, source => JsonConvert.DeserializeObject<GeoJson>(source.Data))
+                .Map(dest => dest.StyleOptions, source => JsonConvert.DeserializeObject<LayerStyleOptions>(source.StyleOptions));
             TypeAdapterConfig<LayerOverview, Layer>.NewConfig()
-                .Map(dest => dest.Data, source => JsonConvert.SerializeObject(source.Data));
+                .Map(dest => dest.Data, source => JsonConvert.SerializeObject(source.Data))
+                .Map(dest => dest.StyleOptions, source => JsonConvert.SerializeObject(source.StyleOptions));
 
             TypeAdapterConfig<SaveMapRequest, Map>.NewConfig()
                 .Map(dest => dest.Layers, source => null as object);

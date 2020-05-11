@@ -53,6 +53,7 @@ export class MapDetailsComponent implements OnInit {
         this.openEditMapDialog(dialogParams);
     }
 
+    // TODO подтверждение закрытия при несохраненных изменениях.
     onCloseMap(): void {
         this.mapService.closeMap();
     }
@@ -97,6 +98,7 @@ export class MapDetailsComponent implements OnInit {
                 map(userId => this.MapToSaveMapRequest(userId, this.currentMap, this.currentLayers)),
                 tap(() => this.mapService.loading$.next(true)),
                 flatMap(request => this.mapService.saveMap(request)),
+                flatMap(mapId => this.mapService.getMap(mapId)),
                 finalize(() => this.mapService.loading$.next(false))
             )
             .subscribe(() => this.snackBar.open('Карта сохранена'));

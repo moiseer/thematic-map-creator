@@ -43,6 +43,9 @@ namespace ThematicMapCreator.Api.Models
                 .HasDefaultValue(LayerStyle.None)
                 .IsRequired();
 
+            builder.Property(layer => layer.StyleOptions)
+                .HasColumnName("style_options");
+
             builder.Property(layer => layer.Type)
                 .HasColumnName("type")
                 .HasDefaultValue(LayerType.None)

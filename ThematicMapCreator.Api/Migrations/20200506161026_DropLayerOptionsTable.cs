@@ -5,22 +5,6 @@ namespace ThematicMapCreator.Api.Migrations
 {
     public partial class DropLayerOptionsTable : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "layer_options");
-
-            migrationBuilder.DropColumn(
-                name: "settings",
-                table: "map");
-
-            migrationBuilder.AddColumn<int>(
-                name: "type",
-                table: "layer",
-                nullable: false,
-                defaultValue: 0);
-        }
-
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
@@ -50,6 +34,22 @@ namespace ThematicMapCreator.Api.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+        }
+
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "layer_options");
+
+            migrationBuilder.DropColumn(
+                name: "settings",
+                table: "map");
+
+            migrationBuilder.AddColumn<int>(
+                name: "type",
+                table: "layer",
+                nullable: false,
+                defaultValue: 0);
         }
     }
 }

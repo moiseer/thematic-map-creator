@@ -1,9 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ThematicMapCreator.Api.Migrations
 {
     public partial class AddIndexToLayer : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropIndex(
+                name: "IX_user_email",
+                table: "user");
+
+            migrationBuilder.DropIndex(
+                name: "IX_user_name",
+                table: "user");
+
+            migrationBuilder.DropColumn(
+                name: "index",
+                table: "layer");
+
+            migrationBuilder.DropColumn(
+                name: "visible",
+                table: "layer");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
@@ -29,25 +49,6 @@ namespace ThematicMapCreator.Api.Migrations
                 table: "user",
                 column: "name",
                 unique: true);
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropIndex(
-                name: "IX_user_email",
-                table: "user");
-
-            migrationBuilder.DropIndex(
-                name: "IX_user_name",
-                table: "user");
-
-            migrationBuilder.DropColumn(
-                name: "index",
-                table: "layer");
-
-            migrationBuilder.DropColumn(
-                name: "visible",
-                table: "layer");
         }
     }
 }

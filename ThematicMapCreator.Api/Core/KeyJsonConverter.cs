@@ -12,7 +12,7 @@ namespace ThematicMapCreator.Api.Core
         private readonly string keyPropertyName;
         private readonly Dictionary<TKey, Type> registeredTypes = new Dictionary<TKey, Type>();
 
-        public KeyJsonConverter(Expression<Func<T, TKey>>  keySelector)
+        public KeyJsonConverter(Expression<Func<T, TKey>> keySelector)
         {
             keyPropertyName = GetPropertyInfo(keySelector).Name;
         }

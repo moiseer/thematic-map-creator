@@ -5,6 +5,13 @@ namespace ThematicMapCreator.Api.Migrations
 {
     public partial class AddMapDescription : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "description",
+                table: "map");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
@@ -12,13 +19,6 @@ namespace ThematicMapCreator.Api.Migrations
                 table: "map",
                 maxLength: 1024,
                 nullable: true);
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "description",
-                table: "map");
         }
     }
 }

@@ -5,6 +5,75 @@ namespace ThematicMapCreator.Api.Migrations
 {
     public partial class AddLayerOptionsTable : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_layer_map_map_id",
+                table: "layer");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_map_user_user_id",
+                table: "map");
+
+            migrationBuilder.DropTable(
+                name: "layer_options");
+
+            migrationBuilder.RenameColumn(
+                name: "id",
+                table: "user",
+                newName: "Id");
+
+            migrationBuilder.RenameColumn(
+                name: "id",
+                table: "map",
+                newName: "Id");
+
+            migrationBuilder.RenameColumn(
+                name: "user_id",
+                table: "map",
+                newName: "UserId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_map_user_id",
+                table: "map",
+                newName: "IX_map_UserId");
+
+            migrationBuilder.RenameColumn(
+                name: "id",
+                table: "layer",
+                newName: "Id");
+
+            migrationBuilder.RenameColumn(
+                name: "map_id",
+                table: "layer",
+                newName: "MapId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_layer_map_id",
+                table: "layer",
+                newName: "IX_layer_MapId");
+
+            migrationBuilder.AddColumn<string>(
+                name: "settings",
+                table: "layer",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_layer_map_MapId",
+                table: "layer",
+                column: "MapId",
+                principalTable: "map",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_map_user_UserId",
+                table: "map",
+                column: "UserId",
+                principalTable: "user",
+                principalColumn: "Id");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
@@ -85,75 +154,6 @@ namespace ThematicMapCreator.Api.Migrations
                 column: "user_id",
                 principalTable: "user",
                 principalColumn: "id");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_layer_map_map_id",
-                table: "layer");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_map_user_user_id",
-                table: "map");
-
-            migrationBuilder.DropTable(
-                name: "layer_options");
-
-            migrationBuilder.RenameColumn(
-                name: "id",
-                table: "user",
-                newName: "Id");
-
-            migrationBuilder.RenameColumn(
-                name: "id",
-                table: "map",
-                newName: "Id");
-
-            migrationBuilder.RenameColumn(
-                name: "user_id",
-                table: "map",
-                newName: "UserId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_map_user_id",
-                table: "map",
-                newName: "IX_map_UserId");
-
-            migrationBuilder.RenameColumn(
-                name: "id",
-                table: "layer",
-                newName: "Id");
-
-            migrationBuilder.RenameColumn(
-                name: "map_id",
-                table: "layer",
-                newName: "MapId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_layer_map_id",
-                table: "layer",
-                newName: "IX_layer_MapId");
-
-            migrationBuilder.AddColumn<string>(
-                name: "settings",
-                table: "layer",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_layer_map_MapId",
-                table: "layer",
-                column: "MapId",
-                principalTable: "map",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_map_user_UserId",
-                table: "map",
-                column: "UserId",
-                principalTable: "user",
-                principalColumn: "Id");
         }
     }
 }

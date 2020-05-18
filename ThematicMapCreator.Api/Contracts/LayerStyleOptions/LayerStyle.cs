@@ -1,4 +1,6 @@
-﻿namespace ThematicMapCreator.Api.Models
+﻿using System;
+
+namespace ThematicMapCreator.Api.Contracts.LayerStyleOptions
 {
     public enum LayerStyle
     {

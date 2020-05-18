@@ -7,7 +7,7 @@ import {
     LatLngBounds, latLngBounds,
     Layer,
     Map, MapOptions,
-    PathOptions,
+    PathOptions, StyleFunction,
     tileLayer
 } from 'leaflet';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,10 @@ import { Subscription } from 'rxjs';
 import { MapService } from '../../services/map.service';
 import * as Models from '../../models/layer';
 import { LayerType } from '../../models/layer-type.enum';
-import { LayerStyleOptions } from '../../models/layer-style-options';
+import { LayerStyle } from '../../models/layer-style-options/layer-style.enum';
+import { LayerStyleOptions } from '../../models/layer-style-options/layer-style-options';
+import { SimpleStyleOptions } from '../../models/layer-style-options/simple-style-options';
+import { UniqueValuesStyleOptions } from '../../models/layer-style-options/unique-values-style-options';
 
 @Component({
     selector: 'app-map',
@@ -107,25 +110,51 @@ export class MapComponent implements OnInit {
             onEachFeature: this.onEachFeature,
             pointToLayer: this.pointToLayer(layer.styleOptions),
             filter: this.getFilter(layer.type),
-            style: this.getStyle(layer.type, layer.styleOptions),
+            style: this.getStyle(layer.styleOptions),
         };
     }
 
     private onEachFeature(feature: GeoJSON.Feature, layer: Layer): void {
         if (feature.properties) {
             const popupContent: string = JSON.stringify(feature.properties, null, 4)
-                .replace(/\n( *)/g, (_, p1) => '<br>' + '&nbsp;'.repeat(p1.length))
-                .replace(/[{}\[\]]/g, () => '');
+                .replace(/\n*( *)},|\n*( *)],/g, () => ',')
+                .replace(/\n*( *)\[|\n*( *){|}|]/g, () => '')
+                .replace(/\n( *)/g, (_, p1) => '<br>' + '&nbsp;'.repeat(p1.length));
             layer.bindPopup(popupContent);
         }
     }
 
-    private pointToLayer(styleOptions: LayerStyleOptions): (_, latlng: LatLng) => Layer {
-        const markerOptions: CircleMarkerOptions = {
-            radius: styleOptions?.size
-        };
+    private pointToLayer(styleOptions: LayerStyleOptions): (feature: GeoJSON.Feature, latlng: LatLng) => Layer {
+        return (feature: GeoJSON.Feature, latlng: LatLng): Layer => {
+            let simpleStyleOptions: SimpleStyleOptions;
 
-        return (_, latlng: LatLng): Layer => {
+            // TODO объеденить с методом getStyle().
+            switch (styleOptions.style) {
+                case LayerStyle.None: {
+                    simpleStyleOptions = styleOptions as SimpleStyleOptions;
+                    break;
+                }
+                case LayerStyle.UniqueValues: {
+                    const uniqueValuesStyleOptions = styleOptions as UniqueValuesStyleOptions;
+
+                    const propertyName = uniqueValuesStyleOptions.propertyName;
+                    const value = feature.properties[propertyName];
+                    const valueStr = value
+                        ? typeof value === 'object' ? JSON.stringify(value) : value.toString()
+                        : 'null';
+                    simpleStyleOptions = uniqueValuesStyleOptions.valueStyleOptions[valueStr] ?? new SimpleStyleOptions();
+
+                    break;
+                }
+                case LayerStyle.DensityMap:
+                case LayerStyle.GraduatedCharacters:
+                case LayerStyle.GraduatedColors:
+                case LayerStyle.ChartDiagram:
+                default:
+                    return circleMarker(latlng);
+            }
+
+            const markerOptions: CircleMarkerOptions = {radius: simpleStyleOptions?.size};
             return circleMarker(latlng, markerOptions);
         };
     }
@@ -153,12 +182,43 @@ export class MapComponent implements OnInit {
         };
     }
 
-    private getStyle(type: LayerType, styleOptions: LayerStyleOptions): PathOptions {
-        return {
-            color: styleOptions?.color,
-            fillColor: styleOptions?.fillColor,
-            weight: type === LayerType.Point ? 1 : styleOptions?.size,
-            fillOpacity: 0.5
+    private getStyle(styleOptions: LayerStyleOptions): StyleFunction {
+        return (feature: GeoJSON.Feature): PathOptions => {
+            let simpleStyleOptions: SimpleStyleOptions;
+
+            switch (styleOptions.style) {
+                case LayerStyle.None: {
+                    simpleStyleOptions = styleOptions as SimpleStyleOptions;
+                    break;
+                }
+                case LayerStyle.UniqueValues: {
+                    const uniqueValuesStyleOptions = styleOptions as UniqueValuesStyleOptions;
+
+                    const propertyName = uniqueValuesStyleOptions.propertyName;
+                    const value = feature.properties[propertyName];
+                    const valueStr = value
+                        ? typeof value === 'object' ? JSON.stringify(value) : value.toString()
+                        : 'null';
+                    simpleStyleOptions = uniqueValuesStyleOptions.valueStyleOptions[valueStr] ?? new SimpleStyleOptions();
+
+                    break;
+                }
+                case LayerStyle.DensityMap:
+                case LayerStyle.GraduatedCharacters:
+                case LayerStyle.GraduatedColors:
+                case LayerStyle.ChartDiagram:
+                default:
+                    return {};
+            }
+
+            return {
+                color: simpleStyleOptions?.color,
+                fillColor: simpleStyleOptions?.fillColor,
+                weight: feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint'
+                    ? 1
+                    : simpleStyleOptions?.size,
+                fillOpacity: 0.5
+            };
         };
     }
 }

@@ -1,48 +1,69 @@
 <h2 mat-dialog-title>{{title}}</h2>
 
-<mat-dialog-content [formGroup]="editLayerForm" fxLayout="column">
+<mat-dialog-content>
 
-    <mat-form-field>
-        <input matInput formControlName="name" placeholder="Название"/>
-        <mat-error *ngIf="layerName.hasError('required')">
-            Необходимо ввести название.
-        </mat-error>
-        <mat-error *ngIf="layerName.hasError('maxlength')">
-            Название не должно превышать {{layerName.getError('maxlength')?.requiredLength}} символа.
-        </mat-error>
-    </mat-form-field>
+    <form [formGroup]="editLayerForm" fxLayout="column">
+        <mat-form-field>
+            <input matInput formControlName="name" placeholder="Название"/>
+            <mat-error *ngIf="layerName.hasError('required')">
+                Необходимо ввести название.
+            </mat-error>
+            <mat-error *ngIf="layerName.hasError('maxlength')">
+                Название не должно превышать {{layerName.getError('maxlength')?.requiredLength}} символа.
+            </mat-error>
+        </mat-form-field>
 
-    <ng-container [ngSwitch]="data.type">
-        <ng-template ngSwitchCase="Create">
+        <ng-container [ngSwitch]="data.type">
+            <ng-template ngSwitchCase="Create">
+                <div class="mat-form-field">
+                    <mat-label>Геоданные</mat-label>
+                    <br/>
+                    <input type="file" [accept]="availableFileExtensions" (change)="onFilesChange($event.target['files'])"/>
+                    <mat-error *ngIf="layerData.dirty && layerData.hasError('required')">
+                        Не удалось прочитать файл.
+                    </mat-error>
+                </div>
 
-            <div class="mat-form-field">
-                <mat-label>Геоданные</mat-label>
-                <br/>
-                <input type="file" [accept]="availableFileExtensions" (change)="onFilesChange($event.target['files'])"/>
-                <mat-error *ngIf="layerData.dirty && layerData.hasError('required')">
-                    Не удалось прочитать файл.
-                </mat-error>
-            </div>
+                <mat-form-field>
+                    <mat-select formControlName="type" placeholder="Тип слоя">
+                        <mat-option *ngFor="let type of layerTypeOptions" [value]="type">{{getLayerTypeOptionName(type)}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="layerType.hasError('required')">
+                        Необходимо выбрать тип слоя.
+                    </mat-error>
+                </mat-form-field>
+            </ng-template>
 
+            <ng-template ngSwitchCase="Edit">
+                <mat-form-field>
+                    <mat-select formControlName="style" placeholder="Стиль отображения" (valueChange)="onStyleChange($event)">
+                        <mat-option *ngFor="let style of layerStyleOptions" [value]="style">{{getLayerStyleOptionName(style)}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-template>
+        </ng-container>
+    </form>
+
+    <form [formGroup]="editLayerStyleForm" *ngIf="data.type === 'Edit'" fxLayout="column">
+        <ng-container *ngIf="layerStyle.value === 1">
             <mat-form-field>
-                <mat-select formControlName="type" placeholder="Тип слоя">
-                    <mat-option *ngFor="let type of layerTypeOptions" [value]="type">{{getLayerTypeOptionName(type)}}</mat-option>
+                <mat-select formControlName="propertyName" placeholder="Атрибут" (valueChange)="onPropertyNameChange($event)">
+                    <mat-option *ngFor="let propertyName of propertyNames" [value]="propertyName">{{propertyName}}</mat-option>
                 </mat-select>
-                <mat-error *ngIf="layerType.hasError('required')">
-                    Необходимо выбрать тип слоя.
+                <mat-error *ngIf="layerPropertyName.hasError('required')">
+                    Необходимо выбрать атрибут для настройки отображения.
                 </mat-error>
             </mat-form-field>
 
-        </ng-template>
-
-        <ng-template ngSwitchCase="Edit">
-
             <mat-form-field>
-                <mat-select formControlName="style" placeholder="Стиль отображения">
-                    <mat-option *ngFor="let style of layerStyleOptions" [value]="style">{{getLayerStyleOptionName(style)}}</mat-option>
+                <mat-select formControlName="propertyValue" placeholder="Значение" (valueChange)="onPropertyValueChange($event)">
+                    <mat-option *ngFor="let propertyValue of propertyValues"
+                        [matTooltip]="propertyValue" [value]="propertyValue">{{propertyValue}}</mat-option>
                 </mat-select>
             </mat-form-field>
+        </ng-container>
 
+        <ng-container *ngIf="layerStyle.value === 0 || layerStyle.value === 1">
             <mat-form-field>
                 <input matInput type="number" min="1" max="64" formControlName="size" placeholder="Размер"/>
             </mat-form-field>
@@ -51,16 +72,15 @@
                 <input matInput type="color" formControlName="color" placeholder="Цвет обводки"/>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field *ngIf="layerType.value !== 2">
                 <input matInput type="color" formControlName="fillColor" placeholder="Цвет заливки"/>
             </mat-form-field>
-
-        </ng-template>
-    </ng-container>
+        </ng-container>
+    </form>
 
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="!editLayerForm.valid || !editLayerForm.dirty">ОК</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="disabled">ОК</button>
 </mat-dialog-actions>

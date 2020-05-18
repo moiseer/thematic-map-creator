@@ -10,7 +10,6 @@ namespace ThematicMapCreator.Api.Models
         public Map Map { get; set; }
         public Guid MapId { get; set; }
         public string Name { get; set; }
-        public LayerStyle Style { get; set; }
         public string StyleOptions { get; set; }
         public LayerType Type { get; set; }
         public bool Visible { get; set; }

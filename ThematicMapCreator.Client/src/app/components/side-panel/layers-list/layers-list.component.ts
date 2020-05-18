@@ -12,7 +12,7 @@ import { EditLayerDialogParameters } from '../edit-layer-dialog/edit-layer-dialo
 import { EditLayerDialogComponent } from '../edit-layer-dialog/edit-layer-dialog.component';
 import { EditLayerDialogType } from '../edit-layer-dialog/edit-layer-dialog-type.enum';
 import { getLayerTypeName, LayerType } from '../../../models/layer-type.enum';
-import { getLayerStyleName, LayerStyle } from '../../../models/layer-style.enum';
+import { getLayerStyleName, LayerStyle } from '../../../models/layer-style-options/layer-style.enum';
 
 @Component({
     selector: 'app-layers-list',

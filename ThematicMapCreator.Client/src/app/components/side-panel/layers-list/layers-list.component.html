@@ -14,7 +14,7 @@
         <div fxLayoutAlign="row center" class="list-item" *ngFor="let layer of layers; index as layerIndex" cdkDrag cdkDragBoundary="#layers">
             <div fxLayout="column" class="layer-text">
                 <span>{{layer.name}}</span>
-                <small class="layer-options">{{getLayerTypeOptionName(layer.type)}} | {{getLayerStyleOptionName(layer.style)}}</small>
+                <small class="layer-options">{{getLayerTypeOptionName(layer.type)}} | {{getLayerStyleOptionName(layer.styleOptions?.style)}}</small>
             </div>
             <div fxFlex></div>
             <button mat-button [matTooltip]="layer.visible?'Скрыть':'Показать'" (click)="onChangeLayerVisibility(layer)">

@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ThematicMapCreator.Api.Contracts;
+using ThematicMapCreator.Api.Contracts.LayerStyleOptions;
+using ThematicMapCreator.Api.Core;
 using ThematicMapCreator.Api.Migrations;
 using ThematicMapCreator.Api.Models;
 
@@ -56,7 +58,12 @@ namespace ThematicMapCreator.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new KeyJsonConverter<ILayerStyleOptions, LayerStyle>(styleOptions => styleOptions.Style)
+                    .RegisterType<SimpleStyleOptions>(LayerStyle.None)
+                    .RegisterType<UniqueValuesStyleOptions>(LayerStyle.UniqueValues));
+            });
 
             services.AddSwaggerGen(options => options.SwaggerDoc("v1",
                 new OpenApiInfo
@@ -75,9 +82,14 @@ namespace ThematicMapCreator.Api
 
         private static void ConfigureMapping()
         {
+            // TODO убрать повторение создания конвертера.
+            JsonConverter converter = new KeyJsonConverter<ILayerStyleOptions, LayerStyle>(styleOptions => styleOptions.Style)
+                .RegisterType<SimpleStyleOptions>(LayerStyle.None)
+                .RegisterType<UniqueValuesStyleOptions>(LayerStyle.UniqueValues);
+
             TypeAdapterConfig<Layer, LayerOverview>.NewConfig()
                 .Map(dest => dest.Data, source => JsonConvert.DeserializeObject<GeoJson>(source.Data))
-                .Map(dest => dest.StyleOptions, source => JsonConvert.DeserializeObject<LayerStyleOptions>(source.StyleOptions));
+                .Map(dest => dest.StyleOptions, source => JsonConvert.DeserializeObject<ILayerStyleOptions>(source.StyleOptions, converter));
             TypeAdapterConfig<LayerOverview, Layer>.NewConfig()
                 .Map(dest => dest.Data, source => JsonConvert.SerializeObject(source.Data))
                 .Map(dest => dest.StyleOptions, source => JsonConvert.SerializeObject(source.StyleOptions));

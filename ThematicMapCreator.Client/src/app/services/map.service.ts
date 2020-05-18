@@ -9,7 +9,7 @@ import { Map } from '../models/map';
 import { Layer } from '../models/layer';
 import { SaveMapRequest } from '../contracts/save-map-request';
 import { LayerType } from '../models/layer-type.enum';
-import { LayerStyle } from '../models/layer-style.enum';
+import { LayerStyle } from '../models/layer-style-options/layer-style.enum';
 
 @Injectable({
     providedIn: 'root'
@@ -89,8 +89,8 @@ export class MapService {
         const common = {
             visible: true,
             type: LayerType.None,
-            style: LayerStyle.None,
             styleOptions: {
+                style:  LayerStyle.None,
                 color: '#3388ff',
                 fillColor: '#3388ff',
                 size: 3

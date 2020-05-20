@@ -1,6 +1,4 @@
 using System;
-using BAMCIS.GeoJSON;
-using Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using ThematicMapCreator.Api.Contracts;
 using ThematicMapCreator.Api.Contracts.LayerStyleOptions;
 using ThematicMapCreator.Api.Core;
 using ThematicMapCreator.Api.Migrations;
@@ -52,17 +48,20 @@ namespace ThematicMapCreator.Api
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Simple Map"));
 
             app.UseDatabaseMigration();
-
-            ConfigureMapping();
+            app.UseMapping();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var layerStyleOptionsConverter = new KeyJsonConverter<ILayerStyleOptions, LayerStyle>(styleOptions => styleOptions.Style)
+                .RegisterType<SimpleStyleOptions>(LayerStyle.None)
+                .RegisterType<UniqueValuesStyleOptions>(LayerStyle.UniqueValues)
+                .RegisterType<GraduatedColorsStyleOptions>(LayerStyle.GraduatedColors);
+            services.AddSingleton(layerStyleOptionsConverter);
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
-                options.SerializerSettings.Converters.Add(new KeyJsonConverter<ILayerStyleOptions, LayerStyle>(styleOptions => styleOptions.Style)
-                    .RegisterType<SimpleStyleOptions>(LayerStyle.None)
-                    .RegisterType<UniqueValuesStyleOptions>(LayerStyle.UniqueValues));
+                options.SerializerSettings.Converters.Add(layerStyleOptionsConverter);
             });
 
             services.AddSwaggerGen(options => options.SwaggerDoc("v1",
@@ -78,24 +77,6 @@ namespace ThematicMapCreator.Api
             );
 
             services.AddDbContextDesignTimeServices();
-        }
-
-        private static void ConfigureMapping()
-        {
-            // TODO убрать повторение создания конвертера.
-            JsonConverter converter = new KeyJsonConverter<ILayerStyleOptions, LayerStyle>(styleOptions => styleOptions.Style)
-                .RegisterType<SimpleStyleOptions>(LayerStyle.None)
-                .RegisterType<UniqueValuesStyleOptions>(LayerStyle.UniqueValues);
-
-            TypeAdapterConfig<Layer, LayerOverview>.NewConfig()
-                .Map(dest => dest.Data, source => JsonConvert.DeserializeObject<GeoJson>(source.Data))
-                .Map(dest => dest.StyleOptions, source => JsonConvert.DeserializeObject<ILayerStyleOptions>(source.StyleOptions, converter));
-            TypeAdapterConfig<LayerOverview, Layer>.NewConfig()
-                .Map(dest => dest.Data, source => JsonConvert.SerializeObject(source.Data))
-                .Map(dest => dest.StyleOptions, source => JsonConvert.SerializeObject(source.StyleOptions));
-
-            TypeAdapterConfig<SaveMapRequest, Map>.NewConfig()
-                .Map(dest => dest.Layers, source => null as object);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace ThematicMapCreator.Api.Contracts.LayerStyleOptions
     {
         public string Color { get; set; }
         public string FillColor { get; set; }
-        public int Size { get; set; }
+        public double Size { get; set; }
         public LayerStyle Style { get; } = LayerStyle.None;
     }
 }

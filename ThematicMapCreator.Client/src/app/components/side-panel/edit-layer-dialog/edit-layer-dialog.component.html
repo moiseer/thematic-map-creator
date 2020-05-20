@@ -45,37 +45,34 @@
     </form>
 
     <form [formGroup]="editLayerStyleForm" *ngIf="data.type === 'Edit'" fxLayout="column">
-        <ng-container *ngIf="layerStyle.value === 1">
-            <mat-form-field>
-                <mat-select formControlName="propertyName" placeholder="Атрибут" (valueChange)="onPropertyNameChange($event)">
-                    <mat-option *ngFor="let propertyName of propertyNames" [value]="propertyName">{{propertyName}}</mat-option>
-                </mat-select>
-                <mat-error *ngIf="layerPropertyName.hasError('required')">
-                    Необходимо выбрать атрибут для настройки отображения.
-                </mat-error>
-            </mat-form-field>
+        <mat-form-field *ngIf="layerStyle.value === 1 || layerStyle.value === 4">
+            <mat-select formControlName="propertyName" placeholder="Атрибут" (valueChange)="onPropertyNameChange($event)">
+                <mat-option *ngFor="let propertyName of propertyNames" [value]="propertyName">{{propertyName}}</mat-option>
+            </mat-select>
+            <mat-hint *ngIf="layerStyle.value === 4">Минимум: {{minValueNumber}}, максимум: {{maxValueNumber}}.</mat-hint>
+            <mat-error *ngIf="layerPropertyName.hasError('required')">
+                Необходимо выбрать атрибут для настройки отображения.
+            </mat-error>
+        </mat-form-field>
 
-            <mat-form-field>
-                <mat-select formControlName="propertyValue" placeholder="Значение" (valueChange)="onPropertyValueChange($event)">
-                    <mat-option *ngFor="let propertyValue of propertyValues"
-                        [matTooltip]="propertyValue" [value]="propertyValue">{{propertyValue}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </ng-container>
+        <mat-form-field *ngIf="layerStyle.value === 1">
+            <mat-select formControlName="propertyValue" placeholder="Значение" (valueChange)="onPropertyValueChange($event)">
+                <mat-option *ngFor="let propertyValue of propertyValues"
+                    [matTooltip]="propertyValue" [value]="propertyValue">{{propertyValue}}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
-        <ng-container *ngIf="layerStyle.value === 0 || layerStyle.value === 1">
-            <mat-form-field>
-                <input matInput type="number" min="1" max="64" formControlName="size" placeholder="Размер"/>
-            </mat-form-field>
+        <mat-form-field>
+            <input matInput type="number" min="1" max="64" formControlName="size" placeholder="Размер"/>
+        </mat-form-field>
 
-            <mat-form-field>
-                <input matInput type="color" formControlName="color" placeholder="Цвет обводки"/>
-            </mat-form-field>
+        <mat-form-field>
+            <input matInput type="color" formControlName="firstColor" [placeholder]="firstColorPlaceholder"/>
+        </mat-form-field>
 
-            <mat-form-field *ngIf="layerType.value !== 2">
-                <input matInput type="color" formControlName="fillColor" placeholder="Цвет заливки"/>
-            </mat-form-field>
-        </ng-container>
+        <mat-form-field *ngIf="layerType.value !== 2 || layerStyle.value === 4">
+            <input matInput type="color" formControlName="secondColor" [placeholder]="secondColorPlaceholder"/>
+        </mat-form-field>
     </form>
 
 </mat-dialog-content>

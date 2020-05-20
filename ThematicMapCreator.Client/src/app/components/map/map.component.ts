@@ -19,6 +19,8 @@ import { LayerStyle } from '../../models/layer-style-options/layer-style.enum';
 import { LayerStyleOptions } from '../../models/layer-style-options/layer-style-options';
 import { SimpleStyleOptions } from '../../models/layer-style-options/simple-style-options';
 import { UniqueValuesStyleOptions } from '../../models/layer-style-options/unique-values-style-options';
+import { GraduatedColorsStyleOptions } from '../../models/layer-style-options/graduated-colors-style-options';
+import { Color } from '../../core/color';
 
 @Component({
     selector: 'app-map',
@@ -126,37 +128,53 @@ export class MapComponent implements OnInit {
 
     private pointToLayer(styleOptions: LayerStyleOptions): (feature: GeoJSON.Feature, latlng: LatLng) => Layer {
         return (feature: GeoJSON.Feature, latlng: LatLng): Layer => {
-            let simpleStyleOptions: SimpleStyleOptions;
-
-            // TODO объеденить с методом getStyle().
-            switch (styleOptions.style) {
-                case LayerStyle.None: {
-                    simpleStyleOptions = styleOptions as SimpleStyleOptions;
-                    break;
-                }
-                case LayerStyle.UniqueValues: {
-                    const uniqueValuesStyleOptions = styleOptions as UniqueValuesStyleOptions;
-
-                    const propertyName = uniqueValuesStyleOptions.propertyName;
-                    const value = feature.properties[propertyName];
-                    const valueStr = value
-                        ? typeof value === 'object' ? JSON.stringify(value) : value.toString()
-                        : 'null';
-                    simpleStyleOptions = uniqueValuesStyleOptions.valueStyleOptions[valueStr] ?? new SimpleStyleOptions();
-
-                    break;
-                }
-                case LayerStyle.DensityMap:
-                case LayerStyle.GraduatedCharacters:
-                case LayerStyle.GraduatedColors:
-                case LayerStyle.ChartDiagram:
-                default:
-                    return circleMarker(latlng);
-            }
-
+            const simpleStyleOptions: SimpleStyleOptions = this.getSimpleStyleOption(styleOptions, feature);
             const markerOptions: CircleMarkerOptions = {radius: simpleStyleOptions?.size};
             return circleMarker(latlng, markerOptions);
         };
+    }
+
+    private getSimpleStyleOption(styleOptions: LayerStyleOptions, feature: GeoJSON.Feature): SimpleStyleOptions {
+        switch (styleOptions.style) {
+            case LayerStyle.None:
+                return styleOptions as SimpleStyleOptions;
+            case LayerStyle.UniqueValues: {
+                const uniqueValuesStyleOptions = styleOptions as UniqueValuesStyleOptions;
+
+                const propertyName = uniqueValuesStyleOptions.propertyName;
+                const value = feature.properties[propertyName];
+                const valueStr = value
+                    ? typeof value === 'object' ? JSON.stringify(value) : value.toString()
+                    : 'null';
+                return uniqueValuesStyleOptions.valueStyleOptions[valueStr] ?? new SimpleStyleOptions();
+            }
+            case LayerStyle.GraduatedColors: {
+                const graduatedColorsStyleOptions = styleOptions as GraduatedColorsStyleOptions;
+
+                const propertyName = graduatedColorsStyleOptions.propertyName;
+                const value = feature.properties[propertyName];
+                const valueNumber = value && typeof value === 'number' ? Number(value) : 0;
+                const minColor = Color.fromHex(graduatedColorsStyleOptions.minColor);
+                const maxColor = Color.fromHex(graduatedColorsStyleOptions.maxColor);
+                const minValue = graduatedColorsStyleOptions.minValue;
+                const maxValue = graduatedColorsStyleOptions.maxValue;
+
+                const color = Color.mix(minColor, maxColor, minValue, maxValue, valueNumber).toHex();
+                return color
+                    ? {
+                        style: LayerStyle.None,
+                        size: graduatedColorsStyleOptions?.size,
+                        color,
+                        fillColor: color
+                    } as SimpleStyleOptions
+                    : new SimpleStyleOptions();
+            }
+            case LayerStyle.DensityMap:
+            case LayerStyle.GraduatedCharacters:
+            case LayerStyle.ChartDiagram:
+            default:
+                return new SimpleStyleOptions();
+        }
     }
 
     // TODO Попробовать фильтровать при выборе типа.
@@ -184,40 +202,14 @@ export class MapComponent implements OnInit {
 
     private getStyle(styleOptions: LayerStyleOptions): StyleFunction {
         return (feature: GeoJSON.Feature): PathOptions => {
-            let simpleStyleOptions: SimpleStyleOptions;
-
-            switch (styleOptions.style) {
-                case LayerStyle.None: {
-                    simpleStyleOptions = styleOptions as SimpleStyleOptions;
-                    break;
-                }
-                case LayerStyle.UniqueValues: {
-                    const uniqueValuesStyleOptions = styleOptions as UniqueValuesStyleOptions;
-
-                    const propertyName = uniqueValuesStyleOptions.propertyName;
-                    const value = feature.properties[propertyName];
-                    const valueStr = value
-                        ? typeof value === 'object' ? JSON.stringify(value) : value.toString()
-                        : 'null';
-                    simpleStyleOptions = uniqueValuesStyleOptions.valueStyleOptions[valueStr] ?? new SimpleStyleOptions();
-
-                    break;
-                }
-                case LayerStyle.DensityMap:
-                case LayerStyle.GraduatedCharacters:
-                case LayerStyle.GraduatedColors:
-                case LayerStyle.ChartDiagram:
-                default:
-                    return {};
-            }
-
+            const simpleStyleOptions: SimpleStyleOptions = this.getSimpleStyleOption(styleOptions, feature);
             return {
                 color: simpleStyleOptions?.color,
                 fillColor: simpleStyleOptions?.fillColor,
                 weight: feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint'
                     ? 1
                     : simpleStyleOptions?.size,
-                fillOpacity: 0.5
+                fillOpacity: 1
             };
         };
     }

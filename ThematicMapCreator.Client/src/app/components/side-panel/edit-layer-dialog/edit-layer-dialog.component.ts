@@ -13,6 +13,7 @@ import { LayerStyleOptions } from '../../../models/layer-style-options/layer-sty
 import { SimpleStyleOptions } from '../../../models/layer-style-options/simple-style-options';
 import { UniqueValuesStyleOptions } from '../../../models/layer-style-options/unique-values-style-options';
 import { GraduatedColorsStyleOptions } from '../../../models/layer-style-options/graduated-colors-style-options';
+import { GraduatedCharactersStyleOptions } from '../../../models/layer-style-options/graduated-characters-style-options';
 
 @Component({
     selector: 'app-edit-layer-dialog',
@@ -48,8 +49,12 @@ export class EditLayerDialogComponent implements OnInit {
         return this.editLayerStyleForm.get('propertyValue');
     }
 
-    public get layerSize(): AbstractControl {
-        return this.editLayerStyleForm.get('size');
+    public get layerFirstSize(): AbstractControl {
+        return this.editLayerStyleForm.get('firstSize');
+    }
+
+    public get layerSecondSize(): AbstractControl {
+        return this.editLayerStyleForm.get('secondSize');
     }
 
     public get layerFirstColor(): AbstractControl {
@@ -67,6 +72,22 @@ export class EditLayerDialogComponent implements OnInit {
             case EditLayerDialogType.Edit:
                 return 'Редактирование слоя';
         }
+    }
+
+    public get firstSizePlaceholder(): string {
+        if (this.layerStyle.value === LayerStyle.GraduatedCharacters) {
+            return 'Размер минимального значения';
+        }
+
+        return 'Размер';
+    }
+
+    public get secondSizePlaceholder(): string {
+        if (this.layerStyle.value === LayerStyle.GraduatedCharacters) {
+            return 'Размер максимального значения';
+        }
+
+        return 'Размер 2';
     }
 
     public get firstColorPlaceholder(): string {
@@ -165,7 +186,7 @@ export class EditLayerDialogComponent implements OnInit {
                     : new SimpleStyleOptions();
 
                 this.editLayerStyleForm = this.formBuilder.group({
-                    size: simpleStyleOptions.size,
+                    firstSize: simpleStyleOptions.size,
                     firstColor: simpleStyleOptions.color,
                     secondColor: simpleStyleOptions.fillColor
                 });
@@ -188,12 +209,35 @@ export class EditLayerDialogComponent implements OnInit {
                 this.editLayerStyleForm = this.formBuilder.group({
                     propertyName: [propertyName, Validators.required],
                     propertyValue: null,
-                    size: null,
+                    firstSize: null,
                     firstColor: null,
                     secondColor: null
                 });
 
                 this.onPropertyNameChange(propertyName, style);
+
+                break;
+            }
+            case LayerStyle.GraduatedCharacters: {
+                const graduatedCharactersStyleOptions = this.data.currentLayer?.styleOptions.style === style
+                    ? this.data.currentLayer.styleOptions as GraduatedCharactersStyleOptions
+                    : new GraduatedCharactersStyleOptions();
+
+                this.propertyNames = this.getAvailablePropertiesForLayer('number');
+
+                const propertyName = graduatedCharactersStyleOptions?.propertyName
+                    ? graduatedCharactersStyleOptions?.propertyName
+                    : this.propertyNames.length > 0
+                        ? this.propertyNames[0]
+                        : null;
+
+                this.editLayerStyleForm = this.formBuilder.group({
+                    propertyName: [propertyName, Validators.required],
+                    firstColor: graduatedCharactersStyleOptions.color,
+                    secondColor: graduatedCharactersStyleOptions.fillColor,
+                    firstSize: graduatedCharactersStyleOptions.minSize,
+                    secondSize: graduatedCharactersStyleOptions.maxSize,
+                });
 
                 break;
             }
@@ -214,7 +258,7 @@ export class EditLayerDialogComponent implements OnInit {
                     propertyName: [propertyName, Validators.required],
                     firstColor: graduatedColorsStyleOptions.minColor,
                     secondColor: graduatedColorsStyleOptions.maxColor,
-                    size: graduatedColorsStyleOptions.size,
+                    firstSize: graduatedColorsStyleOptions.size,
                 });
 
                 this.onPropertyNameChange(propertyName, style);
@@ -222,7 +266,6 @@ export class EditLayerDialogComponent implements OnInit {
                 break;
             }
             case LayerStyle.DensityMap:
-            case LayerStyle.GraduatedCharacters:
             case LayerStyle.ChartDiagram:
             default:
                 break;
@@ -250,6 +293,7 @@ export class EditLayerDialogComponent implements OnInit {
 
                 break;
             }
+            case LayerStyle.GraduatedCharacters:
             case LayerStyle.GraduatedColors:
                 this.minValueNumber = null;
                 this.maxValueNumber = null;
@@ -264,7 +308,7 @@ export class EditLayerDialogComponent implements OnInit {
         }
 
         const simpleStyleOptions = this.valueStyleOptions[value] ?? new SimpleStyleOptions();
-        this.layerSize.setValue(simpleStyleOptions.size);
+        this.layerFirstSize.setValue(simpleStyleOptions.size);
         this.layerFirstColor.setValue(simpleStyleOptions.color);
         this.layerSecondColor.setValue(simpleStyleOptions.fillColor);
         this.currentPropertyValue = value;
@@ -334,7 +378,7 @@ export class EditLayerDialogComponent implements OnInit {
 
         switch (type) {
             case LayerType.Point:
-                return [...commonStyles/*, LayerStyle.GraduatedCharacters*/];
+                return [...commonStyles, LayerStyle.GraduatedCharacters];
             case LayerType.Line:
                 return commonStyles;
             case LayerType.Polygon:
@@ -451,9 +495,9 @@ export class EditLayerDialogComponent implements OnInit {
             case LayerStyle.None:
                 return {
                     style,
+                    size: this.layerFirstSize.value,
                     color: this.layerFirstColor.value,
-                    fillColor: this.layerSecondColor.value,
-                    size: this.layerSize.value
+                    fillColor: this.layerSecondColor.value
                 } as SimpleStyleOptions;
             case LayerStyle.UniqueValues:
                 this.saveCurrentPropertyValue();
@@ -462,18 +506,28 @@ export class EditLayerDialogComponent implements OnInit {
                     propertyName: this.layerPropertyName.value,
                     valueStyleOptions: this.valueStyleOptions
                 } as UniqueValuesStyleOptions;
+            case LayerStyle.GraduatedCharacters:
+                return {
+                    style,
+                    propertyName: this.layerPropertyName.value,
+                    minSize: this.layerFirstSize.value,
+                    maxSize: this.layerSecondSize.value,
+                    color: this.layerFirstColor.value,
+                    fillColor: this.layerSecondColor.value,
+                    minValue: this.minValueNumber,
+                    maxValue: this.maxValueNumber
+                } as GraduatedCharactersStyleOptions;
             case LayerStyle.GraduatedColors:
                 return {
                     style,
                     propertyName: this.layerPropertyName.value,
+                    size: this.layerFirstSize.value,
                     minColor: this.layerFirstColor.value,
                     maxColor: this.layerSecondColor.value,
                     minValue: this.minValueNumber,
                     maxValue: this.maxValueNumber,
-                    size: this.layerSize.value
                 } as GraduatedColorsStyleOptions;
             case LayerStyle.DensityMap:
-            case LayerStyle.GraduatedCharacters:
             case LayerStyle.ChartDiagram:
                 break;
         }
@@ -482,7 +536,7 @@ export class EditLayerDialogComponent implements OnInit {
     private saveCurrentPropertyValue(): void {
         this.valueStyleOptions[this.currentPropertyValue] = {
             style: LayerStyle.None,
-            size: this.layerSize.value,
+            size: this.layerFirstSize.value,
             color: this.layerFirstColor.value,
             fillColor: this.layerSecondColor.value
         };

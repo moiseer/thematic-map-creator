@@ -45,11 +45,13 @@
     </form>
 
     <form [formGroup]="editLayerStyleForm" *ngIf="data.type === 'Edit'" fxLayout="column">
-        <mat-form-field *ngIf="layerStyle.value === 1 || layerStyle.value === 4">
+        <mat-form-field *ngIf="layerStyle.value !== 0">
             <mat-select formControlName="propertyName" placeholder="Атрибут" (valueChange)="onPropertyNameChange($event)">
                 <mat-option *ngFor="let propertyName of propertyNames" [value]="propertyName">{{propertyName}}</mat-option>
             </mat-select>
-            <mat-hint *ngIf="layerStyle.value === 4">Минимум: {{minValueNumber}}, максимум: {{maxValueNumber}}.</mat-hint>
+            <mat-hint *ngIf="layerStyle.value === 3 || layerStyle.value === 4">
+                Минимум: {{minValueNumber}}, максимум: {{maxValueNumber}}.
+            </mat-hint>
             <mat-error *ngIf="layerPropertyName.hasError('required')">
                 Необходимо выбрать атрибут для настройки отображения.
             </mat-error>
@@ -63,7 +65,11 @@
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput type="number" min="1" max="64" formControlName="size" placeholder="Размер"/>
+            <input matInput type="number" min="1" max="64" formControlName="firstSize" [placeholder]="firstSizePlaceholder"/>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="layerStyle.value === 3">
+            <input matInput type="number" min="1" max="64" formControlName="secondSize" [placeholder]="secondSizePlaceholder"/>
         </mat-form-field>
 
         <mat-form-field>

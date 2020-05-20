@@ -20,6 +20,8 @@ import { LayerStyleOptions } from '../../models/layer-style-options/layer-style-
 import { SimpleStyleOptions } from '../../models/layer-style-options/simple-style-options';
 import { UniqueValuesStyleOptions } from '../../models/layer-style-options/unique-values-style-options';
 import { GraduatedColorsStyleOptions } from '../../models/layer-style-options/graduated-colors-style-options';
+import { GraduatedCharactersStyleOptions } from '../../models/layer-style-options/graduated-characters-style-options';
+import { MathHelper } from '../../core/math-helper';
 import { Color } from '../../core/color';
 
 @Component({
@@ -148,12 +150,32 @@ export class MapComponent implements OnInit {
                     : 'null';
                 return uniqueValuesStyleOptions.valueStyleOptions[valueStr] ?? new SimpleStyleOptions();
             }
+            case LayerStyle.GraduatedCharacters: {
+                const graduatedCharactersStyleOptions = styleOptions as GraduatedCharactersStyleOptions;
+
+                const propertyName = graduatedCharactersStyleOptions.propertyName;
+                const value = feature.properties[propertyName];
+                const valueNumber = value && (typeof value === 'number' || !isNaN(value)) ? Number(value) : 0;
+                const minSize = graduatedCharactersStyleOptions.minSize;
+                const maxSize = graduatedCharactersStyleOptions.maxSize;
+                const minValue = graduatedCharactersStyleOptions.minValue;
+                const maxValue = graduatedCharactersStyleOptions.maxValue;
+                const size = MathHelper.CalcProportional(minSize, maxSize, minValue, maxValue, valueNumber);
+
+                return size
+                    ? {
+                        size,
+                        color: graduatedCharactersStyleOptions?.color,
+                        fillColor: graduatedCharactersStyleOptions?.fillColor
+                    } as SimpleStyleOptions
+                    : new SimpleStyleOptions();
+            }
             case LayerStyle.GraduatedColors: {
                 const graduatedColorsStyleOptions = styleOptions as GraduatedColorsStyleOptions;
 
                 const propertyName = graduatedColorsStyleOptions.propertyName;
                 const value = feature.properties[propertyName];
-                const valueNumber = value && typeof value === 'number' ? Number(value) : 0;
+                const valueNumber = value && (typeof value === 'number' || !isNaN(value)) ? Number(value) : 0;
                 const minColor = Color.fromHex(graduatedColorsStyleOptions.minColor);
                 const maxColor = Color.fromHex(graduatedColorsStyleOptions.maxColor);
                 const minValue = graduatedColorsStyleOptions.minValue;
@@ -162,7 +184,6 @@ export class MapComponent implements OnInit {
                 const color = Color.mix(minColor, maxColor, minValue, maxValue, valueNumber).toHex();
                 return color
                     ? {
-                        style: LayerStyle.None,
                         size: graduatedColorsStyleOptions?.size,
                         color,
                         fillColor: color
@@ -170,7 +191,6 @@ export class MapComponent implements OnInit {
                     : new SimpleStyleOptions();
             }
             case LayerStyle.DensityMap:
-            case LayerStyle.GraduatedCharacters:
             case LayerStyle.ChartDiagram:
             default:
                 return new SimpleStyleOptions();

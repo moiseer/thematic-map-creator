@@ -6,7 +6,9 @@ using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ThematicMapCreator.Api.Contracts;
+using ThematicMapCreator.Api.Core;
 using ThematicMapCreator.Api.Models;
+using Z.EntityFramework.Plus;
 
 namespace ThematicMapCreator.Api.Controllers
 {
@@ -24,17 +26,8 @@ namespace ThematicMapCreator.Api.Controllers
         [HttpDelete("{mapId:guid}")]
         public async Task DeleteMap(Guid mapId)
         {
-            var map = await context.Maps.FirstOrDefaultAsync(m => m.Id == mapId);
-            if (map == null)
-            {
-                throw new KeyNotFoundException();
-            }
-
-            var layers = await context.Layers.Where(layer => layer.MapId == mapId).ToListAsync();
-            context.Layers.RemoveRange(layers);
-
-            context.Maps.Remove(map);
-
+            await context.Layers.Where(layer => layer.MapId == mapId).DeleteAsync();
+            await context.Maps.Where(m => m.Id == mapId).DeleteAsync();
             await context.SaveChangesAsync();
         }
 
@@ -50,9 +43,9 @@ namespace ThematicMapCreator.Api.Controllers
         [HttpGet("{mapId:guid}")]
         public async Task<MapOverview> GetMap(Guid mapId)
         {
-            var result = await context.Maps.AsNoTracking()
-                .FirstOrDefaultAsync(map => map.Id == mapId);
-            return result.Adapt<MapOverview>();
+            return await context.Maps.AsNoTracking()
+                .FirstOrDefaultAsync(map => map.Id == mapId)
+                .AdaptAsync<Map, MapOverview>();
         }
 
         [HttpGet("user/{userId:guid}")]

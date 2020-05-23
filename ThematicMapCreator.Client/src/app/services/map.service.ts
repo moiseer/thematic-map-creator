@@ -64,7 +64,7 @@ export class MapService {
         }
 
         return this.http.delete<any>(`${this.url}/${mapId}`)
-            .pipe(tap(() => mapId === this.map$.getValue().id ? this.closeMap() : {}));
+            .pipe(tap(() => mapId === this.map$.getValue()?.id ? this.closeMap() : {}));
     }
 
     public closeMap(): void {

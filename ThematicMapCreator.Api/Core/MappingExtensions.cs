@@ -1,4 +1,6 @@
-﻿using BAMCIS.GeoJSON;
+﻿using System;
+using System.Threading.Tasks;
+using BAMCIS.GeoJSON;
 using Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,5 +29,7 @@ namespace ThematicMapCreator.Api.Core
 
             return applicationBuilder;
         }
+
+        public static async Task<TDestination> AdaptAsync<TSource, TDestination>(this Task<TSource> source) => (await source).Adapt<TDestination>();
     }
 }

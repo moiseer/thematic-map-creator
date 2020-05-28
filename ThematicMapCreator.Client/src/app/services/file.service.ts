@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { GeoJSON } from 'leaflet';
 import { map } from 'rxjs/operators';
+
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FileService {
+
+    private apiUrl = environment.appUrl;
+    private url = `${this.apiUrl}/api/files`;
+
+    constructor(private http: HttpClient) {
+    }
 
     public readFileAsText(file: File): Observable<string> {
         const result = new Subject<string>();
@@ -20,10 +29,23 @@ export class FileService {
         return result.asObservable();
     }
 
-    public readFileAsGeoJson(file: File): Observable<GeoJSON.GeoJsonObject>  {
-        return this.readFileAsText(file).pipe(
-            map(text => this.tryGetGeoJson(text))
-        );
+    public readFileAsGeoJson(file: File): Observable<GeoJSON.GeoJsonObject> {
+        const extension = file.name.split('.').pop().toLowerCase();
+        switch (extension) {
+            case 'json':
+            case 'geojson':
+                return this.readFileAsText(file).pipe(
+                    map(text => this.tryGetGeoJson(text))
+                );
+            case 'csv':
+                return this.getGeoJsonFromCsv(file);
+        }
+    }
+
+    private getGeoJsonFromCsv(csv: File): Observable<GeoJSON.GeoJsonObject> {
+        const formData = new FormData();
+        formData.append('file', csv);
+        return this.http.post<GeoJSON.GeoJsonObject>(`${this.url}/csv`, formData);
     }
 
     private tryGetGeoJson(text: string): GeoJSON.GeoJsonObject {

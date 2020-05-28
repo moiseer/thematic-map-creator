@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using BAMCIS.GeoJSON;
 using Mapster;
@@ -15,13 +15,14 @@ namespace ThematicMapCreator.Api.Core
     {
         public static IApplicationBuilder UseMapping(this IApplicationBuilder applicationBuilder)
         {
-            JsonConverter converter = applicationBuilder.ApplicationServices.GetRequiredService<KeyJsonConverter<ILayerStyleOptions, LayerStyle>>();
+            using var scope = applicationBuilder.ApplicationServices.CreateScope();
+            JsonConverter converter = scope.ServiceProvider.GetRequiredService<KeyJsonConverter<ILayerStyleOptions, LayerStyle>>();
 
             TypeAdapterConfig<Layer, LayerOverview>.NewConfig()
-                .Map(dest => dest.Data, source => JsonConvert.DeserializeObject<GeoJson>(source.Data))
+                .Map(dest => dest.Data, source => GeoJson.FromJson(source.Data))
                 .Map(dest => dest.StyleOptions, source => JsonConvert.DeserializeObject<ILayerStyleOptions>(source.StyleOptions, converter));
             TypeAdapterConfig<LayerOverview, Layer>.NewConfig()
-                .Map(dest => dest.Data, source => JsonConvert.SerializeObject(source.Data))
+                .Map(dest => dest.Data, source => source.Data.ToJson())
                 .Map(dest => dest.StyleOptions, source => JsonConvert.SerializeObject(source.StyleOptions));
 
             TypeAdapterConfig<SaveMapRequest, Map>.NewConfig()

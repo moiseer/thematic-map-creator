@@ -10,6 +10,7 @@ using ThematicMapCreator.Api.Contracts.LayerStyleOptions;
 using ThematicMapCreator.Api.Core;
 using ThematicMapCreator.Api.Migrations;
 using ThematicMapCreator.Api.Models;
+using ThematicMapCreator.Api.Services;
 
 namespace ThematicMapCreator.Api
 {
@@ -76,7 +77,7 @@ namespace ThematicMapCreator.Api
                 .UseSqlServer(Configuration.GetConnectionString("ThematicMapDb"))
             );
 
-            services.AddDbContextDesignTimeServices();
+            services.AddSingleton<FilesService>();
         }
     }
 }

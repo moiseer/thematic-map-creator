@@ -9,6 +9,6 @@ namespace ThematicMapCreator.Api.Models
         public Guid Id { get; set; }
         public List<Map> Maps { get; set; }
         public string Name { get; set; }
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using BAMCIS.GeoJSON;
 using Mapster;
@@ -27,6 +27,10 @@ namespace ThematicMapCreator.Api.Core
 
             TypeAdapterConfig<SaveMapRequest, Map>.NewConfig()
                 .Map(dest => dest.Layers, source => null as object);
+
+            TypeAdapterConfig<RegistrationRequest, User>.NewConfig()
+                .Map(dest => dest.Id, () => Guid.NewGuid())
+                .Map(dest => dest.PasswordHash, source => source.Password.GetSha256());
 
             return applicationBuilder;
         }

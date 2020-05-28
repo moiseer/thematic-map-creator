@@ -107,8 +107,8 @@ namespace ThematicMapCreator.Api.Models
                 .HasMaxLength(64)
                 .IsRequired();
 
-            builder.Property(user => user.Password)
-                .HasColumnName("password")
+            builder.Property(user => user.PasswordHash)
+                .HasColumnName("password_hash")
                 .HasMaxLength(64)
                 .IsRequired();
 

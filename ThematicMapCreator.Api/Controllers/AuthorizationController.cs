@@ -5,6 +5,7 @@ using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ThematicMapCreator.Api.Contracts;
+using ThematicMapCreator.Api.Core;
 using ThematicMapCreator.Api.Models;
 
 namespace ThematicMapCreator.Api.Controllers
@@ -25,7 +26,7 @@ namespace ThematicMapCreator.Api.Controllers
         {
             var response = await context.Users
                 .Where(user => user.Email == request.Email)
-                .FirstOrDefaultAsync(user => user.Password == request.Password);
+                .FirstOrDefaultAsync(user => user.PasswordHash == request.Password.GetSha256());
 
             if (response == null)
             {
@@ -57,7 +58,6 @@ namespace ThematicMapCreator.Api.Controllers
             }
 
             var newUser = request.Adapt<User>();
-            newUser.Id = Guid.NewGuid();
 
             await context.Users.AddAsync(newUser);
             await context.SaveChangesAsync();

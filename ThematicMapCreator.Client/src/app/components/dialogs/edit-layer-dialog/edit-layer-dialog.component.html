@@ -4,7 +4,7 @@
 
     <form [formGroup]="editLayerForm" fxLayout="column">
         <mat-form-field>
-            <input matInput formControlName="name" placeholder="Название"/>
+            <input formControlName="name" matInput placeholder="Название"/>
             <mat-error *ngIf="layerName.hasError('required')">
                 Необходимо ввести название.
             </mat-error>
@@ -18,7 +18,8 @@
                 <div class="mat-form-field">
                     <mat-label>Геоданные</mat-label>
                     <br/>
-                    <input type="file" [accept]="availableFileExtensions" (change)="onFilesChange($event.target['files'])"/>
+                    <input (change)="onFilesChange($event.target['files'])" [accept]="availableFileExtensions"
+                        type="file"/>
                     <mat-error *ngIf="layerData.dirty && layerData.hasError('required')">
                         Не удалось прочитать файл.
                     </mat-error>
@@ -26,7 +27,8 @@
 
                 <mat-form-field>
                     <mat-select formControlName="type" placeholder="Тип слоя">
-                        <mat-option *ngFor="let type of layerTypeOptions" [value]="type">{{getLayerTypeOptionName(type)}}</mat-option>
+                        <mat-option *ngFor="let type of layerTypeOptions"
+                            [value]="type">{{getLayerTypeOptionName(type)}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="layerType.hasError('required')">
                         Необходимо выбрать тип слоя.
@@ -36,18 +38,22 @@
 
             <ng-template ngSwitchCase="Edit">
                 <mat-form-field>
-                    <mat-select formControlName="style" placeholder="Стиль отображения" (valueChange)="onStyleChange($event)">
-                        <mat-option *ngFor="let style of layerStyleOptions" [value]="style">{{getLayerStyleOptionName(style)}}</mat-option>
+                    <mat-select (valueChange)="onStyleChange($event)" formControlName="style"
+                        placeholder="Стиль отображения">
+                        <mat-option *ngFor="let style of layerStyleOptions"
+                            [value]="style">{{getLayerStyleOptionName(style)}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </ng-template>
         </ng-container>
     </form>
 
-    <form [formGroup]="editLayerStyleForm" *ngIf="data.type === 'Edit'" fxLayout="column">
+    <form *ngIf="data.type === 'Edit'" [formGroup]="editLayerStyleForm" fxLayout="column">
         <mat-form-field *ngIf="layerStyle.value !== 0">
-            <mat-select formControlName="propertyName" placeholder="Атрибут" (valueChange)="onPropertyNameChange($event)">
-                <mat-option *ngFor="let propertyName of propertyNames" [value]="propertyName">{{propertyName}}</mat-option>
+            <mat-select (valueChange)="onPropertyNameChange($event)" formControlName="propertyName"
+                placeholder="Атрибут">
+                <mat-option *ngFor="let propertyName of propertyNames"
+                    [value]="propertyName">{{propertyName}}</mat-option>
             </mat-select>
             <mat-hint *ngIf="layerStyle.value === 3 || layerStyle.value === 4">
                 Минимум: {{minValueNumber}}, максимум: {{maxValueNumber}}.
@@ -58,32 +64,39 @@
         </mat-form-field>
 
         <mat-form-field *ngIf="layerStyle.value === 1">
-            <mat-select formControlName="propertyValue" placeholder="Значение" (valueChange)="onPropertyValueChange($event)">
+            <mat-select (valueChange)="onPropertyValueChange($event)" formControlName="propertyValue"
+                placeholder="Значение">
                 <mat-option *ngFor="let propertyValue of propertyValues"
                     [matTooltip]="propertyValue" [value]="propertyValue">{{propertyValue}}</mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field>
-            <input matInput type="number" min="1" max="64" formControlName="firstSize" [placeholder]="firstSizePlaceholder"/>
-        </mat-form-field>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field fxFlex>
+                <input [placeholder]="firstSizePlaceholder" formControlName="firstSize" matInput max="64" min="1"
+                    type="number"/>
+            </mat-form-field>
 
-        <mat-form-field *ngIf="layerStyle.value === 3">
-            <input matInput type="number" min="1" max="64" formControlName="secondSize" [placeholder]="secondSizePlaceholder"/>
-        </mat-form-field>
+            <mat-form-field fxFlex *ngIf="layerStyle.value === 3">
+                <input [placeholder]="secondSizePlaceholder" formControlName="secondSize" matInput max="64" min="1"
+                    type="number"/>
+            </mat-form-field>
+        </div>
 
-        <mat-form-field>
-            <input matInput type="color" formControlName="firstColor" [placeholder]="firstColorPlaceholder"/>
-        </mat-form-field>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field fxFlex>
+                <input [placeholder]="firstColorPlaceholder" formControlName="firstColor" matInput type="color"/>
+            </mat-form-field>
 
-        <mat-form-field *ngIf="layerType.value !== 2 || layerStyle.value === 4">
-            <input matInput type="color" formControlName="secondColor" [placeholder]="secondColorPlaceholder"/>
-        </mat-form-field>
+            <mat-form-field fxFlex *ngIf="layerType.value !== 2 || layerStyle.value === 4">
+                <input [placeholder]="secondColorPlaceholder" formControlName="secondColor" matInput type="color"/>
+            </mat-form-field>
+        </div>
     </form>
 
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="disabled">ОК</button>
+    <button (click)="onSave()" [disabled]="disabled" color="primary" mat-flat-button>ОК</button>
 </mat-dialog-actions>

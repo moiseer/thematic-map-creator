@@ -25,13 +25,13 @@ import { MapComponent } from './components/map/map.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SidePanelComponent } from './components/side-panel/side-panel.component';
 import { MapDetailsComponent } from './components/side-panel/map-details/map-details.component';
-import { EditMapDialogComponent } from './components/side-panel/edit-map-dialog/edit-map-dialog.component';
 import { LayersListComponent } from './components/side-panel/layers-list/layers-list.component';
-import { EditLayerDialogComponent } from './components/side-panel/edit-layer-dialog/edit-layer-dialog.component';
-import { OpenMapDialogComponent } from './components/side-panel/open-map-dialog/open-map-dialog.component';
-import { DeleteObjectDialogComponent } from './components/side-panel/delete-object-dialog/delete-object-dialog.component';
 import { AuthorizationDialogComponent } from './components/auth/authorization-dialog/authorization-dialog.component';
 import { RegistrationDialogComponent } from './components/auth/registration-dialog/registration-dialog.component';
+import { DeleteObjectDialogComponent } from './components/dialogs/delete-object-dialog/delete-object-dialog.component';
+import { EditLayerDialogComponent } from './components/dialogs/edit-layer-dialog/edit-layer-dialog.component';
+import { EditMapDialogComponent } from './components/dialogs/edit-map-dialog/edit-map-dialog.component';
+import { OpenMapDialogComponent } from './components/dialogs/open-map-dialog/open-map-dialog.component';
 
 @NgModule({
     declarations: [
@@ -72,8 +72,9 @@ import { RegistrationDialogComponent } from './components/auth/registration-dial
     ],
     providers: [{
         provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-        useValue: {duration: 3000}
+        useValue: { duration: 3000 }
     }],
-    bootstrap: [AppComponent]
+    bootstrap: [ AppComponent ]
 })
-export class AppModule { }
+export class AppModule {
+}

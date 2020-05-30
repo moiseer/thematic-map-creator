@@ -42,5 +42,23 @@ namespace ThematicMapCreator.Api.Controllers
                 return BadRequest(exception.Message);
             }
         }
+
+        [HttpPost("gpx")]
+        public async Task<ActionResult<GeoJson>> GetGeoJsonFromGpx(IFormFile file)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost("kml")]
+        public async Task<ActionResult<GeoJson>> GetGeoJsonFromKml(IFormFile file)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost("xlsx")]
+        public async Task<ActionResult<GeoJson>> GetGeoJsonFromXlsx(IFormFile file)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

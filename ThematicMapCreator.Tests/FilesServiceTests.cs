@@ -18,6 +18,7 @@ namespace ThematicMapCreator.Tests
         [Fact]
         public void ConvertCsvToGeoJson_Success()
         {
+            // Arrange.
             var nameHeader = "name";
             var points = new[]
             {
@@ -27,8 +28,10 @@ namespace ThematicMapCreator.Tests
 
             var csv = points.Aggregate($"lat; lng; {nameHeader}", (result, point) => $"{result}\r\n{point.Latitude}; {point.Longitude}; {point.Name}");
 
+            // Act.
             var featureCollection = service.ConvertCsvToGeoJson(csv);
 
+            // Assert.
             Assert.NotNull(featureCollection?.Features);
             Assert.Equal(2, featureCollection.Features.Count());
             var features = featureCollection.Features.ToArray();

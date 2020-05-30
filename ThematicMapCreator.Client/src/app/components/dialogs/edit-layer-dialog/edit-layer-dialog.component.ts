@@ -18,12 +18,36 @@ import { GraduatedCharactersStyleOptions } from '../../../models/layer-style-opt
 @Component({
     selector: 'app-edit-layer-dialog',
     templateUrl: './edit-layer-dialog.component.html',
-    styleUrls: ['./edit-layer-dialog.component.css']
+    styleUrls: [ './edit-layer-dialog.component.css' ]
 })
 export class EditLayerDialogComponent implements OnInit {
 
-    private valueStyleOptions: {[value: string]: SimpleStyleOptions};
+    public editLayerForm: FormGroup;
+    public editLayerStyleForm: FormGroup;
+
+    public layerTypeOptions: LayerType[];
+    public layerStyleOptions: LayerStyle[];
+    public propertyNames: string[];
+    public propertyValues: string[];
+
+    public minValueNumber: number;
+    public maxValueNumber: number;
+
+    public availableFileExtensions = '.json, .geojson, .csv';
+
+    public getLayerTypeOptionName: (type: LayerType) => string;
+    public getLayerStyleOptionName: (style: LayerStyle) => string;
+
+    private valueStyleOptions: { [value: string]: SimpleStyleOptions };
     private currentPropertyValue: string;
+
+    constructor(
+        private fileService: FileService,
+        private dialogRef: MatDialogRef<EditLayerDialogComponent>,
+        private formBuilder: FormBuilder,
+        @Inject(MAT_DIALOG_DATA)
+        public data: EditLayerDialogParameters) {
+    }
 
     public get layerName(): AbstractControl {
         return this.editLayerForm.get('name');
@@ -76,7 +100,7 @@ export class EditLayerDialogComponent implements OnInit {
 
     public get firstSizePlaceholder(): string {
         if (this.layerStyle.value === LayerStyle.GraduatedCharacters) {
-            return 'Размер минимального значения';
+            return 'Минимальный размер';
         }
 
         return 'Размер';
@@ -84,7 +108,7 @@ export class EditLayerDialogComponent implements OnInit {
 
     public get secondSizePlaceholder(): string {
         if (this.layerStyle.value === LayerStyle.GraduatedCharacters) {
-            return 'Размер максимального значения';
+            return 'Максимальный размер';
         }
 
         return 'Размер 2';
@@ -111,29 +135,6 @@ export class EditLayerDialogComponent implements OnInit {
             || !this.editLayerStyleForm.valid
             || !this.editLayerForm.dirty && !this.editLayerStyleForm.dirty;
     }
-
-    constructor(
-        private fileService: FileService,
-        private dialogRef: MatDialogRef<EditLayerDialogComponent>,
-        private formBuilder: FormBuilder,
-        @Inject(MAT_DIALOG_DATA)
-        public data: EditLayerDialogParameters) {
-    }
-
-    public editLayerForm: FormGroup;
-    public editLayerStyleForm: FormGroup;
-
-    public layerTypeOptions: LayerType[];
-    public layerStyleOptions: LayerStyle[];
-    public propertyNames: string[];
-    public propertyValues: string[];
-    public minValueNumber: number;
-    public maxValueNumber: number;
-
-    public availableFileExtensions = '.json, .geojson, .csv';
-
-    public getLayerTypeOptionName: (type: LayerType) => string;
-    public getLayerStyleOptionName: (style: LayerStyle) => string;
 
     public ngOnInit(): void {
         this.dialogRef.updateSize('420px');
@@ -207,7 +208,7 @@ export class EditLayerDialogComponent implements OnInit {
                         : null;
 
                 this.editLayerStyleForm = this.formBuilder.group({
-                    propertyName: [propertyName, Validators.required],
+                    propertyName: [ propertyName, Validators.required ],
                     propertyValue: null,
                     firstSize: null,
                     firstColor: null,
@@ -232,7 +233,7 @@ export class EditLayerDialogComponent implements OnInit {
                         : null;
 
                 this.editLayerStyleForm = this.formBuilder.group({
-                    propertyName: [propertyName, Validators.required],
+                    propertyName: [ propertyName, Validators.required ],
                     firstColor: graduatedCharactersStyleOptions.color,
                     secondColor: graduatedCharactersStyleOptions.fillColor,
                     firstSize: graduatedCharactersStyleOptions.minSize,
@@ -255,7 +256,7 @@ export class EditLayerDialogComponent implements OnInit {
                         : null;
 
                 this.editLayerStyleForm = this.formBuilder.group({
-                    propertyName: [propertyName, Validators.required],
+                    propertyName: [ propertyName, Validators.required ],
                     firstColor: graduatedColorsStyleOptions.minColor,
                     secondColor: graduatedColorsStyleOptions.maxColor,
                     firstSize: graduatedColorsStyleOptions.size,
@@ -319,15 +320,15 @@ export class EditLayerDialogComponent implements OnInit {
         this.editLayerForm = this.formBuilder.group({
             name: [
                 this.data.currentLayer?.name,
-                [Validators.required, Validators.maxLength(64)]
+                [ Validators.required, Validators.maxLength(64) ]
             ],
             type: [
                 this.data.currentLayer?.type,
                 Validators.required
             ],
-            data: [null, !!this.data.currentLayer?.data ? [] : Validators.required],
+            data: [ null, !!this.data.currentLayer?.data ? [] : Validators.required ],
             style
-           });
+        });
 
         this.onStyleChange(style);
     }
@@ -338,10 +339,10 @@ export class EditLayerDialogComponent implements OnInit {
             return [];
         }
 
-        const availableTypes: {key: LayerType; value: boolean}[] = [
-            {key: LayerType.Point, value: false},
-            {key: LayerType.Line, value: false},
-            {key: LayerType.Polygon, value: false}
+        const availableTypes: { key: LayerType; value: boolean }[] = [
+            { key: LayerType.Point, value: false },
+            { key: LayerType.Line, value: false },
+            { key: LayerType.Polygon, value: false }
         ];
 
         const geoJsonOptions: GeoJSONOptions = {
@@ -373,16 +374,16 @@ export class EditLayerDialogComponent implements OnInit {
             LayerStyle.None,
             LayerStyle.UniqueValues,
             LayerStyle.GraduatedColors,
-            // LayerStyle.ChartDiagram
+            LayerStyle.ChartDiagram
         ];
 
         switch (type) {
             case LayerType.Point:
-                return [...commonStyles, LayerStyle.GraduatedCharacters];
+                return [ ...commonStyles, LayerStyle.GraduatedCharacters ];
             case LayerType.Line:
                 return commonStyles;
             case LayerType.Polygon:
-                return [...commonStyles/*, LayerStyle.DensityMap*/];
+                return [ ...commonStyles/*, LayerStyle.DensityMap*/ ];
             case LayerType.None:
             default:
                 return [];
@@ -406,7 +407,7 @@ export class EditLayerDialogComponent implements OnInit {
         let propertyNames: string[] = [];
 
         for (const feature of featureCollection.features) {
-            propertyNames = [...new Set([...propertyNames, ...this.getAvailablePropertiesForFeature(feature, type)])];
+            propertyNames = [ ...new Set([ ...propertyNames, ...this.getAvailablePropertiesForFeature(feature, type) ]) ];
         }
 
         return propertyNames;
@@ -433,7 +434,7 @@ export class EditLayerDialogComponent implements OnInit {
             case 'FeatureCollection':
                 return this.getAvailableValuesForFeatureCollection(geojson as GeoJSON.FeatureCollection, propertyName);
             case 'Feature':
-                return [this.getAvailableValueForFeature(geojson as GeoJSON.Feature, propertyName)];
+                return [ this.getAvailableValueForFeature(geojson as GeoJSON.Feature, propertyName) ];
             default:
                 return [];
         }
@@ -443,7 +444,7 @@ export class EditLayerDialogComponent implements OnInit {
         let values: string[] = [];
 
         for (const feature of featureCollection.features) {
-            values = [...new Set([...values, this.getAvailableValueForFeature(feature, propertyName)])];
+            values = [ ...new Set([ ...values, this.getAvailableValueForFeature(feature, propertyName) ]) ];
         }
 
         return values;

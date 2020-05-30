@@ -6,32 +6,32 @@ import { takeWhile } from 'rxjs/operators';
 
 import { Layer } from '../../../models/layer';
 import { MapService } from '../../../services/map.service';
-import { DeleteObjectDialogParameters } from '../delete-object-dialog/delete-object-dialog-parameters';
-import { DeleteObjectDialogComponent } from '../delete-object-dialog/delete-object-dialog.component';
-import { EditLayerDialogParameters } from '../edit-layer-dialog/edit-layer-dialog-parameters';
-import { EditLayerDialogComponent } from '../edit-layer-dialog/edit-layer-dialog.component';
-import { EditLayerDialogType } from '../edit-layer-dialog/edit-layer-dialog-type.enum';
 import { getLayerTypeName, LayerType } from '../../../models/layer-type.enum';
 import { getLayerStyleName, LayerStyle } from '../../../models/layer-style-options/layer-style.enum';
+import { EditLayerDialogParameters } from '../../dialogs/edit-layer-dialog/edit-layer-dialog-parameters';
+import { DeleteObjectDialogComponent } from '../../dialogs/delete-object-dialog/delete-object-dialog.component';
+import { EditLayerDialogType } from '../../dialogs/edit-layer-dialog/edit-layer-dialog-type.enum';
+import { DeleteObjectDialogParameters } from '../../dialogs/delete-object-dialog/delete-object-dialog-parameters';
+import { EditLayerDialogComponent } from '../../dialogs/edit-layer-dialog/edit-layer-dialog.component';
 
 @Component({
     selector: 'app-layers-list',
     templateUrl: './layers-list.component.html',
-    styleUrls: ['./layers-list.component.css'],
+    styleUrls: [ './layers-list.component.css' ],
 })
 export class LayersListComponent implements OnInit {
 
-    @Input() mapId: string;
+    @Input() public mapId: string;
 
     public layers: Layer[];
+
+    public getLayerTypeOptionName: (type: LayerType) => string;
+    public getLayerStyleOptionName: (style: LayerStyle) => string;
 
     constructor(
         private dialogService: MatDialog,
         private mapService: MapService) {
     }
-
-    public getLayerTypeOptionName: (type: LayerType) => string;
-    public getLayerStyleOptionName: (style: LayerStyle) => string;
 
     public ngOnInit(): void {
         this.getLayerTypeOptionName = getLayerTypeName;
@@ -87,9 +87,9 @@ export class LayersListComponent implements OnInit {
 
     public onDeleteLayer(layerIndex: number): void {
         const dialogParams: DeleteObjectDialogParameters = {
-            objectName: `слой "${this.layers[layerIndex].name}"`
+            objectName: `слой "${ this.layers[layerIndex].name }"`
         };
-        const dialogConfig: MatDialogConfig = {data: dialogParams};
+        const dialogConfig: MatDialogConfig = { data: dialogParams };
 
         this.dialogService.open(DeleteObjectDialogComponent, dialogConfig).afterClosed()
             .pipe(takeWhile(result => result))
@@ -121,7 +121,7 @@ export class LayersListComponent implements OnInit {
     }
 
     private openEditLayerDialog(dialogParams: EditLayerDialogParameters): Observable<Layer> {
-        const dialogConfig: MatDialogConfig = {data: dialogParams};
+        const dialogConfig: MatDialogConfig = { data: dialogParams };
 
         return this.dialogService.open(EditLayerDialogComponent, dialogConfig).afterClosed();
     }

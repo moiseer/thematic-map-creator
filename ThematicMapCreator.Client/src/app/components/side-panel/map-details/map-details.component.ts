@@ -1,25 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { map, flatMap, takeWhile, tap, finalize } from 'rxjs/operators';
+import { finalize, flatMap, map, takeWhile, tap } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Map } from '../../../models/map';
-import { EditMapDialogParameters } from '../edit-map-dialog/edit-map-dialog-parameters';
-import { EditMapDialogComponent } from '../edit-map-dialog/edit-map-dialog.component';
 import { MapService } from '../../../services/map.service';
 import { SaveMapRequest } from '../../../contracts/save-map-request';
 import { AuthorizationService } from '../../../services/authorization.service';
 import { Layer } from '../../../models/layer';
-import { OpenMapDialogComponent } from '../open-map-dialog/open-map-dialog.component';
 import { AuthorizationDialogComponent } from '../../auth/authorization-dialog/authorization-dialog.component';
+import { EditMapDialogParameters } from '../../dialogs/edit-map-dialog/edit-map-dialog-parameters';
+import { OpenMapDialogComponent } from '../../dialogs/open-map-dialog/open-map-dialog.component';
+import { EditMapDialogComponent } from '../../dialogs/edit-map-dialog/edit-map-dialog.component';
 
 @Component({
     selector: 'app-map-details',
     templateUrl: './map-details.component.html',
-    styleUrls: ['./map-details.component.css']
+    styleUrls: [ './map-details.component.css' ]
 })
 export class MapDetailsComponent implements OnInit {
+
+    constructor(
+        private snackBar: MatSnackBar,
+        private dialogService: MatDialog,
+        private mapService: MapService,
+        private authorizationService: AuthorizationService) {
+    }
 
     get loading(): boolean {
         return this.mapService.loading$.getValue();
@@ -31,13 +38,6 @@ export class MapDetailsComponent implements OnInit {
 
     get currentLayers(): Layer[] {
         return this.mapService.layers$.getValue();
-    }
-
-    constructor(
-        private snackBar: MatSnackBar,
-        private dialogService: MatDialog,
-        private mapService: MapService,
-        private authorizationService: AuthorizationService) {
     }
 
     ngOnInit(): void {
@@ -105,7 +105,7 @@ export class MapDetailsComponent implements OnInit {
     }
 
     private openEditMapDialog(dialogParams: EditMapDialogParameters): void {
-        const dialogConfig: MatDialogConfig = {data: dialogParams};
+        const dialogConfig: MatDialogConfig = { data: dialogParams };
 
         this.dialogService.open(EditMapDialogComponent, dialogConfig).afterClosed()
             .pipe(takeWhile(result => result))

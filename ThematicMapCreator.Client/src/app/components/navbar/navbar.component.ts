@@ -7,26 +7,26 @@ import { AuthorizationService } from '../../services/authorization.service';
 import { User } from '../../models/user';
 import { AuthorizationDialogComponent } from '../auth/authorization-dialog/authorization-dialog.component';
 import { RegistrationDialogComponent } from '../auth/registration-dialog/registration-dialog.component';
-import { OpenMapDialogComponent } from '../side-panel/open-map-dialog/open-map-dialog.component';
+import { OpenMapDialogComponent } from '../dialogs/open-map-dialog/open-map-dialog.component';
 import { MapService } from '../../services/map.service';
 
 @Component({
     selector: 'app-navbar',
     templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.css']
+    styleUrls: [ './navbar.component.css' ]
 })
 export class NavbarComponent {
     @Input() title: string;
-
-    get currentUser(): User {
-        return this.authorizationService.currentUser$.getValue();
-    }
 
     constructor(
         private snackBar: MatSnackBar,
         private dialogService: MatDialog,
         private mapService: MapService,
         private authorizationService: AuthorizationService) {
+    }
+
+    get currentUser(): User {
+        return this.authorizationService.currentUser$.getValue();
     }
 
     onOpenUserDetails(): void {

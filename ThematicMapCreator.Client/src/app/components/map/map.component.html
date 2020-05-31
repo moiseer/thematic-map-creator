@@ -1,6 +1,7 @@
 <div leaflet class="map-frame"
-     [leafletOptions]="mapOptions"
-     [leafletBaseLayers]="baseLayers"
-     [leafletLayer]="layers"
-     (leafletMapReady)="onMapReady($event)">
+    [leafletOptions]="mapOptions"
+    [leafletBaseLayers]="baseLayers"
+    [leafletLayer]="layers"
+    (leafletMapReady)="onMapReady($event)">
+    <div *ngIf="chartLayers?.length" [leafletLayers]="chartLayers"></div>
 </div>

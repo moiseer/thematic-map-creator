@@ -1,16 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import {
-    circleMarker, CircleMarkerOptions,
-    featureGroup, FeatureGroup,
-    GeoJSON, geoJSON, GeoJSONOptions,
-    LatLng, latLng,
-    LatLngBounds, latLngBounds,
+    circleMarker,
+    CircleMarkerOptions,
+    featureGroup,
+    FeatureGroup,
+    GeoJSON,
+    geoJSON,
+    GeoJSONOptions,
+    LatLng,
+    latLng,
+    LatLngBounds,
+    latLngBounds,
     Layer,
-    Map, MapOptions,
-    PathOptions, StyleFunction,
+    Map,
+    MapOptions,
+    PathOptions,
+    StyleFunction,
     tileLayer
 } from 'leaflet';
 import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { MapService } from '../../services/map.service';
 import * as Models from '../../models/layer';
@@ -21,30 +30,31 @@ import { SimpleStyleOptions } from '../../models/layer-style-options/simple-styl
 import { UniqueValuesStyleOptions } from '../../models/layer-style-options/unique-values-style-options';
 import { GraduatedColorsStyleOptions } from '../../models/layer-style-options/graduated-colors-style-options';
 import { GraduatedCharactersStyleOptions } from '../../models/layer-style-options/graduated-characters-style-options';
+import { ChartDiagramStyleOptions } from '../../models/layer-style-options/chart-diagram-style-options';
 import { MathHelper } from '../../core/math-helper';
 import { Color } from '../../core/color';
+import { DensityMapStyleOptions } from '../../models/layer-style-options/density-map-style-options';
 
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
-    styleUrls: ['./map.component.css']
+    styleUrls: [ './map.component.css' ]
 })
 export class MapComponent implements OnInit {
 
-    private map: Map;
-
     layers: FeatureGroup;
-
+    chartLayers: Layer[];
     mapOptions: MapOptions = {
         zoom: 4,
         center: latLng(56.49771, 84.97437), // Tomsk.
         minZoom: 2,
         maxBounds: latLngBounds(
-            [-90, -200],
-            [90, 200]
+            [ -90, -200 ],
+            [ 90, 200 ]
         )
     };
     baseLayers: { [layerName: string]: Layer };
+    private map: Map;
 
     constructor(private mapService: MapService) {
     }
@@ -90,12 +100,15 @@ export class MapComponent implements OnInit {
     }
 
     private subscribeToLayersChanges(): Subscription {
-        return this.mapService.layers$.subscribe(layers =>
-            this.layers = featureGroup(layers
-                .filter(layer => layer.visible)
-                .map(layer => geoJSON(layer.data, this.getGeoJsonOptions(layer)))
-            )
-        );
+        return this.mapService.layers$
+            .pipe(tap(() => this.chartLayers = []))
+            .subscribe(layers =>
+                this.layers = featureGroup(layers
+                    .filter(layer => layer.visible)
+                    .reverse()
+                    .map(layer => geoJSON(layer.data as GeoJSON.GeoJsonObject, this.getGeoJsonOptions(layer)))
+                )
+            );
     }
 
     private subscribeToZoomAll(): Subscription {
@@ -111,27 +124,38 @@ export class MapComponent implements OnInit {
 
     private getGeoJsonOptions(layer: Models.Layer): GeoJSONOptions {
         return {
-            onEachFeature: this.onEachFeature,
+            onEachFeature: this.onEachFeature(layer.styleOptions),
             pointToLayer: this.pointToLayer(layer.styleOptions),
             filter: this.getFilter(layer.type),
             style: this.getStyle(layer.styleOptions),
         };
     }
 
-    private onEachFeature(feature: GeoJSON.Feature, layer: Layer): void {
-        if (feature.properties) {
-            const popupContent: string = JSON.stringify(feature.properties, null, 4)
-                .replace(/\n*( *)},|\n*( *)],/g, () => ',')
-                .replace(/\n*( *)\[|\n*( *){|}|]/g, () => '')
-                .replace(/\n( *)/g, (_, p1) => '<br>' + '&nbsp;'.repeat(p1.length));
-            layer.bindPopup(popupContent);
-        }
+    private onEachFeature(styleOptions: LayerStyleOptions): (feature: GeoJSON.Feature, layer: Layer) => void {
+        return (feature: GeoJSON.Feature, layer: Layer): void => {
+            if (feature.properties) {
+                const popupContent: string = JSON.stringify(feature.properties, null, 4)
+                    .replace(/\n*( *)},|\n*( *)],/g, () => ',')
+                    .replace(/\n*( *)\[|\n*( *){|}|]/g, () => '')
+                    .replace(/\n( *)/g, (_, p1) => '<br>' + '&nbsp;'.repeat(p1.length));
+                layer.bindPopup(popupContent);
+            }
+
+            if (styleOptions.style === LayerStyle.ChartDiagram
+                && feature.geometry.type !== 'Point'
+                && feature.geometry.type !== 'MultiPoint') {
+                this.chartLayers.push(this.getChartMarker(styleOptions as ChartDiagramStyleOptions, feature));
+            }
+        };
     }
 
     private pointToLayer(styleOptions: LayerStyleOptions): (feature: GeoJSON.Feature, latlng: LatLng) => Layer {
         return (feature: GeoJSON.Feature, latlng: LatLng): Layer => {
+            if (styleOptions.style === LayerStyle.ChartDiagram) {
+                return this.getChartMarker(styleOptions as ChartDiagramStyleOptions, feature, latlng);
+            }
             const simpleStyleOptions: SimpleStyleOptions = this.getSimpleStyleOption(styleOptions, feature);
-            const markerOptions: CircleMarkerOptions = {radius: simpleStyleOptions?.size};
+            const markerOptions: CircleMarkerOptions = { radius: simpleStyleOptions?.size };
             return circleMarker(latlng, markerOptions);
         };
     }
@@ -150,6 +174,14 @@ export class MapComponent implements OnInit {
                     : 'null';
                 return uniqueValuesStyleOptions.valueStyleOptions[valueStr] ?? new SimpleStyleOptions();
             }
+            case LayerStyle.DensityMap: {
+                const densityMapStyleOptions = styleOptions as DensityMapStyleOptions;
+                return {
+                    size: densityMapStyleOptions.size,
+                    color: densityMapStyleOptions.color,
+                    fillColor: densityMapStyleOptions.fillColor
+                } as SimpleStyleOptions;
+            }
             case LayerStyle.GraduatedCharacters: {
                 const graduatedCharactersStyleOptions = styleOptions as GraduatedCharactersStyleOptions;
 
@@ -160,7 +192,7 @@ export class MapComponent implements OnInit {
                 const maxSize = graduatedCharactersStyleOptions.maxSize;
                 const minValue = graduatedCharactersStyleOptions.minValue;
                 const maxValue = graduatedCharactersStyleOptions.maxValue;
-                const size = MathHelper.CalcProportional(minSize, maxSize, minValue, maxValue, valueNumber);
+                const size = MathHelper.CalcProportional(minSize, maxSize, minValue, maxValue, valueNumber, true);
 
                 return size
                     ? {
@@ -181,7 +213,7 @@ export class MapComponent implements OnInit {
                 const minValue = graduatedColorsStyleOptions.minValue;
                 const maxValue = graduatedColorsStyleOptions.maxValue;
 
-                const color = Color.mix(minColor, maxColor, minValue, maxValue, valueNumber).toHex();
+                const color = Color.mix(minColor, maxColor, minValue, maxValue, valueNumber)?.toHex();
                 return color
                     ? {
                         size: graduatedColorsStyleOptions?.size,
@@ -190,8 +222,14 @@ export class MapComponent implements OnInit {
                     } as SimpleStyleOptions
                     : new SimpleStyleOptions();
             }
-            case LayerStyle.DensityMap:
-            case LayerStyle.ChartDiagram:
+            case LayerStyle.ChartDiagram: {
+                const chartDiagramStyleOptions = styleOptions as ChartDiagramStyleOptions;
+                return {
+                    size: chartDiagramStyleOptions.size,
+                    color: chartDiagramStyleOptions.color,
+                    fillColor: chartDiagramStyleOptions.fillColor
+                } as SimpleStyleOptions;
+            }
             default:
                 return new SimpleStyleOptions();
         }
@@ -222,6 +260,13 @@ export class MapComponent implements OnInit {
 
     private getStyle(styleOptions: LayerStyleOptions): StyleFunction {
         return (feature: GeoJSON.Feature): PathOptions => {
+            if ((feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint')
+                && styleOptions.style === LayerStyle.ChartDiagram) {
+                return {
+                    weight: 1,
+                    fillOpacity: 1
+                };
+            }
             const simpleStyleOptions: SimpleStyleOptions = this.getSimpleStyleOption(styleOptions, feature);
             return {
                 color: simpleStyleOptions?.color,
@@ -229,8 +274,40 @@ export class MapComponent implements OnInit {
                 weight: feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint'
                     ? 1
                     : simpleStyleOptions?.size,
-                fillOpacity: 1
+                fillOpacity: styleOptions.style === LayerStyle.DensityMap
+                    ? this.getFillOpacity(styleOptions as DensityMapStyleOptions, feature)
+                    : 1
             };
         };
+    }
+
+    private getChartMarker(styleOptions: ChartDiagramStyleOptions, feature: GeoJSON.Feature, latlng?: LatLng): any {
+        const data: { [key: string]: number } = {};
+        const chartOptions: { [key: string]: any } = {};
+        let color = '#000000';
+        Object.keys(styleOptions.propertyNameColors).forEach((propertyName, index) => {
+            const value = feature.properties[propertyName];
+            const valueNumber = value && (typeof value === 'number' || !isNaN(value)) ? Number(value) : 0;
+            color = styleOptions.propertyNameColors[propertyName] ?? color;
+
+            data[`data${index}`] = valueNumber;
+            chartOptions[`data${index}`] = { fillColor: color };
+        });
+
+        return circleMarker(latlng ?? this.getChartMarkerLatLng(feature), { color, radius: styleOptions.size });
+    }
+
+    private getChartMarkerLatLng(feature: GeoJSON.Feature): LatLng {
+        return geoJSON(feature).getBounds().getCenter();
+    }
+
+    private getFillOpacity(styleOptions: DensityMapStyleOptions, feature: GeoJSON.Feature): number {
+        const propertyName = styleOptions.propertyName;
+        const value = feature.properties[propertyName];
+        const valueNumber = value && (typeof value === 'number' || !isNaN(value)) ? Number(value) : 0;
+        const minValue = styleOptions.minValue;
+        const maxValue = styleOptions.maxValue;
+
+        return MathHelper.CalcProportional(0, 1, minValue, maxValue, valueNumber);
     }
 }

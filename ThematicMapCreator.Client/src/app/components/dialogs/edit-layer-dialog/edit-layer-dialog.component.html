@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{title}}</h2>
 
-<mat-dialog-content>
+<mat-dialog-content *ngIf="!loading; else spinner">
 
     <form [formGroup]="editLayerForm" fxLayout="column">
         <mat-form-field>
@@ -49,13 +49,13 @@
     </form>
 
     <form *ngIf="data.type === 'Edit'" [formGroup]="editLayerStyleForm" fxLayout="column">
-        <mat-form-field *ngIf="layerStyle.value !== 0">
+        <mat-form-field *ngIf="layerStyle.value !== 0 && layerStyle.value !== 5">
             <mat-select (valueChange)="onPropertyNameChange($event)" formControlName="propertyName"
                 placeholder="Атрибут">
                 <mat-option *ngFor="let propertyName of propertyNames"
                     [value]="propertyName">{{propertyName}}</mat-option>
             </mat-select>
-            <mat-hint *ngIf="layerStyle.value === 3 || layerStyle.value === 4">
+            <mat-hint *ngIf="layerStyle.value === 2 || layerStyle.value === 3 || layerStyle.value === 4">
                 Минимум: {{minValueNumber}}, максимум: {{maxValueNumber}}.
             </mat-hint>
             <mat-error *ngIf="layerPropertyName.hasError('required')">
@@ -71,30 +71,63 @@
             </mat-select>
         </mat-form-field>
 
+        <ng-container *ngIf="layerStyle.value === 5">
+            <div *ngFor="let propertyNameColor of propertyNameColors; index as index" fxLayoutAlign="row center"
+                fxLayoutGap="10px">
+                <mat-form-field>
+                    <mat-select [(value)]="propertyNameColor.propertyName" placeholder="Атрибут">
+                        <mat-option *ngFor="let propertyName of propertyNamesForChartDiagram"
+                            [value]="propertyName">{{propertyName}}</mat-option>
+                        <mat-option
+                            [value]="propertyNameColor.propertyName">{{propertyNameColor.propertyName}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="1 0 100px">
+                    <input (change)="onPropertyNameColorChange(index, $event.target['value'])"
+                        placeholder="Цвет атрибута"
+                        [value]="propertyNameColor.color" matInput
+                        type="color"/>
+                </mat-form-field>
+                <button (click)="index ? onDeleteAttribute(index) : onAddAttribute()"
+                    [matTooltip]="index ? 'Удалить атрибут' : 'Добавить атрибут'" class="mini-button"
+                    mat-button [disabled]="!index && !propertyNamesForChartDiagram?.length">
+                    <mat-icon>{{index ? 'delete' : 'add_circle_outline'}}</mat-icon>
+                </button>
+            </div>
+        </ng-container>
+
         <div fxLayout="row" fxLayoutGap="10px">
-            <mat-form-field fxFlex>
+            <mat-form-field fxFlex="1 0 100px">
                 <input [placeholder]="firstSizePlaceholder" formControlName="firstSize" matInput max="64" min="1"
                     type="number"/>
             </mat-form-field>
 
-            <mat-form-field fxFlex *ngIf="layerStyle.value === 3">
+            <mat-form-field *ngIf="layerStyle.value === 3" fxFlex="1 0 100px">
                 <input [placeholder]="secondSizePlaceholder" formControlName="secondSize" matInput max="64" min="1"
                     type="number"/>
             </mat-form-field>
         </div>
 
-        <div fxLayout="row" fxLayoutGap="10px">
-            <mat-form-field fxFlex>
+        <div fxLayout="row" fxLayoutGap="10px" *ngIf="layerStyle.value !== 5 || layerType.value !== 1">
+            <mat-form-field fxFlex="1 0 100px">
                 <input [placeholder]="firstColorPlaceholder" formControlName="firstColor" matInput type="color"/>
             </mat-form-field>
 
-            <mat-form-field fxFlex *ngIf="layerType.value !== 2 || layerStyle.value === 4">
+            <mat-form-field *ngIf="layerType.value !== 2 || layerStyle.value === 4" fxFlex="1 0 100px">
                 <input [placeholder]="secondColorPlaceholder" formControlName="secondColor" matInput type="color"/>
             </mat-form-field>
         </div>
     </form>
 
 </mat-dialog-content>
+
+<ng-template #spinner>
+    <mat-dialog-content>
+        <div fxFill fxLayoutAlign="center center" style="overflow: hidden">
+            <mat-spinner></mat-spinner>
+        </div>
+    </mat-dialog-content>
+</ng-template>
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>

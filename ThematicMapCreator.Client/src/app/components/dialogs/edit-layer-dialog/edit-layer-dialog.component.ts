@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { finalize, tap } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { geoJSON, GeoJSON, GeoJSONOptions } from 'leaflet';
@@ -14,6 +15,8 @@ import { SimpleStyleOptions } from '../../../models/layer-style-options/simple-s
 import { UniqueValuesStyleOptions } from '../../../models/layer-style-options/unique-values-style-options';
 import { GraduatedColorsStyleOptions } from '../../../models/layer-style-options/graduated-colors-style-options';
 import { GraduatedCharactersStyleOptions } from '../../../models/layer-style-options/graduated-characters-style-options';
+import { ChartDiagramStyleOptions } from '../../../models/layer-style-options/chart-diagram-style-options';
+import { DensityMapStyleOptions } from '../../../models/layer-style-options/density-map-style-options';
 
 @Component({
     selector: 'app-edit-layer-dialog',
@@ -22,6 +25,8 @@ import { GraduatedCharactersStyleOptions } from '../../../models/layer-style-opt
 })
 export class EditLayerDialogComponent implements OnInit {
 
+    public loading: boolean;
+
     public editLayerForm: FormGroup;
     public editLayerStyleForm: FormGroup;
 
@@ -29,6 +34,7 @@ export class EditLayerDialogComponent implements OnInit {
     public layerStyleOptions: LayerStyle[];
     public propertyNames: string[];
     public propertyValues: string[];
+    public propertyNameColors: { propertyName: string, color: string }[];
 
     public minValueNumber: number;
     public maxValueNumber: number;
@@ -98,6 +104,10 @@ export class EditLayerDialogComponent implements OnInit {
         }
     }
 
+    public get propertyNamesForChartDiagram(): string[] {
+        return this.propertyNames.filter(name => !this.propertyNameColors.map(x => x.propertyName).includes(name));
+    }
+
     public get firstSizePlaceholder(): string {
         if (this.layerStyle.value === LayerStyle.GraduatedCharacters) {
             return 'Минимальный размер';
@@ -164,19 +174,23 @@ export class EditLayerDialogComponent implements OnInit {
             return;
         }
 
-        this.fileService.readFileAsGeoJson(files[0]).subscribe(geojson => {
-            if (geojson && !this.layerName.value?.length) {
-                this.layerName.setValue(files[0].name);
-            }
-
-            this.layerData.setValue(geojson);
-            this.layerData.markAsDirty();
-
-            this.layerTypeOptions = this.getAvailableTypesForLayer(geojson);
-            if (this.layerTypeOptions.length === 1) {
-                this.layerType.setValue(this.layerTypeOptions[0]);
-            }
-        });
+        this.loading = true;
+        this.fileService.readFileAsGeoJson(files[0])
+            .pipe(
+                tap(geojson => {
+                    if (geojson && !this.layerName.value?.length) {
+                        this.layerName.setValue(files[0].name);
+                    }
+                }),
+                tap(geojson => this.layerData.setValue(geojson)),
+                tap(() => this.layerData.markAsDirty()),
+                tap(geojson => this.layerTypeOptions = this.getAvailableTypesForLayer(geojson)),
+                finalize(() => this.loading = false))
+            .subscribe(() => {
+                if (this.layerTypeOptions.length === 1) {
+                    this.layerType.setValue(this.layerTypeOptions[0]);
+                }
+            });
     }
 
     public onStyleChange(style: LayerStyle): void {
@@ -219,6 +233,30 @@ export class EditLayerDialogComponent implements OnInit {
 
                 break;
             }
+            case LayerStyle.DensityMap: {
+                const densityMapStyleOptions = this.data.currentLayer?.styleOptions.style === style
+                    ? this.data.currentLayer.styleOptions as DensityMapStyleOptions
+                    : new DensityMapStyleOptions();
+
+                this.propertyNames = this.getAvailablePropertiesForLayer('number');
+
+                const propertyName = densityMapStyleOptions?.propertyName
+                    ? densityMapStyleOptions?.propertyName
+                    : this.propertyNames.length > 0
+                        ? this.propertyNames[0]
+                        : null;
+
+                this.editLayerStyleForm = this.formBuilder.group({
+                    propertyName: [ propertyName, Validators.required ],
+                    firstColor: densityMapStyleOptions.color,
+                    secondColor: densityMapStyleOptions.fillColor,
+                    firstSize: densityMapStyleOptions.size
+                });
+
+                this.onPropertyNameChange(propertyName, style);
+
+                break;
+            }
             case LayerStyle.GraduatedCharacters: {
                 const graduatedCharactersStyleOptions = this.data.currentLayer?.styleOptions.style === style
                     ? this.data.currentLayer.styleOptions as GraduatedCharactersStyleOptions
@@ -239,6 +277,8 @@ export class EditLayerDialogComponent implements OnInit {
                     firstSize: graduatedCharactersStyleOptions.minSize,
                     secondSize: graduatedCharactersStyleOptions.maxSize,
                 });
+
+                this.onPropertyNameChange(propertyName, style);
 
                 break;
             }
@@ -266,10 +306,32 @@ export class EditLayerDialogComponent implements OnInit {
 
                 break;
             }
-            case LayerStyle.DensityMap:
-            case LayerStyle.ChartDiagram:
-            default:
+            case LayerStyle.ChartDiagram: {
+                const chartDiagramStyleOptions = this.data.currentLayer?.styleOptions.style === style
+                    ? this.data.currentLayer.styleOptions as ChartDiagramStyleOptions
+                    : new ChartDiagramStyleOptions();
+
+                this.propertyNames = this.getAvailablePropertiesForLayer('number');
+                this.propertyNameColors = [];
+                Object.keys(chartDiagramStyleOptions.propertyNameColors).forEach(propertyName =>
+                    this.propertyNameColors.push({
+                        propertyName,
+                        color: chartDiagramStyleOptions.propertyNameColors[propertyName]
+                    })
+                );
+
+                if (!this.propertyNameColors?.length) {
+                    this.onAddAttribute();
+                }
+
+                this.editLayerStyleForm = this.formBuilder.group({
+                    firstColor: chartDiagramStyleOptions.color,
+                    secondColor: chartDiagramStyleOptions.fillColor,
+                    firstSize: chartDiagramStyleOptions.size,
+                });
+
                 break;
+            }
         }
     }
 
@@ -294,12 +356,12 @@ export class EditLayerDialogComponent implements OnInit {
 
                 break;
             }
+            case LayerStyle.DensityMap:
             case LayerStyle.GraduatedCharacters:
             case LayerStyle.GraduatedColors:
                 this.minValueNumber = null;
                 this.maxValueNumber = null;
                 this.findMinMaxValuesForLayerProperty(propertyName);
-                break;
         }
     }
 
@@ -313,6 +375,24 @@ export class EditLayerDialogComponent implements OnInit {
         this.layerFirstColor.setValue(simpleStyleOptions.color);
         this.layerSecondColor.setValue(simpleStyleOptions.fillColor);
         this.currentPropertyValue = value;
+    }
+
+    public onPropertyNameColorChange(index: number, color: string): void {
+        this.propertyNameColors[index].color = color;
+        this.editLayerStyleForm.markAsDirty();
+    }
+
+    public onDeleteAttribute(index: number): any {
+        this.propertyNameColors.splice(index, 1);
+        this.editLayerStyleForm.markAsDirty();
+    }
+
+    public onAddAttribute(): any {
+        this.propertyNameColors.push({
+            propertyName: this.propertyNamesForChartDiagram[0],
+            color: '#000000'
+        });
+        this.editLayerStyleForm.markAsDirty();
     }
 
     private formsInit(): void {
@@ -383,7 +463,7 @@ export class EditLayerDialogComponent implements OnInit {
             case LayerType.Line:
                 return commonStyles;
             case LayerType.Polygon:
-                return [ ...commonStyles/*, LayerStyle.DensityMap*/ ];
+                return [ ...commonStyles, LayerStyle.DensityMap ];
             case LayerType.None:
             default:
                 return [];
@@ -391,7 +471,7 @@ export class EditLayerDialogComponent implements OnInit {
     }
 
     private getAvailablePropertiesForLayer(type?: string): string[] {
-        const geojson: GeoJSON.GeoJsonObject = this.data.currentLayer?.data;
+        const geojson: GeoJSON.GeoJsonObject = this.data.currentLayer?.data as GeoJSON.GeoJsonObject;
 
         switch (geojson?.type) {
             case 'FeatureCollection':
@@ -428,7 +508,7 @@ export class EditLayerDialogComponent implements OnInit {
     }
 
     private getAvailableValuesForLayerProperty(propertyName: string): string[] {
-        const geojson: GeoJSON.GeoJsonObject = this.data.currentLayer?.data;
+        const geojson: GeoJSON.GeoJsonObject = this.data.currentLayer?.data as GeoJSON.GeoJsonObject;
 
         switch (geojson?.type) {
             case 'FeatureCollection':
@@ -458,7 +538,7 @@ export class EditLayerDialogComponent implements OnInit {
     }
 
     private findMinMaxValuesForLayerProperty(propertyName: string): void {
-        const geojson: GeoJSON.GeoJsonObject = this.data.currentLayer?.data;
+        const geojson: GeoJSON.GeoJsonObject = this.data.currentLayer?.data as GeoJSON.GeoJsonObject;
 
         switch (geojson?.type) {
             case 'FeatureCollection':
@@ -507,6 +587,16 @@ export class EditLayerDialogComponent implements OnInit {
                     propertyName: this.layerPropertyName.value,
                     valueStyleOptions: this.valueStyleOptions
                 } as UniqueValuesStyleOptions;
+            case LayerStyle.DensityMap:
+                return {
+                    style,
+                    propertyName: this.layerPropertyName.value,
+                    size: this.layerFirstSize.value,
+                    color: this.layerFirstColor.value,
+                    fillColor: this.layerSecondColor.value,
+                    minValue: this.minValueNumber,
+                    maxValue: this.maxValueNumber,
+                } as DensityMapStyleOptions;
             case LayerStyle.GraduatedCharacters:
                 return {
                     style,
@@ -528,9 +618,18 @@ export class EditLayerDialogComponent implements OnInit {
                     minValue: this.minValueNumber,
                     maxValue: this.maxValueNumber,
                 } as GraduatedColorsStyleOptions;
-            case LayerStyle.DensityMap:
             case LayerStyle.ChartDiagram:
-                break;
+                const propertyNameColors: { [propertyName: string]: string } = {};
+                this.propertyNameColors.forEach((item) =>
+                    propertyNameColors[item.propertyName] = item.color
+                );
+                return {
+                    style,
+                    size: this.layerFirstSize.value,
+                    color: this.layerFirstColor.value,
+                    fillColor: this.layerSecondColor.value,
+                    propertyNameColors
+                } as ChartDiagramStyleOptions;
         }
     }
 

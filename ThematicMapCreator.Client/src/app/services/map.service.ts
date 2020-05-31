@@ -16,14 +16,12 @@ import { LayerStyle } from '../models/layer-style-options/layer-style.enum';
 })
 export class MapService {
 
-    private apiUrl = environment.appUrl;
-    private url = `${this.apiUrl}/api/maps`;
-
     public map$: BehaviorSubject<Map> = new BehaviorSubject<Map>(null);
     public layers$: BehaviorSubject<Layer[]> = new BehaviorSubject<Layer[]>([]);
-
     public zoomAll$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private apiUrl = environment.appUrl;
+    private url = `${this.apiUrl}/api/maps`;
 
     constructor(private http: HttpClient) {
     }
@@ -48,17 +46,27 @@ export class MapService {
     }
 
     public getMapLayers(mapId: string): Observable<Layer[]> {
-        // return of(this.getExampleLayers(mapId));
-        return this.http.get<Layer[]>(`${this.url}/${mapId}/layers`);
+        return this.http.get<Layer[]>(`${this.url}/${mapId}/layers`)
+            .pipe(
+                tap(layers => layers.forEach(layer => {
+                    if (typeof layer.data === 'string') {
+                        layer.data = JSON.parse(layer.data);
+                    }
+                })),
+                tap(layers => layers.sort((a, b) => a.index - b.index))
+            );
     }
 
     public saveMap(map: SaveMapRequest): Observable<string> {
-        // return of(null);
+        map.layers.forEach(layer => {
+            if (typeof layer.data === 'object') {
+                layer.data = JSON.stringify(layer.data);
+            }
+        });
         return this.http.put<string>(this.url, map);
     }
 
     public deleteMap(mapId: string): Observable<any> {
-        // return of(null)
         if (!mapId) {
             return of(null).pipe(tap(() => this.closeMap()));
         }
@@ -74,8 +82,8 @@ export class MapService {
 
     private getExampleMaps(userId: string): Map[] {
         return [
-            {id: '1', name: 'New map 1', description: 'simple description', userId},
-            {id: '2', name: 'New map 2', description: 'simple description', userId},
+            { id: '1', name: 'New map 1', description: 'simple description', userId },
+            { id: '2', name: 'New map 2', description: 'simple description', userId },
             {
                 id: '3',
                 name: 'Very long name Very long name Very long name Very long name',
@@ -90,7 +98,7 @@ export class MapService {
             visible: true,
             type: LayerType.None,
             styleOptions: {
-                style:  LayerStyle.None,
+                style: LayerStyle.None,
                 color: '#3388ff',
                 fillColor: '#3388ff',
                 size: 3
@@ -100,9 +108,9 @@ export class MapService {
         };
 
         return [
-            {id: '1', index: 1, name: 'layer 1', ...common},
-            {id: '2', index: 2, name: 'layer 2', ...common},
-            {id: '3', index: 3, name: 'layer 3 with very long name, layer 3 with very long name', ...common},
+            { id: '1', index: 1, name: 'layer 1', ...common },
+            { id: '2', index: 2, name: 'layer 2', ...common },
+            { id: '3', index: 3, name: 'layer 3 with very long name, layer 3 with very long name', ...common },
         ];
     }
 }

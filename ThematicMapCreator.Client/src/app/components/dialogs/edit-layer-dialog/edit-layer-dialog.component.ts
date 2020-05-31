@@ -39,7 +39,7 @@ export class EditLayerDialogComponent implements OnInit {
     public minValueNumber: number;
     public maxValueNumber: number;
 
-    public availableFileExtensions = '.json, .geojson, .csv';
+    public availableFileExtensions = '.json, .geojson, .csv, .gpx, .kml, .xslx';
 
     public getLayerTypeOptionName: (type: LayerType) => string;
     public getLayerStyleOptionName: (style: LayerStyle) => string;

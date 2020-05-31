@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {
     circleMarker,
     CircleMarkerOptions,
+    divIcon,
+    DivIconOptions,
     featureGroup,
     FeatureGroup,
     GeoJSON,
@@ -14,6 +16,8 @@ import {
     Layer,
     Map,
     MapOptions,
+    Marker,
+    marker,
     PathOptions,
     StyleFunction,
     tileLayer
@@ -31,9 +35,10 @@ import { UniqueValuesStyleOptions } from '../../models/layer-style-options/uniqu
 import { GraduatedColorsStyleOptions } from '../../models/layer-style-options/graduated-colors-style-options';
 import { GraduatedCharactersStyleOptions } from '../../models/layer-style-options/graduated-characters-style-options';
 import { ChartDiagramStyleOptions } from '../../models/layer-style-options/chart-diagram-style-options';
+import { DensityMapStyleOptions } from '../../models/layer-style-options/density-map-style-options';
 import { MathHelper } from '../../core/math-helper';
 import { Color } from '../../core/color';
-import { DensityMapStyleOptions } from '../../models/layer-style-options/density-map-style-options';
+import { SvgHelper } from '../../core/svg-helper';
 
 @Component({
     selector: 'app-map',
@@ -281,20 +286,29 @@ export class MapComponent implements OnInit {
         };
     }
 
-    private getChartMarker(styleOptions: ChartDiagramStyleOptions, feature: GeoJSON.Feature, latlng?: LatLng): any {
-        const data: { [key: string]: number } = {};
-        const chartOptions: { [key: string]: any } = {};
-        let color = '#000000';
+    private getChartMarker(styleOptions: ChartDiagramStyleOptions, feature: GeoJSON.Feature, latlng?: LatLng): Marker {
+        const data: number[] = [];
+        const colors: string[] = [];
+
         Object.keys(styleOptions.propertyNameColors).forEach((propertyName, index) => {
             const value = feature.properties[propertyName];
             const valueNumber = value && (typeof value === 'number' || !isNaN(value)) ? Number(value) : 0;
-            color = styleOptions.propertyNameColors[propertyName] ?? color;
+            const color = styleOptions.propertyNameColors[propertyName] ?? '#000000';
 
-            data[`data${index}`] = valueNumber;
-            chartOptions[`data${index}`] = { fillColor: color };
+            data.push(valueNumber);
+            colors.push(color);
         });
 
-        return circleMarker(latlng ?? this.getChartMarkerLatLng(feature), { color, radius: styleOptions.size });
+        latlng = latlng ?? this.getChartMarkerLatLng(feature);
+        const size = styleOptions.size;
+        const iconOptions: DivIconOptions = {
+            iconSize: [ size, size ],
+            iconAnchor: [ size / 2, size / 2 ],
+            html: SvgHelper.getPieChartHtml(data, colors),
+            className: 'svg-icon',
+        };
+
+        return marker(latlng, { icon: divIcon(iconOptions) });
     }
 
     private getChartMarkerLatLng(feature: GeoJSON.Feature): LatLng {

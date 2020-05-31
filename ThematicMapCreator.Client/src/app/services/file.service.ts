@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { GeoJSON } from 'leaflet';
 import { map, take } from 'rxjs/operators';
 
@@ -39,6 +39,14 @@ export class FileService {
                 );
             case 'csv':
                 return this.getGeoJsonFromCsv(file);
+            case 'gpx':
+                return this.getGeoJsonFromGpx(file);
+            case 'kml':
+                return this.getGeoJsonFromKml(file);
+            case 'xlsx':
+                return this.getGeoJsonFromXlsx(file);
+            default:
+                return of(null);
         }
     }
 
@@ -46,6 +54,24 @@ export class FileService {
         const formData = new FormData();
         formData.append('file', csv);
         return this.http.post<GeoJSON.GeoJsonObject>(`${this.url}/csv`, formData);
+    }
+
+    private getGeoJsonFromGpx(gpx: File): Observable<GeoJSON.GeoJsonObject> {
+        const formData = new FormData();
+        formData.append('file', gpx);
+        return this.http.post<GeoJSON.GeoJsonObject>(`${this.url}/gpx`, formData);
+    }
+
+    private getGeoJsonFromKml(kml: File): Observable<GeoJSON.GeoJsonObject> {
+        const formData = new FormData();
+        formData.append('file', kml);
+        return this.http.post<GeoJSON.GeoJsonObject>(`${this.url}/kml`, formData);
+    }
+
+    private getGeoJsonFromXlsx(xlsx: File): Observable<GeoJSON.GeoJsonObject> {
+        const formData = new FormData();
+        formData.append('file', xlsx);
+        return this.http.post<GeoJSON.GeoJsonObject>(`${this.url}/xlsx`, formData);
     }
 
     private tryGetGeoJson(text: string): GeoJSON.GeoJsonObject {

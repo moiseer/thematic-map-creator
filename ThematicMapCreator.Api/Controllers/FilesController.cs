@@ -35,7 +35,7 @@ namespace ThematicMapCreator.Api.Controllers
                 var csv = await streamReader.ReadToEndAsync();
                 var geoJson = service.ConvertCsvToGeoJson(csv);
 
-                return Ok(geoJson);
+                return Json(geoJson);
             }
             catch (Exception exception)
             {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { GeoJSON } from 'leaflet';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 
@@ -26,7 +26,7 @@ export class FileService {
 
         reader.readAsText(file);
 
-        return result.asObservable();
+        return result.pipe(take(1));
     }
 
     public readFileAsGeoJson(file: File): Observable<GeoJSON.GeoJsonObject> {

@@ -57,7 +57,10 @@ namespace ThematicMapCreator.Api
             var layerStyleOptionsConverter = new KeyJsonConverter<ILayerStyleOptions, LayerStyle>(styleOptions => styleOptions.Style)
                 .RegisterType<SimpleStyleOptions>(LayerStyle.None)
                 .RegisterType<UniqueValuesStyleOptions>(LayerStyle.UniqueValues)
-                .RegisterType<GraduatedColorsStyleOptions>(LayerStyle.GraduatedColors);
+                .RegisterType<DensityMapStyleOptions>(LayerStyle.DensityMap)
+                .RegisterType<GraduatedCharactersStyleOption>(LayerStyle.GraduatedCharacters)
+                .RegisterType<GraduatedColorsStyleOptions>(LayerStyle.GraduatedColors)
+                .RegisterType<ChartDiagramStyleOptions>(LayerStyle.ChartDiagram);
             services.AddSingleton(layerStyleOptionsConverter);
 
             services.AddControllers().AddNewtonsoftJson(options =>

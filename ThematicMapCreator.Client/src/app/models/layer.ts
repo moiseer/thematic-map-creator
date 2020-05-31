@@ -6,7 +6,7 @@ export interface Layer {
     id: string;
     index: number;
     name: string;
-    data: GeoJSON.GeoJsonObject;
+    data: GeoJSON.GeoJsonObject | string;
     type: LayerType;
     styleOptions: LayerStyleOptions;
     visible: boolean;

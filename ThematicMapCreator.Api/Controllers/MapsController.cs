@@ -34,7 +34,7 @@ namespace ThematicMapCreator.Api.Controllers
         [HttpGet("{mapId:guid}/layers")]
         public async Task<IEnumerable<LayerOverview>> GetLayersByMapId(Guid mapId)
         {
-            return await context.Layers.AsNoTracking()
+            return await context.Layers
                 .Where(layer => layer.MapId == mapId)
                 .ProjectToType<LayerOverview>()
                 .ToListAsync();
@@ -43,7 +43,7 @@ namespace ThematicMapCreator.Api.Controllers
         [HttpGet("{mapId:guid}")]
         public async Task<MapOverview> GetMap(Guid mapId)
         {
-            return await context.Maps.AsNoTracking()
+            return await context.Maps
                 .FirstOrDefaultAsync(map => map.Id == mapId)
                 .AdaptAsync<Map, MapOverview>();
         }
@@ -51,7 +51,7 @@ namespace ThematicMapCreator.Api.Controllers
         [HttpGet("user/{userId:guid}")]
         public async Task<IEnumerable<MapOverview>> GetMapsByUserId(Guid userId)
         {
-            return await context.Maps.AsNoTracking()
+            return await context.Maps
                 .Where(map => map.UserId == userId)
                 .ProjectToType<MapOverview>()
                 .ToListAsync();
@@ -99,31 +99,39 @@ namespace ThematicMapCreator.Api.Controllers
 
         private async Task<Guid> UpdateMap(SaveMapRequest request)
         {
-            var map = request.Adapt<Map>();
-
             var layers = request.Layers.Adapt<List<Layer>>();
             foreach (var layer in layers)
             {
-                layer.MapId = map.Id;
+                layer.MapId = request.Id;
             }
 
-            var oldLayers = await context.Layers.AsNoTracking().Where(layer => layer.MapId == map.Id).ToListAsync();
-
-            var newLayers = layers.Where(layer => oldLayers.All(old => old.Id != layer.Id));
+            var newLayers = layers.Where(layer => layer.Id == Guid.Empty);
             foreach (var layer in newLayers)
             {
                 layer.Id = Guid.NewGuid();
             }
 
-            var updatedLayers = layers.Where(layer => oldLayers.Any(old => old.Id == layer.Id));
-            var deletedLayers = oldLayers.Where(old => layers.All(layer => old.Id != layer.Id));
+            var oldLayers = layers.Except(newLayers);
 
-            context.Maps.Update(map);
+            await context.Maps.Where(map => map.Id == request.Id).UpdateAsync(map => new Map
+            {
+                Name = request.Name,
+                Description = request.Description
+            });
             await context.Layers.AddRangeAsync(newLayers);
-            context.Layers.UpdateRange(updatedLayers);
-            context.Layers.RemoveRange(deletedLayers);
+            await context.Layers.Where(old => !oldLayers.Select(layer => layer.Id).Contains(old.Id)).DeleteAsync();
+            foreach (var layer in oldLayers)
+            {
+                await context.Layers.Where(old => old.Id == layer.Id).UpdateAsync(old => new Layer
+                {
+                    Visible = layer.Visible,
+                    Index = layer.Index,
+                    Name = layer.Name,
+                    StyleOptions = layer.StyleOptions
+                });
+            }
 
-            return map.Id;
+            return request.Id;
         }
     }
 }

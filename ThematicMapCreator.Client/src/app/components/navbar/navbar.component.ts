@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { finalize, flatMap, takeWhile, tap } from 'rxjs/operators';
+import { takeWhile, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 import { AuthorizationService } from '../../services/authorization.service';
 import { User } from '../../models/user';
@@ -19,6 +20,7 @@ export class NavbarComponent {
     @Input() title: string;
 
     constructor(
+        private router: Router,
         private snackBar: MatSnackBar,
         private dialogService: MatDialog,
         private mapService: MapService,
@@ -37,9 +39,7 @@ export class NavbarComponent {
         this.dialogService.open(OpenMapDialogComponent).afterClosed()
             .pipe(
                 takeWhile(mapId => !!mapId),
-                tap(() => this.mapService.loading$.next(true)),
-                flatMap(mapId => this.mapService.getMap(mapId)),
-                finalize(() => this.mapService.loading$.next(false))
+                tap(mapId => this.router.navigateByUrl(`/maps/${mapId}`))
             )
             .subscribe();
     }

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { finalize, flatMap, map, takeWhile, tap } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 import { Map } from '../../../models/map';
 import { MapService } from '../../../services/map.service';
@@ -21,7 +22,10 @@ import { EditMapDialogComponent } from '../../dialogs/edit-map-dialog/edit-map-d
 })
 export class MapDetailsComponent implements OnInit {
 
+    @Input() private mapId: string;
+
     constructor(
+        private router: Router,
         private snackBar: MatSnackBar,
         private dialogService: MatDialog,
         private mapService: MapService,
@@ -41,7 +45,14 @@ export class MapDetailsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.subscribeToLogout();
+        if (this.mapId) {
+            this.mapService.loading$.next(true);
+            this.mapService.getMap(this.mapId)
+                .pipe(
+                    tap(() => this.mapService.zoomAll$.next(true)),
+                    finalize(() => this.mapService.loading$.next(false)))
+                .subscribe();
+        }
     }
 
     onEditMap(): void {
@@ -78,10 +89,7 @@ export class MapDetailsComponent implements OnInit {
                 takeWhile(userId => !!userId),
                 flatMap(() => this.dialogService.open(OpenMapDialogComponent).afterClosed()),
                 takeWhile(mapId => !!mapId),
-                tap(() => this.mapService.loading$.next(true)),
-                flatMap(mapId => this.mapService.getMap(mapId)),
-                tap(() => this.mapService.zoomAll$.next(true)),
-                finalize(() => this.mapService.loading$.next(false))
+                tap(mapId => this.router.navigateByUrl(`/maps/${mapId}`))
             )
             .subscribe();
     }
@@ -110,11 +118,6 @@ export class MapDetailsComponent implements OnInit {
         this.dialogService.open(EditMapDialogComponent, dialogConfig).afterClosed()
             .pipe(takeWhile(result => result))
             .subscribe(result => this.mapService.map$.next(result));
-    }
-
-    private subscribeToLogout(): Subscription {
-        return this.authorizationService.logout$
-            .subscribe(() => this.mapService.closeMap());
     }
 
     private MapToSaveMapRequest(userId: string, savedMap: Map, layers: Layer[]): SaveMapRequest {

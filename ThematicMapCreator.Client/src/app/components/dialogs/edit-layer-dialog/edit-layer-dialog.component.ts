@@ -31,6 +31,8 @@ export class EditLayerDialogComponent implements OnInit {
     public editLayerForm: FormGroup;
     public editLayerStyleForm: FormGroup;
 
+    public fileName = '';
+
     public layerTypeOptions: LayerType[];
     public layerStyleOptions: LayerStyle[];
     public dependencyTypeOptions = [ DependencyType.Linear, DependencyType.Logarithmic ];
@@ -187,8 +189,9 @@ export class EditLayerDialogComponent implements OnInit {
             .pipe(
                 tap(geojson => {
                     if (geojson && !this.layerName.value?.length) {
-                        this.layerName.setValue(files[0].name);
+                        this.layerName.setValue(files[0].name.slice(0, files[0].name.lastIndexOf('.')));
                     }
+                    this.fileName = files[0]?.name;
                 }),
                 tap(geojson => this.layerData.setValue(geojson)),
                 tap(() => this.layerData.markAsDirty()),

@@ -2,3 +2,9 @@
     padding: 0;
     min-width: 36px;
 }
+
+.file-name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

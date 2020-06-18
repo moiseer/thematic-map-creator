@@ -2,7 +2,7 @@
 
 <mat-dialog-content *ngIf="!loading; else spinner">
 
-    <form [formGroup]="editLayerForm" fxLayout="column">
+    <form [formGroup]="editLayerForm" fxLayout="column" fxLayoutGap="16px">
         <mat-form-field>
             <input formControlName="name" matInput placeholder="Название"/>
             <mat-error *ngIf="layerName.hasError('required')">
@@ -15,15 +15,18 @@
 
         <ng-container [ngSwitch]="data.type">
             <ng-template ngSwitchCase="Create">
-                <div class="mat-form-field">
+                <mat-form-field hintLabel="Доступные типы файлов: {{availableFileExtensions}}.">
                     <mat-label>Геоданные</mat-label>
-                    <br/>
-                    <input (change)="onFilesChange($event.target['files'])" [accept]="availableFileExtensions"
-                        type="file"/>
+                    <input disabled [value]="fileName" matInput class="file-name" placeholder="Выберите файл"/>
+                    <label matSuffix for="file" class="mat-button mat-flat-button mat-primary" fxFlex="1 0 auto">
+                            Обзор
+                    </label>
+                    <input id="file" (change)="onFilesChange($event.target['files'])" [accept]="availableFileExtensions"
+                        type="file" style="display: none"/>
                     <mat-error *ngIf="layerData.dirty && layerData.hasError('required')">
                         Не удалось прочитать файл.
                     </mat-error>
-                </div>
+                </mat-form-field>
 
                 <mat-form-field>
                     <mat-select formControlName="type" placeholder="Тип слоя">
@@ -48,7 +51,9 @@
         </ng-container>
     </form>
 
-    <form *ngIf="data.type === 'Edit'" [formGroup]="editLayerStyleForm" fxLayout="column">
+    <form *ngIf="data.type === 'Edit'" [formGroup]="editLayerStyleForm" fxLayout="column" fxLayoutGap="8px">
+
+        <!--Выбор атрибута-->
         <mat-form-field *ngIf="layerStyle.value !== 0 && layerStyle.value !== 5">
             <mat-select (valueChange)="onPropertyNameChange($event)" formControlName="propertyName"
                 placeholder="Атрибут">
@@ -63,6 +68,7 @@
             </mat-error>
         </mat-form-field>
 
+        <!--Выбор значения атрибута-->
         <mat-form-field *ngIf="layerStyle.value === 1">
             <mat-select (valueChange)="onPropertyValueChange($event)" formControlName="propertyValue"
                 placeholder="Значение">
@@ -71,6 +77,7 @@
             </mat-select>
         </mat-form-field>
 
+        <!--Выбор атрибутов и их цветов для диаграмм-->
         <ng-container *ngIf="layerStyle.value === 5">
             <div *ngFor="let propertyNameColor of propertyNameColors; index as index" fxLayoutAlign="row center"
                 fxLayoutGap="10px">
@@ -117,6 +124,7 @@
             </mat-form-field>
         </div>
 
+        <!--Выбор цвета-->
         <div fxLayout="row" fxLayoutGap="10px" *ngIf="layerStyle.value !== 5 || layerType.value !== 1">
             <mat-form-field fxFlex="1 0 100px">
                 <input [placeholder]="firstColorPlaceholder" formControlName="firstColor" matInput type="color"/>

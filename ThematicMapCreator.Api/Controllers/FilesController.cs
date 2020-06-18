@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using BAMCIS.GeoJSON;
+using Geo.Abstractions.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ThematicMapCreator.Api.Services;
@@ -20,7 +20,7 @@ namespace ThematicMapCreator.Api.Controllers
         }
 
         [HttpPost("csv")]
-        public async Task<ActionResult<GeoJson>> GetGeoJsonFromCsv(IFormFile file)
+        public async Task<ActionResult<IGeoJsonObject>> GetGeoJsonFromCsv(IFormFile file)
         {
             if (".csv" != Path.GetExtension(file.FileName).ToLower())
             {
@@ -44,21 +44,63 @@ namespace ThematicMapCreator.Api.Controllers
         }
 
         [HttpPost("gpx")]
-        public async Task<ActionResult<GeoJson>> GetGeoJsonFromGpx(IFormFile file)
+        public async Task<ActionResult<IGeoJsonObject>> GetGeoJsonFromGpx(IFormFile file)
         {
-            throw new NotImplementedException();
+            if (".gpx" != Path.GetExtension(file.FileName).ToLower())
+            {
+                return BadRequest("Расширение файла должно быть \"GPX\".");
+            }
+
+            try
+            {
+                await using var stream = file.OpenReadStream();
+                var geoJson = service.ConvertGpxToGeoJson(stream);
+                return Json(geoJson);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
 
         [HttpPost("kml")]
-        public async Task<ActionResult<GeoJson>> GetGeoJsonFromKml(IFormFile file)
+        public async Task<ActionResult<IGeoJsonObject>> GetGeoJsonFromKml(IFormFile file)
         {
-            throw new NotImplementedException();
+            if (".kml" != Path.GetExtension(file.FileName).ToLower())
+            {
+                return BadRequest("Расширение файла должно быть \"KML\".");
+            }
+
+            try
+            {
+                await using var stream = file.OpenReadStream();
+                var geoJson = service.ConvertKmlToGeoJson(stream);
+                return Json(geoJson);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
 
         [HttpPost("xlsx")]
-        public async Task<ActionResult<GeoJson>> GetGeoJsonFromXlsx(IFormFile file)
+        public async Task<ActionResult<IGeoJsonObject>> GetGeoJsonFromXlsx(IFormFile file)
         {
-            throw new NotImplementedException();
+            if (".xlsx" != Path.GetExtension(file.FileName).ToLower())
+            {
+                return BadRequest("Расширение файла должно быть \"XLSX\".");
+            }
+
+            try
+            {
+                await using var stream = file.OpenReadStream();
+                var geoJson = service.ConvertXlsxToGeoJson(stream);
+                return Json(geoJson);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
     }
 }

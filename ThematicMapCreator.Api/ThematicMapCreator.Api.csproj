@@ -7,11 +7,13 @@
 
     <ItemGroup>
         <PackageReference Include="Csv" Version="1.0.55" />
-        <PackageReference Include="GeoJSON" Version="2.1.0" />
+        <PackageReference Include="EPPlus" Version="5.1.2" />
+        <PackageReference Include="Geo" Version="1.0.0" />
         <PackageReference Include="Mapster" Version="5.3.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.4" />
+        <PackageReference Include="SharpKml.Core" Version="5.1.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.4.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.4.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.4.1" />

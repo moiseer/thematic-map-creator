@@ -1,5 +1,6 @@
 import { LayerStyleOptions } from './layer-style-options';
 import { LayerStyle } from './layer-style.enum';
+import { DependencyType } from '../../core/dependency.type';
 
 export class GraduatedCharactersStyleOptions implements LayerStyleOptions {
     style: LayerStyle.GraduatedCharacters;
@@ -10,4 +11,5 @@ export class GraduatedCharactersStyleOptions implements LayerStyleOptions {
     fillColor = '#000000';
     minValue: number;
     maxValue: number;
+    dependency: DependencyType = DependencyType.Linear;
 }

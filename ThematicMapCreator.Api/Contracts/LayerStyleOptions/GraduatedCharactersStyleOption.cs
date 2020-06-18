@@ -5,6 +5,7 @@ namespace ThematicMapCreator.Api.Contracts.LayerStyleOptions
     public class GraduatedCharactersStyleOption : ILayerStyleOptions
     {
         public string Color { get; set; }
+        public DependencyType Dependency { get; set; }
         public string FillColor { get; set; }
         public double MaxSize { get; set; }
         public double MaxValue { get; set; }

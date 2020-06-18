@@ -96,6 +96,15 @@
             </div>
         </ng-container>
 
+        <!--Выбор зависимости-->
+        <mat-form-field *ngIf="layerStyle.value === 3">
+            <mat-select formControlName="dependency" placeholder="Зависимость">
+                <mat-option *ngFor="let dependencyType of dependencyTypeOptions"
+                    [value]="dependencyType">{{getDependencyTypeOptionName(dependencyType)}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!--Выбор размера-->
         <div fxLayout="row" fxLayoutGap="10px">
             <mat-form-field fxFlex="1 0 100px">
                 <input [placeholder]="firstSizePlaceholder" formControlName="firstSize" matInput max="64" min="1"

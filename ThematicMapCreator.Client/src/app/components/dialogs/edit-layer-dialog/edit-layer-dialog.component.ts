@@ -10,6 +10,7 @@ import { Layer } from '../../../models/layer';
 import { FileService } from '../../../services/file.service';
 import { getLayerTypeName, LayerType } from '../../../models/layer-type.enum';
 import { getLayerStyleName, LayerStyle } from '../../../models/layer-style-options/layer-style.enum';
+import { DependencyType, getDependencyTypeName } from '../../../core/dependency.type';
 import { LayerStyleOptions } from '../../../models/layer-style-options/layer-style-options';
 import { SimpleStyleOptions } from '../../../models/layer-style-options/simple-style-options';
 import { UniqueValuesStyleOptions } from '../../../models/layer-style-options/unique-values-style-options';
@@ -32,6 +33,7 @@ export class EditLayerDialogComponent implements OnInit {
 
     public layerTypeOptions: LayerType[];
     public layerStyleOptions: LayerStyle[];
+    public dependencyTypeOptions = [ DependencyType.Linear, DependencyType.Logarithmic ];
     public propertyNames: string[];
     public propertyValues: string[];
     public propertyNameColors: { propertyName: string, color: string }[];
@@ -43,6 +45,7 @@ export class EditLayerDialogComponent implements OnInit {
 
     public getLayerTypeOptionName: (type: LayerType) => string;
     public getLayerStyleOptionName: (style: LayerStyle) => string;
+    public getDependencyTypeOptionName: (style: DependencyType) => string;
 
     private valueStyleOptions: { [value: string]: SimpleStyleOptions };
     private currentPropertyValue: string;
@@ -77,6 +80,10 @@ export class EditLayerDialogComponent implements OnInit {
 
     public get layerPropertyValue(): AbstractControl {
         return this.editLayerStyleForm.get('propertyValue');
+    }
+
+    public get layerDependency(): AbstractControl {
+        return this.editLayerStyleForm.get('dependency');
     }
 
     public get layerFirstSize(): AbstractControl {
@@ -150,6 +157,7 @@ export class EditLayerDialogComponent implements OnInit {
         this.dialogRef.updateSize('420px');
         this.getLayerTypeOptionName = getLayerTypeName;
         this.getLayerStyleOptionName = getLayerStyleName;
+        this.getDependencyTypeOptionName = getDependencyTypeName;
         this.layerStyleOptions = this.getAvailableStylesForLayerType(this.data.currentLayer?.type);
         this.formsInit();
     }
@@ -272,6 +280,7 @@ export class EditLayerDialogComponent implements OnInit {
 
                 this.editLayerStyleForm = this.formBuilder.group({
                     propertyName: [ propertyName, Validators.required ],
+                    dependency: graduatedCharactersStyleOptions.dependency,
                     firstColor: graduatedCharactersStyleOptions.color,
                     secondColor: graduatedCharactersStyleOptions.fillColor,
                     firstSize: graduatedCharactersStyleOptions.minSize,
@@ -606,7 +615,8 @@ export class EditLayerDialogComponent implements OnInit {
                     color: this.layerFirstColor.value,
                     fillColor: this.layerSecondColor.value,
                     minValue: this.minValueNumber,
-                    maxValue: this.maxValueNumber
+                    maxValue: this.maxValueNumber,
+                    dependency: this.layerDependency.value
                 } as GraduatedCharactersStyleOptions;
             case LayerStyle.GraduatedColors:
                 return {

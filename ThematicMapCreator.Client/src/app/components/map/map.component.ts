@@ -197,7 +197,8 @@ export class MapComponent implements OnInit {
                 const maxSize = graduatedCharactersStyleOptions.maxSize;
                 const minValue = graduatedCharactersStyleOptions.minValue;
                 const maxValue = graduatedCharactersStyleOptions.maxValue;
-                const size = MathHelper.CalcProportional(minSize, maxSize, minValue, maxValue, valueNumber, true);
+                const dependency = graduatedCharactersStyleOptions.dependency;
+                const size = MathHelper.CalcProportional(minSize, maxSize, minValue, maxValue, valueNumber, true, dependency);
 
                 return size
                     ? {

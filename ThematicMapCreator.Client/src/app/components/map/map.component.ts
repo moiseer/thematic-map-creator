@@ -22,8 +22,10 @@ import {
     StyleFunction,
     tileLayer
 } from 'leaflet';
+import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import 'leaflet-easyprint';
 
 import { MapService } from '../../services/map.service';
 import * as Models from '../../models/layer';
@@ -71,7 +73,19 @@ export class MapComponent implements OnInit {
     }
 
     onMapReady(map: Map): void {
+        this.addEasyPrint(map);
         this.map = map;
+    }
+
+    private addEasyPrint(map: Map): void {
+        (L as any).easyPrint({
+            title: 'Сохранить как изображение',
+            sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
+            filename: `my-thematic-map`,
+            exportOnly: true,
+            hideControlContainer: true,
+            defaultSizeTitles: {Current: 'Текущий размер', A4Landscape: 'A4 Альбомный', A4Portrait: 'A4 Портретный'}
+        }).addTo(map);
     }
 
     private addBaseLayers(): void {

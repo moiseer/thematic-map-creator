@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { finalize, flatMap, mergeMap, takeWhile, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 import { MapService } from '../../../services/map.service';
 import { AuthorizationService } from '../../../services/authorization.service';
@@ -21,9 +22,10 @@ export class OpenMapDialogComponent implements OnInit {
     maps: Map[];
     selectedMapId: string;
 
-    tableColumnNames: string[] = ['name', 'delete'];
+    tableColumnNames: string[] = ['name', 'share', 'delete'];
 
     constructor(
+        private clipboard: Clipboard,
         private snackBar: MatSnackBar,
         private dialogRef: MatDialogRef<OpenMapDialogComponent>,
         private dialogService: MatDialog,
@@ -38,6 +40,13 @@ export class OpenMapDialogComponent implements OnInit {
 
     onSelectMap(mapId: string): void {
         this.selectedMapId = mapId;
+    }
+
+    onShareMap(mapId: string): void {
+        const url = location.origin;
+        if (this.clipboard.copy(`${url}/maps/${mapId}`)) {
+            this.snackBar.open('Ссылка скопированна в буфер обмена.');
+        }
     }
 
     onDeleteMap(mapId: string): void {

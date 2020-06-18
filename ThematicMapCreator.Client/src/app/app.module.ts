@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -68,7 +69,8 @@ import { OpenMapDialogComponent } from './components/dialogs/open-map-dialog/ope
         MatTooltipModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
-        MatSelectModule
+        MatSelectModule,
+        ClipboardModule
     ],
     providers: [{
         provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,

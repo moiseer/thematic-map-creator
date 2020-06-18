@@ -3,20 +3,29 @@
 <mat-dialog-content>
     <ng-container *ngIf="!loading; else spinner">
         <mat-table *ngIf="maps?.length; else empty" [dataSource]="maps">
-            <ng-container matColumnDef="name" >
+            <ng-container matColumnDef="name">
                 <mat-cell fxFlex *matCellDef="let map" [matTooltip]="map.description">{{map.name}}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="delete" >
+            <ng-container matColumnDef="share">
                 <mat-cell fxFlex="0 0 auto" *matCellDef="let map">
-                    <button mat-button matTooltip="Удалить" (click)="onDeleteMap(map.id)">
+                    <button class="mini-button" mat-button matTooltip="Скопировать ссылку в буфер обмена"
+                        (click)="onShareMap(map.id)">
+                        <mat-icon>share</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+                <mat-cell fxFlex="0 0 auto" *matCellDef="let map">
+                    <button class="mini-button" mat-button matTooltip="Удалить" (click)="onDeleteMap(map.id)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </mat-cell>
             </ng-container>
 
             <mat-row *matRowDef="let map; columns: tableColumnNames" (click)="onSelectMap(map.id)"
-                     class="selectable" [class.selected]="map.id === selectedMapId"></mat-row>
+                class="selectable" [class.selected]="map.id === selectedMapId"></mat-row>
         </mat-table>
     </ng-container>
 
@@ -33,5 +42,7 @@
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-flat-button color="primary" [mat-dialog-close]="selectedMapId" [disabled]="!selectedMapId || loading">Открыть</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="selectedMapId" [disabled]="!selectedMapId || loading">
+        Открыть
+    </button>
 </mat-dialog-actions>

@@ -5,3 +5,8 @@
 .selected {
     background-color: #ddd;
 }
+
+.mini-button {
+    padding: 0;
+    min-width: 36px;
+}

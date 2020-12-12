@@ -26,6 +26,11 @@ namespace ThematicMapCreator.Host.Persistence.Repositories
                 .Where(layer => !excludedLayerIds.Contains(layer.Id))
                 .DeleteAsync();
 
+        public async Task DeleteByMapIdAsync(Guid mapId) =>
+            await Context.Set<Layer>()
+                .Where(layer => layer.MapId == mapId)
+                .DeleteAsync();
+
         public async Task<List<Layer>> GetByMapIdAsync(Guid mapId) =>
             await Context.Set<Layer>().Where(layer => layer.MapId == mapId).ToListAsync();
 

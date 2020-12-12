@@ -26,8 +26,10 @@ namespace ThematicMapCreator.Domain.Services
         public async Task DeleteAsync(Guid id)
         {
             await using var unitOfWork = await unitOfWorkFactory.CreateAsync();
-            var repository = unitOfWork.GetRepository<IMapsRepository>();
-            await repository.DeleteAsync(id);
+            var layerRepository = unitOfWork.GetRepository<ILayersRepository>();
+            var mapRepository = unitOfWork.GetRepository<IMapsRepository>();
+            await layerRepository.DeleteByMapIdAsync(id);
+            await mapRepository.DeleteAsync(id);
             await unitOfWork.CommitAsync();
         }
 

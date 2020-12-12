@@ -10,6 +10,7 @@ namespace ThematicMapCreator.Domain.Repositories
     {
         Task AddAsync(IEnumerable<Layer> layers);
         Task DeleteByMapIdAsync(Guid mapId, IEnumerable<Guid> excludedLayerIds);
+        Task DeleteByMapIdAsync(Guid mapId);
         Task<List<Layer>> GetByMapIdAsync(Guid mapId);
     }
 }

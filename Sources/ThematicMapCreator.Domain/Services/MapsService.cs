@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Dal;
-using Core.Extensions;
 using FluentValidation;
 using ThematicMapCreator.Contracts;
+using ThematicMapCreator.Domain.Exceptions;
+using ThematicMapCreator.Domain.Extensions;
 using ThematicMapCreator.Domain.Models;
 using ThematicMapCreator.Domain.Repositories;
 
@@ -34,7 +35,8 @@ namespace ThematicMapCreator.Domain.Services
         {
             await using var unitOfWork = await unitOfWorkFactory.CreateAsync();
             var repository = unitOfWork.GetRepository<IMapsRepository>();
-            var map = await repository.GetAsync(id);
+            var map = await repository.GetAsync(id)
+                .ThrowOnEmptyAsync(() => new TmcException(TmcError.Map.NotFound));
             await unitOfWork.CommitAsync();
 
             return map;
@@ -57,7 +59,7 @@ namespace ThematicMapCreator.Domain.Services
         /// <returns>Идентификатор сохраненной карты.</returns>
         public async Task<Guid> SaveAsync(SaveMapRequest request)
         {
-            await saveMapValidator.ThrowOnErrorsAsync(request);
+            await saveMapValidator.ValidateAsync(request).ThrowOnErrorsAsync();
 
             await using var unitOfWork = await unitOfWorkFactory.CreateAsync();
             var mapsRepository = unitOfWork.GetRepository<IMapsRepository>();

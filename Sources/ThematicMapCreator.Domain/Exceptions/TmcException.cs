@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Core.Exceptions
+namespace ThematicMapCreator.Domain.Exceptions
 {
     public class TmcException : Exception
     {

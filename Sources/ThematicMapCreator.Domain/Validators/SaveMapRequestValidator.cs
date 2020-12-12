@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Dal;
-using Core.Exceptions;
 using FluentValidation;
 using ThematicMapCreator.Contracts;
+using ThematicMapCreator.Domain.Exceptions;
 using ThematicMapCreator.Domain.Repositories;
 
 namespace ThematicMapCreator.Domain.Validators

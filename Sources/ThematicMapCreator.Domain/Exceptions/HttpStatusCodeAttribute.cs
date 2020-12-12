@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Core.Exceptions
+namespace ThematicMapCreator.Domain.Exceptions
 {
     public class HttpStatusCodeAttribute : Attribute
     {

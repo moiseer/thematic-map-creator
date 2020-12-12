@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Core.Dal;
+using ThematicMapCreator.Domain.Exceptions;
+using ThematicMapCreator.Domain.Extensions;
 using ThematicMapCreator.Domain.Models;
 using ThematicMapCreator.Domain.Repositories;
 
@@ -35,7 +37,8 @@ namespace ThematicMapCreator.Domain.Services
         {
             await using var unitOfWork = await unitOfWorkFactory.CreateAsync();
             var repository = unitOfWork.GetRepository<ILayersRepository>();
-            var layer = await repository.GetAsync(id);
+            var layer = await repository.GetAsync(id)
+                .ThrowOnEmptyAsync(() => new TmcException(TmcError.Layer.NotFound));
             await unitOfWork.CommitAsync();
 
             return layer;

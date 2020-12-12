@@ -3,25 +3,26 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 
-namespace Core.Exceptions
+namespace ThematicMapCreator.Domain.Exceptions
 {
     public static class TmcError
     {
         private static readonly Dictionary<string, HttpStatusCode> httpStatusCodes = GetHttpStatusCodes();
 
+        public static HttpStatusCode GetHttpStatusCode(string errorCode) =>
+            httpStatusCodes.GetValueOrDefault(errorCode, HttpStatusCode.InternalServerError);
+
+        [HttpStatusCode(HttpStatusCode.InternalServerError)]
+        public const string InnerError = "Error.InnerError";
+
         private static Dictionary<string, HttpStatusCode> GetHttpStatusCodes()
         {
-            return typeof(TmcError)
-                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+            return typeof(TmcError).GetNestedTypes().Append(typeof(TmcError))
+                .SelectMany(nested => nested.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy))
                 .Where(field => field.IsLiteral && !field.IsInitOnly)
                 .ToDictionary(
                     field => (string)field.GetRawConstantValue(),
                     field => field.GetCustomAttribute<HttpStatusCodeAttribute>()?.StatusCode ?? HttpStatusCode.InternalServerError);
-        }
-
-        public static HttpStatusCode GetHttpStatusCode(string errorCode)
-        {
-            return httpStatusCodes.GetValueOrDefault(errorCode, HttpStatusCode.InternalServerError);
         }
 
         public static class Map
@@ -35,6 +36,9 @@ namespace Core.Exceptions
             [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
             public const string NameRequired = "Error.Map.NameRequired";
 
+            [HttpStatusCode(HttpStatusCode.NotFound)]
+            public const string NotFound = "Error.Map.NotFound";
+
             [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
             public const string NotUniqueName = "Error.Map.NotUniqueName";
 
@@ -43,6 +47,12 @@ namespace Core.Exceptions
 
             [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
             public const string UserRequired = "Error.Map.UserRequired";
+        }
+
+        public static class User
+        {
+            [HttpStatusCode(HttpStatusCode.NotFound)]
+            public const string NotFound = "Error.User.NotFound";
         }
 
         public static class Layer
@@ -67,6 +77,9 @@ namespace Core.Exceptions
 
             [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
             public const string NameRequired = "Error.Layer.NameRequired";
+
+            [HttpStatusCode(HttpStatusCode.NotFound)]
+            public const string NotFound = "Error.Layer.NotFound";
 
             [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
             public const string NotUniqueName = "Error.Layer.NotUniqueName";

@@ -15,6 +15,7 @@ using ThematicMapCreator.Domain;
 using ThematicMapCreator.Domain.Repositories;
 using ThematicMapCreator.Domain.Services;
 using ThematicMapCreator.Domain.Validators;
+using ThematicMapCreator.Host.Filters;
 using ThematicMapCreator.Host.Persistence.Contexts;
 using ThematicMapCreator.Host.Persistence.Repositories;
 
@@ -59,7 +60,7 @@ namespace ThematicMapCreator.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(new TmcExceptionFilter()));;
 
             services.AddSwaggerGen(options => options.SwaggerDoc("v1",
                 new OpenApiInfo

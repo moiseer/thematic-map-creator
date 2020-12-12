@@ -33,10 +33,4 @@
       <ProjectReference Include="..\ThematicMapCreator.Domain\ThematicMapCreator.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Database" />
-      <Folder Include="Migrations" />
-    </ItemGroup>
-
-
 </Project>

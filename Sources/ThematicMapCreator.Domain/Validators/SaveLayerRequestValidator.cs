@@ -1,6 +1,6 @@
-﻿using Core.Exceptions;
-using FluentValidation;
+﻿using FluentValidation;
 using ThematicMapCreator.Contracts;
+using ThematicMapCreator.Domain.Exceptions;
 using ThematicMapCreator.Domain.Models;
 
 namespace ThematicMapCreator.Domain.Validators

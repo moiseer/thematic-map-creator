@@ -14,6 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="9.3.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
       <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
       <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="5.1.4" />

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ThematicMapCreator.Domain.Models;
 
@@ -65,6 +64,8 @@ namespace ThematicMapCreator.Host.Persistence.Contexts
                 .WithMany(map => map.Layers)
                 .HasForeignKey(layer => layer.MapId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasIndex(layer => new { layer.MapId, layer.Name }).IsUnique();
         }
 
         private void ConfigureMapEntity(EntityTypeBuilder<Map> builder)
@@ -91,6 +92,8 @@ namespace ThematicMapCreator.Host.Persistence.Contexts
                 .WithMany(user => user.Maps)
                 .HasForeignKey(map => map.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasIndex(map => new { map.UserId, map.Name }).IsUnique();
         }
 
         private void ConfigureUserEntity(EntityTypeBuilder<User> builder)

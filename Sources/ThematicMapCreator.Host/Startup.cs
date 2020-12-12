@@ -1,7 +1,7 @@
-using System;
 using Core.Dal.EntityFramework;
 using Core.Dal.EntityFramework.Extensions;
 using Core.Dal.Extensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ThematicMapCreator.Contracts;
 using ThematicMapCreator.Domain;
 using ThematicMapCreator.Domain.Repositories;
 using ThematicMapCreator.Domain.Services;
+using ThematicMapCreator.Domain.Validators;
 using ThematicMapCreator.Host.Persistence.Contexts;
 using ThematicMapCreator.Host.Persistence.Repositories;
 
@@ -68,6 +70,7 @@ namespace ThematicMapCreator.Host
 
             AddDal(services);
             AddServices(services);
+            AddValidators(services);
         }
 
         private void AddDal(IServiceCollection services)
@@ -89,6 +92,13 @@ namespace ThematicMapCreator.Host
                 .AddSingleton<ILayersService, LayersService>()
                 .AddSingleton<IMapsService, MapsService>()
                 .AddSingleton<IUsersService, UsersService>();
+        }
+
+        private void AddValidators(IServiceCollection services)
+        {
+            services
+                .AddTransient<IValidator<SaveLayerRequest>, SaveLayerRequestValidator>()
+                .AddTransient<IValidator<SaveMapRequest>, SaveMapRequestValidator>();
         }
 
         private void UseMigration(IApplicationBuilder app)

@@ -17,8 +17,11 @@ namespace ThematicMapCreator.Host.Persistence.Repositories
         {
         }
 
+        public async Task<bool> ExistsAsync(Guid userId, string name) =>
+            await Context.Set<Map>().Where(map => map.UserId == userId).AnyAsync(map => map.Name == name);
+
         public async Task<List<Map>> GetByUserIdAsync(Guid userId) =>
-            await Context.Set<Map>().Where(map => map.User.Id == userId).ToListAsync();
+            await Context.Set<Map>().Where(map => map.UserId == userId).ToListAsync();
 
         public override async Task UpdateAsync(Map entity, CancellationToken cancellationToken = default) =>
             await Context.Set<Map>().Where(map => map.Id == entity.Id).UpdateAsync(

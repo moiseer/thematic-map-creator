@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Dal;
+using Core.Extensions;
+using FluentValidation;
 using ThematicMapCreator.Contracts;
 using ThematicMapCreator.Domain.Models;
 using ThematicMapCreator.Domain.Repositories;
@@ -11,11 +13,13 @@ namespace ThematicMapCreator.Domain.Services
 {
     public class MapsService : IMapsService
     {
+        private readonly IValidator<SaveMapRequest> saveMapValidator;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
-        public MapsService(IUnitOfWorkFactory unitOfWorkFactory)
+        public MapsService(IUnitOfWorkFactory unitOfWorkFactory, IValidator<SaveMapRequest> saveMapValidator)
         {
             this.unitOfWorkFactory = unitOfWorkFactory;
+            this.saveMapValidator = saveMapValidator;
         }
 
         public async Task DeleteAsync(Guid id)
@@ -53,6 +57,8 @@ namespace ThematicMapCreator.Domain.Services
         /// <returns>Идентификатор сохраненной карты.</returns>
         public async Task<Guid> SaveAsync(SaveMapRequest request)
         {
+            await saveMapValidator.ThrowOnErrorsAsync(request);
+
             await using var unitOfWork = await unitOfWorkFactory.CreateAsync();
             var mapsRepository = unitOfWork.GetRepository<IMapsRepository>();
 

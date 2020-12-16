@@ -1,5 +1,4 @@
-﻿using System;
-using ThematicMapCreator.Contracts;
+﻿using ThematicMapCreator.Contracts;
 using ThematicMapCreator.Domain.Models;
 
 namespace ThematicMapCreator.Host.Extensions

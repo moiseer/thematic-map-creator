@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Core.Dal.Models
+﻿namespace Core.Dal.Models
 {
     public interface IEntity<out TKey>
     {

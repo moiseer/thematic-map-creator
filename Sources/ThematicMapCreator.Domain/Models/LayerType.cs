@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThematicMapCreator.Domain.Models
+﻿namespace ThematicMapCreator.Domain.Models
 {
     public enum LayerType
     {

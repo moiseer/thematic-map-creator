@@ -5,7 +5,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -60,7 +59,7 @@ namespace ThematicMapCreator.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options => options.Filters.Add(new TmcExceptionFilter()));;
+            services.AddControllers(options => options.Filters.Add(new TmcExceptionFilter()));
 
             services.AddSwaggerGen(options => options.SwaggerDoc("v1",
                 new OpenApiInfo
@@ -79,9 +78,7 @@ namespace ThematicMapCreator.Host
             services
                 .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
                 .AddDbContextFactory<ThematicMapDbContext>(DbTag.App,
-                    builder => builder
-                        .UseSqlite(Configuration.GetConnectionString("ThematicMapDb"))
-                        .ConfigureWarnings(warn => warn.Log(InMemoryEventId.TransactionIgnoredWarning)))
+                    builder => builder.UseSqlite(Configuration.GetConnectionString("ThematicMapDb")))
                 .AddRepository<IUsersRepository, UsersRepository>()
                 .AddRepository<IMapsRepository, MapsRepository>()
                 .AddRepository<ILayersRepository, LayersRepository>();

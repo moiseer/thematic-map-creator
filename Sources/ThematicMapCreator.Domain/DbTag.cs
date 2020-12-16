@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThematicMapCreator.Domain
+﻿namespace ThematicMapCreator.Domain
 {
     public static class DbTag
     {

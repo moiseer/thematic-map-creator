@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Dal.Repositories;
+﻿using Core.Dal.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.Dal.EntityFramework

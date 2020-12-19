@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using ThematicMapCreator.Contracts;
 using ThematicMapCreator.Domain;
 using ThematicMapCreator.Domain.Repositories;
@@ -36,12 +37,13 @@ namespace ThematicMapCreator.Host
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSerilogRequestLogging();
+
             app.UseCors(builder => builder
                 .SetIsOriginAllowed(_ => true)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .AllowCredentials()
-            );
+                .AllowCredentials());
 
             app.UseHttpsRedirection();
 
@@ -59,7 +61,7 @@ namespace ThematicMapCreator.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options => options.Filters.Add(new TmcExceptionFilter()));
+            services.AddControllers(options => options.Filters.AddService<TmcExceptionFilter>());
 
             services.AddSwaggerGen(options => options.SwaggerDoc("v1",
                 new OpenApiInfo
@@ -67,6 +69,8 @@ namespace ThematicMapCreator.Host
                     Version = "v1.0",
                     Title = "Thematic Map Creator"
                 }));
+
+            services.AddSingleton<TmcExceptionFilter>();
 
             AddDal(services);
             AddServices(services);

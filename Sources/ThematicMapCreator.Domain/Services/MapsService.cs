@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Dal;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using ThematicMapCreator.Contracts;
 using ThematicMapCreator.Domain.Exceptions;
 using ThematicMapCreator.Domain.Extensions;
@@ -14,13 +15,18 @@ namespace ThematicMapCreator.Domain.Services
 {
     public class MapsService : IMapsService
     {
+        private readonly ILogger logger;
         private readonly IValidator<SaveMapRequest> saveMapValidator;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
-        public MapsService(IUnitOfWorkFactory unitOfWorkFactory, IValidator<SaveMapRequest> saveMapValidator)
+        public MapsService(
+            ILogger<MapsService> logger,
+            IValidator<SaveMapRequest> saveMapValidator,
+            IUnitOfWorkFactory unitOfWorkFactory)
         {
-            this.unitOfWorkFactory = unitOfWorkFactory;
+            this.logger = logger;
             this.saveMapValidator = saveMapValidator;
+            this.unitOfWorkFactory = unitOfWorkFactory;
         }
 
         public async Task DeleteAsync(Guid id)
@@ -82,6 +88,7 @@ namespace ThematicMapCreator.Domain.Services
 
             await unitOfWork.CommitAsync();
 
+            logger.LogInformation("Map {MapId} saved", mapId);
             return mapId;
         }
 
@@ -117,6 +124,7 @@ namespace ThematicMapCreator.Domain.Services
             List<Layer> layers = request.Layers.ConvertAll(layer => CreateLayer(layer, map.Id));
             await layerRepository.AddAsync(layers);
 
+            logger.LogDebug("Map {MapId} added", map.Id);
             return map.Id;
         }
 
@@ -150,6 +158,7 @@ namespace ThematicMapCreator.Domain.Services
                 layer.StyleOptions = update.StyleOptions;
             }
 
+            logger.LogDebug("Map {MapId} updated", map.Id);
             return map.Id;
         }
     }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Core.Dal;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
 using Moq;
 using ThematicMapCreator.Contracts;
 using ThematicMapCreator.Domain.Models;
@@ -17,11 +18,11 @@ namespace ThematicMapCreator.Tests.UnitTests
 {
     public class MapsServiceTests
     {
-        private readonly Mock<ILayersRepository> layersRepositoryMock = new Mock<ILayersRepository>();
-        private readonly Mock<IMapsRepository> mapsRepositoryMock = new Mock<IMapsRepository>();
+        private readonly Mock<ILayersRepository> layersRepositoryMock = new();
+        private readonly Mock<IMapsRepository> mapsRepositoryMock = new();
+        private readonly Mock<IValidator<SaveMapRequest>> saveMapRequestValidatorMock = new();
         private readonly IMapsService service;
-        private readonly Mock<IUnitOfWorkFactory> unitOfWorkFactoryMock = new Mock<IUnitOfWorkFactory>();
-        private readonly Mock<IValidator<SaveMapRequest>> saveMapRequestValidatorMock = new Mock<IValidator<SaveMapRequest>>();
+        private readonly Mock<IUnitOfWorkFactory> unitOfWorkFactoryMock = new();
 
         public MapsServiceTests()
         {
@@ -37,7 +38,7 @@ namespace ThematicMapCreator.Tests.UnitTests
                 .Setup(x => x.ValidateAsync(It.IsAny<SaveMapRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new ValidationResult());
 
-            service = new MapsService(unitOfWorkFactoryMock.Object, saveMapRequestValidatorMock.Object);
+            service = new MapsService(Mock.Of<ILogger<MapsService>>(), saveMapRequestValidatorMock.Object, unitOfWorkFactoryMock.Object);
         }
 
         [Fact]
@@ -135,7 +136,7 @@ namespace ThematicMapCreator.Tests.UnitTests
                 Times.Once);
         }
 
-        private static Layer CreateLayer(Map map, int index) => new Layer
+        private static Layer CreateLayer(Map map, int index) => new()
         {
             Id = Guid.NewGuid(),
             Name = Guid.NewGuid().ToString(),
@@ -147,7 +148,7 @@ namespace ThematicMapCreator.Tests.UnitTests
             Index = index
         };
 
-        private static Map CreateMap() => new Map
+        private static Map CreateMap() => new()
         {
             Id = Guid.NewGuid(),
             Name = Guid.NewGuid().ToString(),
@@ -155,7 +156,7 @@ namespace ThematicMapCreator.Tests.UnitTests
             UserId = Guid.NewGuid()
         };
 
-        private static SaveLayerRequest CreateSaveLayerRequest(int index, LayerType type = LayerType.None, bool isVisible = false) => new SaveLayerRequest
+        private static SaveLayerRequest CreateSaveLayerRequest(int index, LayerType type = LayerType.None, bool isVisible = false) => new()
         {
             Name = Guid.NewGuid().ToString(),
             Description = Guid.NewGuid().ToString(),
@@ -166,7 +167,7 @@ namespace ThematicMapCreator.Tests.UnitTests
             Type = (int)type
         };
 
-        private static SaveMapRequest CreateSaveMapRequest() => new SaveMapRequest
+        private static SaveMapRequest CreateSaveMapRequest() => new()
         {
             Name = Guid.NewGuid().ToString(),
             Description = Guid.NewGuid().ToString(),

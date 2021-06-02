@@ -50,24 +50,30 @@ namespace Core.Dal.EntityFramework
 
         public void Dispose()
         {
-            if (!committed)
+            using (locker.Lock())
             {
-                transaction?.Rollback();
-            }
+                if (!committed)
+                {
+                    transaction.Rollback();
+                }
 
-            transaction?.Dispose();
-            context?.Dispose();
+                transaction.Dispose();
+                context.Dispose();
+            }
         }
 
         public async ValueTask DisposeAsync()
         {
-            if (!committed)
+            using (await locker.LockAsync())
             {
-                await transaction?.RollbackAsync();
-            }
+                if (!committed)
+                {
+                    await transaction.RollbackAsync();
+                }
 
-            await transaction.DisposeAsync();
-            await context.DisposeAsync();
+                await transaction.DisposeAsync();
+                await context.DisposeAsync();
+            }
         }
 
         public TRepository GetRepository<TRepository>()

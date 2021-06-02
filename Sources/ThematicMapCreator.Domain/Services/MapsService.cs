@@ -74,7 +74,7 @@ namespace ThematicMapCreator.Domain.Services
             await using var unitOfWork = await unitOfWorkFactory.CreateAsync();
             var mapsRepository = unitOfWork.GetRepository<IMapsRepository>();
 
-            Map existingMap = request.Id.HasValue
+            Map? existingMap = request.Id.HasValue
                 ? await mapsRepository.GetAsync(request.Id.Value)
                 : null;
 
@@ -97,20 +97,20 @@ namespace ThematicMapCreator.Domain.Services
         private static Layer CreateLayer(SaveLayerRequest request, Guid mapId) => new Layer
         {
             Id = Guid.NewGuid(),
-            Name = request.Name,
+            Name = request.Name ?? throw new ArgumentNullException(nameof(request.Name)),
             Description = request.Description,
             MapId = mapId,
-            Data = request.Data,
+            Data = request.Data ?? throw new ArgumentNullException(nameof(request.Data)),
             Index = request.Index,
             IsVisible = request.IsVisible,
-            StyleOptions = request.StyleOptions,
+            StyleOptions = request.StyleOptions ?? throw new ArgumentNullException(nameof(request.StyleOptions)),
             Type = (LayerType)request.Type
         };
 
         private static Map CreateMap(SaveMapRequest request) => new Map
         {
             Id = Guid.NewGuid(),
-            Name = request.Name,
+            Name = request.Name ?? throw new ArgumentNullException(nameof(request.Name)),
             Description = request.Description,
             UserId = request.UserId
         };
@@ -134,7 +134,7 @@ namespace ThematicMapCreator.Domain.Services
         {
             var layerRepository = unitOfWork.GetRepository<ILayersRepository>();
 
-            map.Name = request.Name;
+            map.Name = request.Name ?? throw new ArgumentNullException(nameof(request.Name));
             map.Description = request.Description;
 
             IEnumerable<Layer> newLayers = request.Layers
@@ -143,7 +143,7 @@ namespace ThematicMapCreator.Domain.Services
 
             HashSet<Guid> updateLayerIds = request.Layers
                 .Where(layer => layer.Id.HasValue)
-                .Select(layer => layer.Id.Value)
+                .Select(layer => layer.Id!.Value)
                 .ToHashSet();
 
             await layerRepository.DeleteByMapIdAsync(map.Id, excludedLayerIds: updateLayerIds);
@@ -152,11 +152,11 @@ namespace ThematicMapCreator.Domain.Services
             foreach (var layer in updateLayers)
             {
                 var update = request.Layers.Single(l => l.Id.HasValue && l.Id.Value == layer.Id);
-                layer.Name = update.Name;
+                layer.Name = update.Name ?? throw new ArgumentNullException(nameof(update.Name));
                 layer.Description = update.Description;
                 layer.IsVisible = update.IsVisible;
                 layer.Index = update.Index;
-                layer.StyleOptions = update.StyleOptions;
+                layer.StyleOptions = update.StyleOptions ?? throw new ArgumentNullException(nameof(update.StyleOptions));
 
                 await layerRepository.UpdateAsync(layer);
             }

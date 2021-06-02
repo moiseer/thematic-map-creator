@@ -34,7 +34,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
             provider = services.BuildServiceProvider();
             unitOfWorkFactory = provider.GetRequiredService<IUnitOfWorkFactory>();
 
-            var contextFactory = provider.GetService<IDbContextFactory>();
+            var contextFactory = provider.GetRequiredService<IDbContextFactory>();
             using var context = contextFactory.Create();
             context.Database.EnsureCreated();
         }
@@ -93,11 +93,11 @@ namespace ThematicMapCreator.Tests.IntegrationTests
 
         public void Dispose()
         {
-            var contextFactory = provider.GetService<IDbContextFactory>();
+            var contextFactory = provider.GetRequiredService<IDbContextFactory>();
             using var context = contextFactory.Create();
             context.Database.EnsureDeleted();
 
-            provider?.Dispose();
+            provider.Dispose();
         }
 
         [Fact]

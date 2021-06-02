@@ -37,8 +37,7 @@ namespace ThematicMapCreator.Host.Persistence.Contexts
 
             builder.Property(layer => layer.Description)
                 .HasColumnName("description")
-                .HasMaxLength(1024)
-                .IsRequired();
+                .HasMaxLength(1024);
 
             builder.Property(layer => layer.StyleOptions)
                 .HasColumnName("style_options");
@@ -84,7 +83,7 @@ namespace ThematicMapCreator.Host.Persistence.Contexts
                 .HasColumnName("description")
                 .HasMaxLength(1024);
 
-            builder.Property(layer => layer.UserId)
+            builder.Property(map => map.UserId)
                 .HasColumnName("user_id")
                 .IsRequired();
 

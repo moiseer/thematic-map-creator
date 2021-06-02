@@ -51,8 +51,23 @@ namespace ThematicMapCreator.Domain.Exceptions
 
         public static class User
         {
+            [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
+            public const string EmailRequired = "Error.User.EmailRequired";
+
+            [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
+            public const string InvalidEmail = "Error.User.InvalidEmail";
+
+            [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
+            public const string InvalidEmailOrPassword = "Error.User.InvalidEmailOrPassword";
+
             [HttpStatusCode(HttpStatusCode.NotFound)]
             public const string NotFound = "Error.User.NotFound";
+
+            [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
+            public const string PasswordNotConfirmed = "Error.User.PasswordNotConfirmed";
+
+            [HttpStatusCode(HttpStatusCode.UnprocessableEntity)]
+            public const string PasswordRequired = "Error.User.PasswordRequired";
         }
 
         public static class Layer

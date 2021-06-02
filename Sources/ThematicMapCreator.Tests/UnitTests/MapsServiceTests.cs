@@ -71,7 +71,7 @@ namespace ThematicMapCreator.Tests.UnitTests
                             layer.StyleOptions == requestLayer.StyleOptions &&
                             layer.Index == requestLayer.Index &&
                             layer.Type == (LayerType)requestLayer.Type &&
-                            layer.MapId == mapId.Value)))),
+                            mapId.HasValue && layer.MapId == mapId.Value)))),
                 Times.Once);
         }
 

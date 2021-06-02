@@ -32,12 +32,12 @@ namespace ThematicMapCreator.Domain.Validators
         {
             await using var unitOfWork = await unitOfWorkFactory.CreateAsync(cancellationToken);
             var repository = unitOfWork.GetRepository<IMapsRepository>();
-            var exists = await repository.ExistsAsync(map.UserId, map.Name);
+            var exists = await repository.ExistsAsync(map.UserId, map.Name!);
             await unitOfWork.CommitAsync(cancellationToken);
             return !exists;
         }
 
         private static bool IsUniqueNames(IEnumerable<SaveLayerRequest> layers) =>
-            !layers.GroupBy(layer => layer.Name.Trim()).Any(group => group.Count() > 1);
+            !layers.GroupBy(layer => layer.Name?.Trim()).Any(group => group.Count() > 1);
     }
 }

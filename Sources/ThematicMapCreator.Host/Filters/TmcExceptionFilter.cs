@@ -21,9 +21,9 @@ namespace ThematicMapCreator.Host.Filters
             string[] errorCodes = context.Exception.GetErrorCodes();
             context.Result = new ObjectResult(errorCodes)
             {
-                StatusCode = (int?)TmcError.GetHttpStatusCode(errorCodes.FirstOrDefault()),
+                StatusCode = (int?)TmcError.GetHttpStatusCode(errorCodes.First()),
             };
-            logger.LogError(context.Exception, errorCodes.FirstOrDefault());
+            logger.LogError(context.Exception, errorCodes.First());
             context.ExceptionHandled = true;
         }
     }

@@ -6,11 +6,11 @@ namespace ThematicMapCreator.Domain.Models
 {
     public class Map : IEntity<Guid>
     {
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public Guid Id { get; set; }
-        public List<Layer> Layers { get; set; }
-        public string Name { get; set; }
-        public User User { get; set; }
+        public List<Layer> Layers { get; set; } = new List<Layer>();
+        public string Name { get; set; } = null!;
+        public User User { get; set; } = null!;
         public Guid UserId { get; set; }
     }
 }

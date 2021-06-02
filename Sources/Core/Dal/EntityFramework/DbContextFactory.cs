@@ -15,7 +15,7 @@ namespace Core.Dal.EntityFramework
         }
 
         public string Tag { get; }
-        public TContext Create() => innerFactory?.Invoke();
+        public TContext Create() => innerFactory.Invoke();
         DbContext IDbContextFactory.Create() => Create();
     }
 }

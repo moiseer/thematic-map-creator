@@ -7,13 +7,13 @@ namespace ThematicMapCreator.Domain.Exceptions
 {
     public static class TmcError
     {
+        [HttpStatusCode(HttpStatusCode.InternalServerError)]
+        public const string InnerError = "Error.InnerError";
+
         private static readonly Dictionary<string, HttpStatusCode> httpStatusCodes = GetHttpStatusCodes();
 
         public static HttpStatusCode GetHttpStatusCode(string errorCode) =>
             httpStatusCodes.GetValueOrDefault(errorCode, HttpStatusCode.InternalServerError);
-
-        [HttpStatusCode(HttpStatusCode.InternalServerError)]
-        public const string InnerError = "Error.InnerError";
 
         private static Dictionary<string, HttpStatusCode> GetHttpStatusCodes()
         {

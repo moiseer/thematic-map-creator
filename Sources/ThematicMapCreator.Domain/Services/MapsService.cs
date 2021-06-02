@@ -37,6 +37,8 @@ namespace ThematicMapCreator.Domain.Services
             await layerRepository.DeleteByMapIdAsync(id);
             await mapRepository.DeleteAsync(id);
             await unitOfWork.CommitAsync();
+
+            logger.LogInformation("Map {MapId} deleted", id);
         }
 
         public async Task<Map> GetDetailsAsync(Guid id)
@@ -128,7 +130,6 @@ namespace ThematicMapCreator.Domain.Services
             return map.Id;
         }
 
-        /// <remarks>Зависит от change detection.</remarks>
         private async Task<Guid> UpdateMapAsync(SaveMapRequest request, Map map, IUnitOfWork unitOfWork)
         {
             var layerRepository = unitOfWork.GetRepository<ILayersRepository>();
@@ -156,6 +157,8 @@ namespace ThematicMapCreator.Domain.Services
                 layer.IsVisible = update.IsVisible;
                 layer.Index = update.Index;
                 layer.StyleOptions = update.StyleOptions;
+
+                await layerRepository.UpdateAsync(layer);
             }
 
             logger.LogDebug("Map {MapId} updated", map.Id);

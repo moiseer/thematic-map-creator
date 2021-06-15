@@ -1,62 +1,32 @@
 using System;
 using System.Threading.Tasks;
-using Core.Dal;
-using Core.Dal.EntityFramework;
-using Core.Dal.EntityFramework.Extensions;
-using Core.Dal.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
 using ThematicMapCreator.Domain.Models;
 using ThematicMapCreator.Domain.Repositories;
-using ThematicMapCreator.Host.Persistence.Contexts;
-using ThematicMapCreator.Host.Persistence.Repositories;
 using Xunit;
 
 namespace ThematicMapCreator.Tests.IntegrationTests
 {
-    public class UsersRepositoryTests : IDisposable
+    public class UsersRepositoryTests : EfRepositoryTests
     {
-        private const string Tag = "test";
-        private readonly ServiceProvider provider;
-        private readonly IUnitOfWorkFactory unitOfWorkFactory;
-
-        public UsersRepositoryTests()
-        {
-            var services = new ServiceCollection()
-                .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
-                .AddDbContextFactory<ThematicMapDbContext>(Tag,
-                    builder => builder
-                        .UseInMemoryDatabase(Tag)
-                        .ConfigureWarnings(warn => warn.Ignore(InMemoryEventId.TransactionIgnoredWarning)))
-                .AddRepository<IUsersRepository, UsersRepository>();
-
-            provider = services.BuildServiceProvider();
-            unitOfWorkFactory = provider.GetRequiredService<IUnitOfWorkFactory>();
-
-            var contextFactory = provider.GetRequiredService<IDbContextFactory>();
-            using var context = contextFactory.Create();
-            context.Database.EnsureCreated();
-        }
-
         [Fact]
         public async Task Add_NewEntity_Success()
         {
             var user = CreateUser();
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync(Tag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.AddAsync(user);
                 await unitOfWork.CommitAsync();
             }
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync())
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 var storedUser = await repository.GetAsync(user.Id);
                 await unitOfWork.CommitAsync();
 
+                Assert.NotNull(storedUser);
                 Assert.Equal(user.Id, storedUser.Id);
                 Assert.Equal(user.Name, storedUser.Name);
             }
@@ -67,21 +37,21 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             var user = CreateUser();
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync(Tag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.AddAsync(user);
                 await unitOfWork.CommitAsync();
             }
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync(Tag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.DeleteAsync(user.Id);
                 await unitOfWork.CommitAsync();
             }
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync())
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 var storedUser = await repository.GetAsync(user.Id);
@@ -91,21 +61,12 @@ namespace ThematicMapCreator.Tests.IntegrationTests
             }
         }
 
-        public void Dispose()
-        {
-            var contextFactory = provider.GetRequiredService<IDbContextFactory>();
-            using var context = contextFactory.Create();
-            context.Database.EnsureDeleted();
-
-            provider.Dispose();
-        }
-
         [Fact]
         public async Task Update_WithoutSpecialMethod_Success()
         {
             var user = CreateUser();
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync(Tag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.AddAsync(user);
@@ -113,7 +74,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
             }
 
             var newName = Guid.NewGuid().ToString();
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync(Tag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 var storedUser = await repository.GetAsync(user.Id);
@@ -121,7 +82,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
                 await unitOfWork.CommitAsync();
             }
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync())
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 var storedUser = await repository.GetAsync(user.Id);
@@ -137,7 +98,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             var user = CreateUser();
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync(Tag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.AddAsync(user);
@@ -146,25 +107,26 @@ namespace ThematicMapCreator.Tests.IntegrationTests
 
             var updatedUser = CreateUser();
             updatedUser.Id = user.Id;
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync(Tag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.UpdateAsync(updatedUser);
                 await unitOfWork.CommitAsync();
             }
 
-            await using (var unitOfWork = await unitOfWorkFactory.CreateAsync())
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 var storedUser = await repository.GetAsync(user.Id);
                 await unitOfWork.CommitAsync();
 
+                Assert.NotNull(storedUser);
                 Assert.Equal(updatedUser.Id, storedUser.Id);
                 Assert.Equal(updatedUser.Name, storedUser.Name);
             }
         }
 
-        private User CreateUser() => new User
+        private static User CreateUser() => new()
         {
             Id = Guid.NewGuid(),
             Name = Guid.NewGuid().ToString(),

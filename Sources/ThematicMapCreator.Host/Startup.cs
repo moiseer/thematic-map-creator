@@ -77,6 +77,32 @@ namespace ThematicMapCreator.Host
             AddValidators(services);
         }
 
+        private static void AddServices(IServiceCollection services)
+        {
+            services
+                .AddSingleton<ILayersService, LayersService>()
+                .AddSingleton<IMapsService, MapsService>()
+                .AddSingleton<IUsersService, UsersService>();
+        }
+
+        private static void AddValidators(IServiceCollection services)
+        {
+            services
+                .AddTransient<IValidator<SaveLayerRequest>, SaveLayerRequestValidator>()
+                .AddTransient<IValidator<SaveMapRequest>, SaveMapRequestValidator>();
+        }
+
+        private static void UseMigration(IApplicationBuilder app)
+        {
+            using var scope = app.ApplicationServices.CreateScope();
+            var contextFactories = scope.ServiceProvider.GetServices<IDbContextFactory>();
+            foreach (var contextFactory in contextFactories)
+            {
+                using var context = contextFactory.Create();
+                context.Database.EnsureCreated();
+            }
+        }
+
         private void AddDal(IServiceCollection services)
         {
             services
@@ -86,32 +112,6 @@ namespace ThematicMapCreator.Host
                 .AddRepository<IUsersRepository, UsersRepository>()
                 .AddRepository<IMapsRepository, MapsRepository>()
                 .AddRepository<ILayersRepository, LayersRepository>();
-        }
-
-        private void AddServices(IServiceCollection services)
-        {
-            services
-                .AddSingleton<ILayersService, LayersService>()
-                .AddSingleton<IMapsService, MapsService>()
-                .AddSingleton<IUsersService, UsersService>();
-        }
-
-        private void AddValidators(IServiceCollection services)
-        {
-            services
-                .AddTransient<IValidator<SaveLayerRequest>, SaveLayerRequestValidator>()
-                .AddTransient<IValidator<SaveMapRequest>, SaveMapRequestValidator>();
-        }
-
-        private void UseMigration(IApplicationBuilder app)
-        {
-            using var scope = app.ApplicationServices.CreateScope();
-            var contextFactories = scope.ServiceProvider.GetServices<IDbContextFactory>();
-            foreach (var contextFactory in contextFactories)
-            {
-                using var context = contextFactory.Create();
-                context.Database.EnsureCreated();
-            }
         }
     }
 }

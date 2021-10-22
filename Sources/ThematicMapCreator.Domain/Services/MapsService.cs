@@ -94,7 +94,7 @@ namespace ThematicMapCreator.Domain.Services
             return mapId;
         }
 
-        private static Layer CreateLayer(SaveLayerRequest request, Guid mapId) => new Layer
+        private static Layer CreateLayer(SaveLayerRequest request, Guid mapId) => new()
         {
             Id = Guid.NewGuid(),
             Name = request.Name ?? throw new ArgumentNullException(nameof(request.Name)),
@@ -107,7 +107,7 @@ namespace ThematicMapCreator.Domain.Services
             Type = (LayerType)request.Type
         };
 
-        private static Map CreateMap(SaveMapRequest request) => new Map
+        private static Map CreateMap(SaveMapRequest request) => new()
         {
             Id = Guid.NewGuid(),
             Name = request.Name ?? throw new ArgumentNullException(nameof(request.Name)),

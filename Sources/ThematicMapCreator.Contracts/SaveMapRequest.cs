@@ -7,7 +7,7 @@ namespace ThematicMapCreator.Contracts
     {
         public string? Description { get; set; }
         public Guid? Id { get; set; }
-        public List<SaveLayerRequest> Layers { get; set; } = new List<SaveLayerRequest>();
+        public List<SaveLayerRequest> Layers { get; set; } = new();
         public string? Name { get; set; }
         public Guid UserId { get; set; }
     }

@@ -23,7 +23,7 @@ namespace ThematicMapCreator.Host.Filters
             {
                 StatusCode = (int?)TmcError.GetHttpStatusCode(errorCodes.First()),
             };
-            logger.LogError(context.Exception, errorCodes.First());
+            logger.LogError(context.Exception, "{Message}", errorCodes.First());
             context.ExceptionHandled = true;
         }
     }

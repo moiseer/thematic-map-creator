@@ -12,7 +12,7 @@ namespace ThematicMapCreator.Domain.Extensions
             var result = await asyncResult;
             if (!result.IsValid)
             {
-                throw new TmcException(result.Errors.Select(error => error.ErrorMessage));
+                throw new TmcException(result.Errors.Select(error => error.ErrorCode));
             }
         }
     }

@@ -14,18 +14,18 @@ namespace ThematicMapCreator.Domain.Validators
     {
         public SaveMapRequestValidator(IValidator<SaveLayerRequest> layerValidator, IUnitOfWorkFactory unitOfWorkFactory)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(TmcError.Map.NameRequired);
-            RuleFor(x => x.Name).MinimumLength(3).WithMessage(TmcError.Map.ShortName);
-            RuleFor(x => x.Name).MaximumLength(64).WithMessage(TmcError.Map.LongName);
-            RuleFor(x => x.Description).MaximumLength(1024).WithMessage(TmcError.Map.LongDescription);
-            RuleFor(x => x.UserId).NotEmpty().WithMessage(TmcError.Map.UserRequired);
+            RuleFor(x => x.Name).NotEmpty().WithErrorCode(TmcError.Map.NameRequired);
+            RuleFor(x => x.Name).MinimumLength(3).WithErrorCode(TmcError.Map.ShortName);
+            RuleFor(x => x.Name).MaximumLength(64).WithErrorCode(TmcError.Map.LongName);
+            RuleFor(x => x.Description).MaximumLength(1024).WithErrorCode(TmcError.Map.LongDescription);
+            RuleFor(x => x.UserId).NotEmpty().WithErrorCode(TmcError.Map.UserRequired);
 
-            RuleFor(x => x.Layers).Must(IsUniqueNames).WithMessage(TmcError.Layer.NotUniqueName);
+            RuleFor(x => x.Layers).Must(IsUniqueNames).WithErrorCode(TmcError.Layer.NotUniqueName);
             RuleForEach(x => x.Layers).SetValidator(layerValidator);
 
             RuleFor(x => x.Name)
-                .MustAsync(async (map, name, ct) => await IsUniqueNameAsync(map, unitOfWorkFactory, ct))
-                .WithMessage(TmcError.Map.NotUniqueName);
+                .MustAsync(async (map, _, ct) => await IsUniqueNameAsync(map, unitOfWorkFactory, ct))
+                .WithErrorCode(TmcError.Map.NotUniqueName);
         }
 
         private static async Task<bool> IsUniqueNameAsync(SaveMapRequest map, IUnitOfWorkFactory unitOfWorkFactory, CancellationToken cancellationToken)

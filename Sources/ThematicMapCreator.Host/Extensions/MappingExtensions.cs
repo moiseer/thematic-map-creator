@@ -5,7 +5,7 @@ namespace ThematicMapCreator.Host.Extensions
 {
     public static class MappingExtensions
     {
-        public static MapDto ToDto(this Map map) => new MapDto
+        public static MapDto ToDto(this Map map) => new()
         {
             Id = map.Id,
             Name = map.Name,
@@ -13,14 +13,14 @@ namespace ThematicMapCreator.Host.Extensions
             UserId = map.UserId
         };
 
-        public static UserDto ToDto(this User user) => new UserDto
+        public static UserDto ToDto(this User user) => new()
         {
             Id = user.Id,
             Name = user.Name,
             Email = user.Email
         };
 
-        public static LayerDto ToDto(this Layer layer) => new LayerDto
+        public static LayerDto ToDto(this Layer layer) => new()
         {
             Id = layer.Id,
             Name = layer.Name,

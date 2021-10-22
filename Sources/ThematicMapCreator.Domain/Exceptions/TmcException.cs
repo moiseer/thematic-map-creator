@@ -8,7 +8,7 @@ namespace ThematicMapCreator.Domain.Exceptions
     {
         public TmcException()
         {
-            ErrorCodes = new string[0];
+            ErrorCodes = Array.Empty<string>();
         }
 
         public TmcException(string errorCode) : base(errorCode)

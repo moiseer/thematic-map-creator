@@ -13,7 +13,7 @@ namespace Core.Dal.EntityFramework
     public class EfUnitOfWork : IUnitOfWork
     {
         private readonly DbContext context;
-        private readonly AsyncLock locker = new AsyncLock();
+        private readonly AsyncLock locker = new();
         private readonly IServiceProvider serviceProvider;
         private readonly IDbContextTransaction transaction;
         private bool committed;

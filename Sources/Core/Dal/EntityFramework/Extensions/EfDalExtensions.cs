@@ -13,9 +13,11 @@ namespace Core.Dal.EntityFramework.Extensions
         {
             EntityFrameworkManager.ContextFactory = context => context;
 
-            DbContextOptions<TContext> options = CreateDbContextOptions<TContext>(optionAction);
-            var factory = new DbContextFactory<TContext>(tag, () => (TContext)Activator.CreateInstance(typeof(TContext), options));
-            return services.AddSingleton<IDbContextFactory>(factory);
+            return services.AddSingleton<IDbContextFactory>(provider =>
+            {
+                DbContextOptions<TContext> options = CreateDbContextOptions<TContext>(optionAction);
+                return new DbContextFactory<TContext>(tag, () => ActivatorUtilities.CreateInstance<TContext>(provider, options));
+            });
         }
 
         public static IServiceCollection AddRepository<TService, TImplementation>(this IServiceCollection services)

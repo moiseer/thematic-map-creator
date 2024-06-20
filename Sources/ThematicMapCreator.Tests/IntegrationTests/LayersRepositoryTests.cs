@@ -298,7 +298,8 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             Id = Guid.NewGuid(),
             Name = Guid.NewGuid().ToString(),
-            Email = Guid.NewGuid().ToString()
+            Email = Guid.NewGuid().ToString(),
+            PasswordHash = Guid.NewGuid().ToString(),
         };
     }
 }

@@ -84,3 +84,5 @@ _ReSharper*/
 packages/
 node_modules
 *.db
+*.db-shm
+*.db-wal

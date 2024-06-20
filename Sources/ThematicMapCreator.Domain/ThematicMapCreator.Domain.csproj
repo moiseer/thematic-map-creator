@@ -1,26 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <LangVersion>default</LangVersion>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>..\..\Out\ThematicMapCreator.Domain\bin\Debug\</OutputPath>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>..\..\Out\ThematicMapCreator.Domain\bin\Release\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Core\Core.csproj" />
-      <ProjectReference Include="..\ThematicMapCreator.Contracts\ThematicMapCreator.Contracts.csproj" />
+        <PackageReference Include="FluentValidation" Version="11.9.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="9.3.0" />
+        <ProjectReference Include="..\Core\Core.csproj" />
+        <ProjectReference Include="..\ThematicMapCreator.Contracts\ThematicMapCreator.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

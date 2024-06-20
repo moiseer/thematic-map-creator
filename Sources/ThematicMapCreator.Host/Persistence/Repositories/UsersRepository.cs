@@ -6,24 +6,20 @@ using Core.Dal.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using ThematicMapCreator.Domain.Models;
 using ThematicMapCreator.Domain.Repositories;
-using Z.EntityFramework.Plus;
 
-namespace ThematicMapCreator.Host.Persistence.Repositories
+namespace ThematicMapCreator.Host.Persistence.Repositories;
+
+public sealed class UsersRepository : EfCrudRepository<User, Guid>, IUsersRepository
 {
-    public class UsersRepository : EfCrudRepository<User, Guid>, IUsersRepository
+    public UsersRepository(DbContext context) : base(context)
     {
-        public UsersRepository(DbContext context) : base(context)
-        {
-        }
-
-        public override async Task UpdateAsync(User entity, CancellationToken cancellationToken = default) =>
-            await Context.Set<User>().Where(user => user.Id == entity.Id).UpdateAsync(
-                user => new User
-                {
-                    Name = entity.Name,
-                    Email = entity.Email,
-                    PasswordHash = entity.PasswordHash
-                },
-                cancellationToken);
     }
+
+    public override async Task UpdateAsync(User entity, CancellationToken ct = default) =>
+        await Context.Set<User>().Where(user => user.Id == entity.Id).ExecuteUpdateAsync(
+            calls => calls
+                .SetProperty(user => user.Name, entity.Name)
+                .SetProperty(user => user.Email, entity.Email)
+                .SetProperty(user => user.PasswordHash, entity.PasswordHash),
+            ct);
 }

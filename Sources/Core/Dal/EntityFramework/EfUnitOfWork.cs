@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Dal.Repositories;
@@ -8,78 +7,77 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Nito.AsyncEx;
 
-namespace Core.Dal.EntityFramework
+namespace Core.Dal.EntityFramework;
+
+public sealed class EfUnitOfWork : IUnitOfWork
 {
-    public class EfUnitOfWork : IUnitOfWork
+    private readonly DbContext context;
+    private readonly AsyncLock locker = new();
+    private readonly IServiceProvider serviceProvider;
+    private readonly IDbContextTransaction transaction;
+    private bool committed;
+
+    public EfUnitOfWork(string tag, DbContext context, IServiceProvider serviceProvider)
     {
-        private readonly DbContext context;
-        private readonly AsyncLock locker = new();
-        private readonly IServiceProvider serviceProvider;
-        private readonly IDbContextTransaction transaction;
-        private bool committed;
+        Tag = tag;
+        this.context = context;
+        this.serviceProvider = serviceProvider;
+        transaction = context.Database.BeginTransaction();
+    }
 
-        public EfUnitOfWork(string tag, DbContext context, IServiceProvider serviceProvider)
+    public string Tag { get; }
+
+    public void Commit()
+    {
+        using (locker.Lock())
         {
-            Tag = tag;
-            this.context = context;
-            this.serviceProvider = serviceProvider;
-            transaction = context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
+            context.SaveChanges();
+            transaction.Commit();
+            committed = true;
         }
+    }
 
-        public string Tag { get; }
-
-        public void Commit()
+    public async Task CommitAsync(CancellationToken cancellationToken = default)
+    {
+        using (await locker.LockAsync(cancellationToken))
         {
-            using (locker.Lock())
+            await context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            committed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        using (locker.Lock())
+        {
+            if (!committed)
             {
-                context.SaveChanges();
-                transaction.Commit();
-                committed = true;
+                transaction.Rollback();
             }
-        }
 
-        public async Task CommitAsync(CancellationToken cancellationToken = default)
+            transaction.Dispose();
+            context.Dispose();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        using (await locker.LockAsync())
         {
-            using (await locker.LockAsync(cancellationToken))
+            if (!committed)
             {
-                await context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-                committed = true;
+                await transaction.RollbackAsync();
             }
+
+            await transaction.DisposeAsync();
+            await context.DisposeAsync();
         }
+    }
 
-        public void Dispose()
-        {
-            using (locker.Lock())
-            {
-                if (!committed)
-                {
-                    transaction.Rollback();
-                }
-
-                transaction.Dispose();
-                context.Dispose();
-            }
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            using (await locker.LockAsync())
-            {
-                if (!committed)
-                {
-                    await transaction.RollbackAsync();
-                }
-
-                await transaction.DisposeAsync();
-                await context.DisposeAsync();
-            }
-        }
-
-        public TRepository GetRepository<TRepository>()
-            where TRepository : IRepository
-        {
-            return serviceProvider.GetRequiredService<EfRepositoryFactory<TRepository>>().Invoke(context);
-        }
+    public TRepository GetRepository<TRepository>()
+        where TRepository : IRepository
+    {
+        return serviceProvider.GetRequiredService<EfRepositoryFactory<TRepository>>().Invoke(context);
     }
 }

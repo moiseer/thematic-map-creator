@@ -4,7 +4,6 @@ using Core.Dal.EntityFramework;
 using Core.Dal.EntityFramework.Extensions;
 using Core.Dal.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using ThematicMapCreator.Domain.Repositories;
 using ThematicMapCreator.Host.Persistence.Contexts;
@@ -25,10 +24,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             var services = new ServiceCollection()
                 .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
-                .AddDbContextFactory<ThematicMapDbContext>(DbTag,
-                    builder => builder
-                        .UseInMemoryDatabase(DbTag)
-                        .ConfigureWarnings(warn => warn.Ignore(InMemoryEventId.TransactionIgnoredWarning)))
+                .AddDbContextFactory<ThematicMapDbContext>(DbTag, builder => builder.UseSqlite("Data Source=Test.db"))
                 .AddRepository<IUsersRepository, UsersRepository>()
                 .AddRepository<IMapsRepository, MapsRepository>()
                 .AddRepository<ILayersRepository, LayersRepository>();

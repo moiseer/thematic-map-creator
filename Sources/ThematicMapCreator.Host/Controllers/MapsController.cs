@@ -1,46 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ThematicMapCreator.Contracts;
-using ThematicMapCreator.Domain.Services;
+using ThematicMapCreator.Domain.Commands;
+using ThematicMapCreator.Domain.Queries;
 using ThematicMapCreator.Host.Extensions;
 
-namespace ThematicMapCreator.Host.Controllers
+namespace ThematicMapCreator.Host.Controllers;
+
+[ApiController]
+[Route("api/maps")]
+public sealed class MapsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class MapsController : Controller
+    private readonly IMediator mediator;
+
+    public MapsController(IMediator mediator) => this.mediator = mediator;
+
+    [HttpDelete("{mapId:guid}")]
+    public async Task DeleteMapAsync(Guid mapId, CancellationToken ct) =>
+        await mediator.Send(new MapDeleteCommand(mapId), ct);
+
+    [HttpGet("{mapId:guid}/layers")]
+    public async Task<IEnumerable<LayerDto>> GetLayersByMapIdAsync(Guid mapId, CancellationToken ct)
     {
-        private readonly IMapsService service;
-
-        public MapsController(IMapsService service)
-        {
-            this.service = service;
-        }
-
-        [HttpDelete("{id:guid}")]
-        public async Task DeleteMap(Guid id)
-        {
-            await service.DeleteAsync(id);
-        }
-
-        [HttpGet("{id:guid}/layers")]
-        public async Task<IEnumerable<LayerDto>> GetLayersByMapId(Guid id)
-        {
-            return (await service.GetLayersAsync(id)).ConvertAll(layer => layer.ToDto());
-        }
-
-        [HttpGet("{id:guid}")]
-        public async Task<MapDto> GetMap(Guid id)
-        {
-            return (await service.GetDetailsAsync(id)).ToDto();
-        }
-
-        [HttpPut]
-        public async Task<Guid> SaveMap([FromBody] SaveMapRequest request)
-        {
-            return await service.SaveAsync(request);
-        }
+        var layers = await mediator.Send(new LayersQuery(mapId), ct);
+        return layers.Select(layer => layer.ToDto());
     }
+
+    [HttpGet("{mapId:guid}")]
+    public async Task<MapDto> GetMap(Guid mapId, CancellationToken ct)
+    {
+        var map = await mediator.Send(new MapDetailsQuery(mapId), ct);
+        return map.ToDto();
+    }
+
+    [HttpPut]
+    public async Task SaveMap([FromBody] SaveMapRequest request, CancellationToken ct) =>
+        await mediator.Send(request.ToCommand(), ct);
 }

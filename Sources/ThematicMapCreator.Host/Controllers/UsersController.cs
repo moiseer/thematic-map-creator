@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ThematicMapCreator.Contracts;
-using ThematicMapCreator.Domain.Services;
+using ThematicMapCreator.Domain.Queries;
 using ThematicMapCreator.Host.Extensions;
 
-namespace ThematicMapCreator.Host.Controllers
+namespace ThematicMapCreator.Host.Controllers;
+
+[ApiController]
+[Route("api/users")]
+public sealed class UsersController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : Controller
+    private readonly IMediator mediator;
+
+    public UsersController(IMediator mediator) => this.mediator = mediator;
+
+    [HttpGet("{userId:guid}/maps")]
+    public async Task<IEnumerable<MapDto>> GetMapsAsync(Guid userId, CancellationToken ct)
     {
-        private readonly IUsersService service;
-
-        public UsersController(IUsersService service)
-        {
-            this.service = service;
-        }
-
-        [HttpGet("{id:guid}/maps")]
-        public async Task<List<MapDto>> GetMapsAsync(Guid id)
-        {
-            return (await service.GetMapsAsync(id)).ConvertAll(map => map.ToDto());
-        }
+        var maps = await mediator.Send(new MapsQuery(userId), ct);
+        return maps.Select(map => map.ToDto());
     }
 }

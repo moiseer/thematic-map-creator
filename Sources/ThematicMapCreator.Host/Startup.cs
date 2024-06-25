@@ -10,10 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using ThematicMapCreator.Contracts;
 using ThematicMapCreator.Domain;
+using ThematicMapCreator.Domain.Commands;
 using ThematicMapCreator.Domain.Repositories;
-using ThematicMapCreator.Domain.Services;
 using ThematicMapCreator.Domain.Validators;
 using ThematicMapCreator.Host.Filters;
 using ThematicMapCreator.Host.Persistence.Contexts;
@@ -32,29 +31,18 @@ namespace ThematicMapCreator.Host
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseSerilogRequestLogging();
 
-            app.UseCors(builder => builder
-                .SetIsOriginAllowed(_ => true)
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials());
+            if (env.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints => endpoints.MapControllers());
-
-            app.UseSwagger();
-            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Thematic Map Creator"));
 
             UseMigration(app);
         }
@@ -74,22 +62,12 @@ namespace ThematicMapCreator.Host
 
             AddDal(services);
             AddServices(services);
-            AddValidators(services);
         }
 
         private static void AddServices(IServiceCollection services)
         {
-            services
-                .AddSingleton<ILayersService, LayersService>()
-                .AddSingleton<IMapsService, MapsService>()
-                .AddSingleton<IUsersService, UsersService>();
-        }
-
-        private static void AddValidators(IServiceCollection services)
-        {
-            services
-                .AddTransient<IValidator<SaveLayerRequest>, SaveLayerRequestValidator>()
-                .AddTransient<IValidator<SaveMapRequest>, SaveMapRequestValidator>();
+            services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblyContaining<MapSaveCommand>());
+            services.AddTransient<IValidator<MapSaveCommand>, MapSaveCommandValidator>();
         }
 
         private static void UseMigration(IApplicationBuilder app)

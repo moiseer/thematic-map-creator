@@ -8,13 +8,8 @@ namespace Core.Dal.EntityFramework
     {
         private readonly Func<TContext> innerFactory;
 
-        public DbContextFactory(string tag, Func<TContext> innerFactory)
-        {
-            Tag = tag;
-            this.innerFactory = innerFactory;
-        }
+        public DbContextFactory(Func<TContext> innerFactory) => this.innerFactory = innerFactory;
 
-        public string Tag { get; }
         public TContext Create() => innerFactory.Invoke();
         DbContext IDbContextFactory.Create() => Create();
     }

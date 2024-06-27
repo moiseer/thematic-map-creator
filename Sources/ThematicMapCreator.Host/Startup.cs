@@ -51,12 +51,7 @@ namespace ThematicMapCreator.Host
         {
             services.AddControllers(options => options.Filters.AddService<TmcExceptionFilter>());
 
-            services.AddSwaggerGen(options => options.SwaggerDoc("v1",
-                new OpenApiInfo
-                {
-                    Version = "v1.0",
-                    Title = "Thematic Map Creator"
-                }));
+            services.AddSwaggerGen();
 
             services.AddSingleton<TmcExceptionFilter>();
 
@@ -85,8 +80,7 @@ namespace ThematicMapCreator.Host
         {
             services
                 .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
-                .AddDbContextFactory<ThematicMapDbContext>(DbTag.App,
-                    builder => builder.UseSqlite(Configuration.GetConnectionString("ThematicMapDb")))
+                .AddDbContextFactory<ThematicMapDbContext>(builder => builder.UseSqlite(Configuration.GetConnectionString("ThematicMapDb")))
                 .AddRepository<IUsersRepository, UsersRepository>()
                 .AddRepository<IMapsRepository, MapsRepository>()
                 .AddRepository<ILayersRepository, LayersRepository>();

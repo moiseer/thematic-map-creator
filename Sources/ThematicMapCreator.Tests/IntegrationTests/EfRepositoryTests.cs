@@ -24,7 +24,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             var services = new ServiceCollection()
                 .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
-                .AddDbContextFactory<ThematicMapDbContext>(DbTag, builder => builder.UseSqlite("Data Source=Test.db"))
+                .AddDbContextFactory<ThematicMapDbContext>(builder => builder.UseSqlite("Data Source=Test.db"))
                 .AddRepository<IUsersRepository, UsersRepository>()
                 .AddRepository<IMapsRepository, MapsRepository>()
                 .AddRepository<ILayersRepository, LayersRepository>();

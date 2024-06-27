@@ -7,7 +7,6 @@ namespace Core.Dal
 {
     public interface IUnitOfWork : IDisposable, IAsyncDisposable
     {
-        string Tag { get; }
         void Commit();
         Task CommitAsync(CancellationToken cancellationToken = default);
 

@@ -17,15 +17,12 @@ public sealed class EfUnitOfWork : IUnitOfWork
     private readonly IDbContextTransaction transaction;
     private bool committed;
 
-    public EfUnitOfWork(string tag, DbContext context, IServiceProvider serviceProvider)
+    public EfUnitOfWork(DbContext context, IServiceProvider serviceProvider)
     {
-        Tag = tag;
         this.context = context;
         this.serviceProvider = serviceProvider;
         transaction = context.Database.BeginTransaction();
     }
-
-    public string Tag { get; }
 
     public void Commit()
     {

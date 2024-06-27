@@ -13,7 +13,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             var user = CreateUser();
 
-            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.AddAsync(user);
@@ -37,14 +37,14 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             var user = CreateUser();
 
-            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.AddAsync(user);
                 await unitOfWork.CommitAsync();
             }
 
-            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.DeleteAsync(user.Id);
@@ -66,7 +66,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             var user = CreateUser();
 
-            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.AddAsync(user);
@@ -74,11 +74,11 @@ namespace ThematicMapCreator.Tests.IntegrationTests
             }
 
             var newName = Guid.NewGuid().ToString();
-            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 var storedUser = await repository.GetAsync(user.Id);
-                storedUser.Name = newName;
+                storedUser!.Name = newName;
                 await unitOfWork.CommitAsync();
             }
 
@@ -88,6 +88,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
                 var storedUser = await repository.GetAsync(user.Id);
                 await unitOfWork.CommitAsync();
 
+                Assert.NotNull(storedUser);
                 Assert.Equal(user.Id, storedUser.Id);
                 Assert.Equal(newName, storedUser.Name);
             }
@@ -98,7 +99,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
         {
             var user = CreateUser();
 
-            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.AddAsync(user);
@@ -107,7 +108,7 @@ namespace ThematicMapCreator.Tests.IntegrationTests
 
             var updatedUser = CreateUser();
             updatedUser.Id = user.Id;
-            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync(DbTag))
+            await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
             {
                 var repository = unitOfWork.GetRepository<IUsersRepository>();
                 await repository.UpdateAsync(updatedUser);

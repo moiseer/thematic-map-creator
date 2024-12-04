@@ -1,11 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Dal
+namespace Core.Dal;
+
+public interface IUnitOfWorkFactory
 {
-    public interface IUnitOfWorkFactory
-    {
-        IUnitOfWork Create();
-        Task<IUnitOfWork> CreateAsync(CancellationToken cancellationToken = default);
-    }
+    IUnitOfWork Create();
+    Task<IUnitOfWork> CreateAsync(CancellationToken cancellationToken = default);
 }

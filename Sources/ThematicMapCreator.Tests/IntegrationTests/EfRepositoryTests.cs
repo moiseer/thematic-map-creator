@@ -10,40 +10,38 @@ using ThematicMapCreator.Host.Persistence.Contexts;
 using ThematicMapCreator.Host.Persistence.Repositories;
 using Xunit;
 
-namespace ThematicMapCreator.Tests.IntegrationTests
+namespace ThematicMapCreator.Tests.IntegrationTests;
+
+[Collection("EfRepositoryTests")]
+public abstract class EfRepositoryTests : IDisposable
 {
-    [Collection("EfRepositoryTests")]
-    public abstract class EfRepositoryTests : IDisposable
+    protected readonly IUnitOfWorkFactory UnitOfWorkFactory;
+
+    private readonly ServiceProvider provider;
+
+    protected EfRepositoryTests()
     {
-        protected const string DbTag = "test";
-        protected readonly IUnitOfWorkFactory UnitOfWorkFactory;
+        var services = new ServiceCollection()
+            .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
+            .AddDbContextFactory<ThematicMapDbContext>(builder => builder.UseSqlite("Data Source=Test.db"))
+            .AddRepository<IUsersRepository, UsersRepository>()
+            .AddRepository<IMapsRepository, MapsRepository>()
+            .AddRepository<ILayersRepository, LayersRepository>();
 
-        private readonly ServiceProvider provider;
+        provider = services.BuildServiceProvider();
+        UnitOfWorkFactory = provider.GetRequiredService<IUnitOfWorkFactory>();
 
-        protected EfRepositoryTests()
-        {
-            var services = new ServiceCollection()
-                .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
-                .AddDbContextFactory<ThematicMapDbContext>(builder => builder.UseSqlite("Data Source=Test.db"))
-                .AddRepository<IUsersRepository, UsersRepository>()
-                .AddRepository<IMapsRepository, MapsRepository>()
-                .AddRepository<ILayersRepository, LayersRepository>();
+        var contextFactory = provider.GetRequiredService<IDbContextFactory>();
+        using var context = contextFactory.Create();
+        context.Database.EnsureCreated();
+    }
 
-            provider = services.BuildServiceProvider();
-            UnitOfWorkFactory = provider.GetRequiredService<IUnitOfWorkFactory>();
+    public void Dispose()
+    {
+        var contextFactory = provider.GetRequiredService<IDbContextFactory>();
+        using var context = contextFactory.Create();
+        context.Database.EnsureDeleted();
 
-            var contextFactory = provider.GetRequiredService<IDbContextFactory>();
-            using var context = contextFactory.Create();
-            context.Database.EnsureCreated();
-        }
-
-        public void Dispose()
-        {
-            var contextFactory = provider.GetRequiredService<IDbContextFactory>();
-            using var context = contextFactory.Create();
-            context.Database.EnsureDeleted();
-
-            provider.Dispose();
-        }
+        provider.Dispose();
     }
 }

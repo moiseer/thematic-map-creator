@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Core.Dal.EntityFramework
+namespace Core.Dal.EntityFramework;
+
+public interface IDbContextFactory
 {
-    public interface IDbContextFactory
-    {
-        public DbContext Create();
-    }
+    public DbContext Create();
 }

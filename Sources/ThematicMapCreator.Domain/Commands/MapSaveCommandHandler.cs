@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,26 +30,26 @@ public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
 
     public async Task Handle(MapSaveCommand request, CancellationToken cancellationToken)
     {
-        await saveMapValidator.ValidateAsync(request).ThrowOnErrorsAsync();
+        await saveMapValidator.ValidateAsync(request, cancellationToken).ThrowOnErrorsAsync();
 
-        await using var unitOfWork = await unitOfWorkFactory.CreateAsync();
+        await using var unitOfWork = await unitOfWorkFactory.CreateAsync(cancellationToken);
         var mapsRepository = unitOfWork.GetRepository<IMapsRepository>();
 
-        Map? existingMap = request.Id.HasValue
-            ? await mapsRepository.GetAsync(request.Id.Value)
+        var existingMap = request.Id.HasValue
+            ? await mapsRepository.GetAsync(request.Id.Value, cancellationToken)
             : null;
 
         Guid mapId;
         if (existingMap == null || existingMap.UserId != request.UserId)
         {
-            mapId = await AddMapAsync(request, unitOfWork);
+            mapId = await AddMapAsync(request, unitOfWork, cancellationToken);
         }
         else
         {
-            mapId = await UpdateMapAsync(request, existingMap, unitOfWork);
+            mapId = await UpdateMapAsync(request, existingMap, unitOfWork, cancellationToken);
         }
 
-        await unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync(cancellationToken);
 
         logger.LogInformation("Map {MapId} saved", mapId);
     }
@@ -65,7 +64,7 @@ public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
         Index = request.Index,
         IsVisible = request.IsVisible,
         StyleOptions = request.StyleOptions!,
-        Type = request.Type
+        Type = request.Type,
     };
 
     private static Map CreateMap(MapSaveCommand request) => new()
@@ -73,43 +72,43 @@ public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
         Id = Guid.NewGuid(),
         Name = request.Name!,
         Description = request.Description,
-        UserId = request.UserId
+        UserId = request.UserId,
     };
 
-    private async Task<Guid> AddMapAsync(MapSaveCommand request, IUnitOfWork unitOfWork)
+    private async Task<Guid> AddMapAsync(MapSaveCommand request, IUnitOfWork unitOfWork, CancellationToken ct)
     {
         var mapsRepository = unitOfWork.GetRepository<IMapsRepository>();
         var layerRepository = unitOfWork.GetRepository<ILayersRepository>();
 
-        Map map = CreateMap(request);
-        await mapsRepository.AddAsync(map);
+        var map = CreateMap(request);
+        await mapsRepository.AddAsync(map, ct);
 
-        List<Layer> layers = request.Layers.ConvertAll(layer => CreateLayer(layer, map.Id));
+        var layers = request.Layers.ConvertAll(layer => CreateLayer(layer, map.Id));
         await layerRepository.AddAsync(layers);
 
         logger.LogDebug("Map {MapId} added", map.Id);
         return map.Id;
     }
 
-    private async Task<Guid> UpdateMapAsync(MapSaveCommand request, Map map, IUnitOfWork unitOfWork)
+    private async Task<Guid> UpdateMapAsync(MapSaveCommand request, Map map, IUnitOfWork unitOfWork, CancellationToken ct)
     {
         var layerRepository = unitOfWork.GetRepository<ILayersRepository>();
 
         map.Name = request.Name!;
         map.Description = request.Description;
 
-        IEnumerable<Layer> newLayers = request.Layers
+        var newLayers = request.Layers
             .Where(layer => !layer.Id.HasValue)
             .Select(layer => CreateLayer(layer, map.Id));
 
-        HashSet<Guid> updateLayerIds = request.Layers
+        var updateLayerIds = request.Layers
             .Where(layer => layer.Id.HasValue)
             .Select(layer => layer.Id!.Value)
             .ToHashSet();
 
-        await layerRepository.DeleteByMapIdAsync(map.Id, excludedLayerIds: updateLayerIds);
+        await layerRepository.DeleteByMapIdAsync(map.Id, updateLayerIds);
         await layerRepository.AddAsync(newLayers);
-        List<Layer> updateLayers = await layerRepository.GetAsync(updateLayerIds);
+        var updateLayers = await layerRepository.GetAsync(updateLayerIds, ct);
         foreach (var layer in updateLayers)
         {
             var update = request.Layers.Single(l => l.Id.HasValue && l.Id.Value == layer.Id);
@@ -119,7 +118,7 @@ public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
             layer.Index = update.Index;
             layer.StyleOptions = update.StyleOptions!;
 
-            await layerRepository.UpdateAsync(layer);
+            await layerRepository.UpdateAsync(layer, ct);
         }
 
         logger.LogDebug("Map {MapId} updated", map.Id);

@@ -1,10 +1,9 @@
-﻿namespace ThematicMapCreator.Domain.Models
+﻿namespace ThematicMapCreator.Domain.Models;
+
+public enum LayerType
 {
-    public enum LayerType
-    {
-        None = 0,
-        Point = 1,
-        Line = 2,
-        Polygon = 4
-    }
+    None = 0,
+    Point = 1,
+    Line = 2,
+    Polygon = 4,
 }

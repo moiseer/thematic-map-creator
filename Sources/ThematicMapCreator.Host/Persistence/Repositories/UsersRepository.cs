@@ -11,7 +11,8 @@ namespace ThematicMapCreator.Host.Persistence.Repositories;
 
 public sealed class UsersRepository : EfCrudRepository<User, Guid>, IUsersRepository
 {
-    public UsersRepository(DbContext context) : base(context)
+    public UsersRepository(DbContext context)
+        : base(context)
     {
     }
 

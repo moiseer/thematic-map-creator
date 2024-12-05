@@ -73,8 +73,6 @@ public sealed class EfUnitOfWork : IUnitOfWork
     }
 
     public TRepository GetRepository<TRepository>()
-        where TRepository : IRepository
-    {
-        return serviceProvider.GetRequiredService<EfRepositoryFactory<TRepository>>().Invoke(context);
-    }
+        where TRepository : IRepository =>
+        serviceProvider.GetRequiredService<EfRepositoryFactory<TRepository>>().Invoke(context);
 }

@@ -1,7 +1,6 @@
-﻿namespace Core.Dal.Models
+﻿namespace Core.Dal.Models;
+
+public interface IEntity<out TKey>
 {
-    public interface IEntity<out TKey>
-    {
-        TKey Id { get; }
-    }
+    TKey Id { get; }
 }

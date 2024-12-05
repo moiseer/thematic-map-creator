@@ -30,14 +30,14 @@ public static class MappingExtensions
         Id = map.Id,
         Name = map.Name,
         Description = map.Description,
-        UserId = map.UserId
+        UserId = map.UserId,
     };
 
     public static UserDto ToDto(this User user) => new()
     {
         Id = user.Id,
         Name = user.Name,
-        Email = user.Email
+        Email = user.Email,
     };
 
     public static LayerDto ToDto(this Layer layer) => new()
@@ -50,6 +50,6 @@ public static class MappingExtensions
         MapId = layer.MapId,
         Data = layer.Data,
         StyleOptions = layer.StyleOptions,
-        Type = (int)layer.Type
+        Type = (int)layer.Type,
     };
 }

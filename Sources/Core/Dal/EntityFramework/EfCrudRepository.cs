@@ -16,7 +16,8 @@ public abstract class EfCrudRepository<TEntity, TKey> :
     where TEntity : class, IEntity<TKey>
     where TKey : IEquatable<TKey>
 {
-    protected EfCrudRepository(DbContext context) : base(context)
+    protected EfCrudRepository(DbContext context)
+        : base(context)
     {
     }
 

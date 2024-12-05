@@ -12,7 +12,8 @@ namespace ThematicMapCreator.Host.Persistence.Repositories;
 
 public sealed class LayersRepository : EfCrudRepository<Layer, Guid>, ILayersRepository
 {
-    public LayersRepository(DbContext context) : base(context)
+    public LayersRepository(DbContext context)
+        : base(context)
     {
     }
 

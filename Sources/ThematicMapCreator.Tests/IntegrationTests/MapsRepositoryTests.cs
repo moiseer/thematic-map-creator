@@ -8,14 +8,14 @@ namespace ThematicMapCreator.Tests.IntegrationTests;
 
 public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
 {
-    private readonly User user;
+    private readonly User _user;
 
-    public MapsRepositoryTests() => user = CreateUser();
+    public MapsRepositoryTests() => _user = CreateUser();
 
     [Fact]
     public async Task Add_NewEntity_Success()
     {
-        var map = CreateMap(user.Id);
+        var map = CreateMap(_user.Id);
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -41,7 +41,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task Delete_EntityExists_Success()
     {
-        var map = CreateMap(user.Id);
+        var map = CreateMap(_user.Id);
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -72,7 +72,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task Exists_Empty_ReturnsFalse()
     {
-        var map = CreateMap(user.Id);
+        var map = CreateMap(_user.Id);
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -85,7 +85,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
             var repository = unitOfWork.GetRepository<IMapsRepository>();
-            var exists = await repository.ExistsAsync(user.Id, mapName);
+            var exists = await repository.ExistsAsync(_user.Id, mapName);
             await unitOfWork.CommitAsync();
 
             Assert.False(exists);
@@ -95,7 +95,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task Exists_EntityAdded_ReturnsTrue()
     {
-        var map = CreateMap(user.Id);
+        var map = CreateMap(_user.Id);
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -107,7 +107,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
             var repository = unitOfWork.GetRepository<IMapsRepository>();
-            var exists = await repository.ExistsAsync(user.Id, map.Name);
+            var exists = await repository.ExistsAsync(_user.Id, map.Name);
             await unitOfWork.CommitAsync();
 
             Assert.True(exists);
@@ -119,7 +119,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
     {
         await using var unitOfWork = await UnitOfWorkFactory.CreateAsync();
         var repository = unitOfWork.GetRepository<IMapsRepository>();
-        var storedMaps = await repository.GetByUserIdAsync(user.Id);
+        var storedMaps = await repository.GetByUserIdAsync(_user.Id);
         await unitOfWork.CommitAsync();
 
         Assert.Empty(storedMaps);
@@ -128,7 +128,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task GetByUserId_EntitiesAdded_Success()
     {
-        var maps = new[] { CreateMap(user.Id), CreateMap(user.Id) };
+        var maps = new[] { CreateMap(_user.Id), CreateMap(_user.Id) };
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -144,7 +144,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
             var repository = unitOfWork.GetRepository<IMapsRepository>();
-            var storedMaps = await repository.GetByUserIdAsync(user.Id);
+            var storedMaps = await repository.GetByUserIdAsync(_user.Id);
             await unitOfWork.CommitAsync();
 
             Assert.NotEmpty(storedMaps);
@@ -157,14 +157,14 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
     {
         await using var unitOfWork = await UnitOfWorkFactory.CreateAsync();
         var repository = unitOfWork.GetRepository<IUsersRepository>();
-        await repository.AddAsync(user);
+        await repository.AddAsync(_user);
         await unitOfWork.CommitAsync();
     }
 
     [Fact]
     public async Task Update_WithSpecialMethod_Success()
     {
-        var map = CreateMap(user.Id);
+        var map = CreateMap(_user.Id);
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -173,7 +173,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
             await unitOfWork.CommitAsync();
         }
 
-        var updatedMap = CreateMap(user.Id);
+        var updatedMap = CreateMap(_user.Id);
         updatedMap.Id = map.Id;
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {

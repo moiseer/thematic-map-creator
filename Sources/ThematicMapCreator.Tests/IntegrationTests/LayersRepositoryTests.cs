@@ -9,19 +9,19 @@ namespace ThematicMapCreator.Tests.IntegrationTests;
 
 public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
 {
-    private readonly Map map;
-    private readonly User user;
+    private readonly Map _map;
+    private readonly User _user;
 
     public LayersRepositoryTests()
     {
-        user = CreateUser();
-        map = CreateMap(user.Id);
+        _user = CreateUser();
+        _map = CreateMap(_user.Id);
     }
 
     [Fact]
     public async Task Add_ManyEntities_Success()
     {
-        var layers = new[] { CreateLayer(map.Id), CreateLayer(map.Id) };
+        var layers = new[] { CreateLayer(_map.Id), CreateLayer(_map.Id) };
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -59,7 +59,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task Add_NewEntity_Success()
     {
-        var layer = CreateLayer(map.Id);
+        var layer = CreateLayer(_map.Id);
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -89,7 +89,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task Delete_EntityExists_Success()
     {
-        var layer = CreateLayer(map.Id);
+        var layer = CreateLayer(_map.Id);
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -118,7 +118,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task DeleteByMapId_WithExcluded_Success()
     {
-        var layers = new[] { CreateLayer(map.Id), CreateLayer(map.Id) };
+        var layers = new[] { CreateLayer(_map.Id), CreateLayer(_map.Id) };
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -134,14 +134,14 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
             var repository = unitOfWork.GetRepository<ILayersRepository>();
-            await repository.DeleteByMapIdAsync(map.Id, new[] { layers.First().Id });
+            await repository.DeleteByMapIdAsync(_map.Id, new[] { layers.First().Id });
             await unitOfWork.CommitAsync();
         }
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
             var repository = unitOfWork.GetRepository<ILayersRepository>();
-            var storedLayers = await repository.GetByMapIdAsync(map.Id);
+            var storedLayers = await repository.GetByMapIdAsync(_map.Id);
             await unitOfWork.CommitAsync();
 
             Assert.NotEmpty(storedLayers);
@@ -153,7 +153,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task DeleteByMapId_WithoutExcluded_Success()
     {
-        var layers = new[] { CreateLayer(map.Id), CreateLayer(map.Id) };
+        var layers = new[] { CreateLayer(_map.Id), CreateLayer(_map.Id) };
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -169,14 +169,14 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
             var repository = unitOfWork.GetRepository<ILayersRepository>();
-            await repository.DeleteByMapIdAsync(map.Id);
+            await repository.DeleteByMapIdAsync(_map.Id);
             await unitOfWork.CommitAsync();
         }
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
             var repository = unitOfWork.GetRepository<ILayersRepository>();
-            var storedLayers = await repository.GetByMapIdAsync(map.Id);
+            var storedLayers = await repository.GetByMapIdAsync(_map.Id);
             await unitOfWork.CommitAsync();
 
             Assert.Empty(storedLayers);
@@ -190,7 +190,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
     {
         await using var unitOfWork = await UnitOfWorkFactory.CreateAsync();
         var repository = unitOfWork.GetRepository<ILayersRepository>();
-        var storedLayers = await repository.GetByMapIdAsync(map.Id);
+        var storedLayers = await repository.GetByMapIdAsync(_map.Id);
         await unitOfWork.CommitAsync();
 
         Assert.Empty(storedLayers);
@@ -199,7 +199,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
     [Fact]
     public async Task GetByMapId_EntitiesAdded_Success()
     {
-        var layers = new[] { CreateLayer(map.Id), CreateLayer(map.Id) };
+        var layers = new[] { CreateLayer(_map.Id), CreateLayer(_map.Id) };
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -215,7 +215,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
             var repository = unitOfWork.GetRepository<ILayersRepository>();
-            var storedLayers = await repository.GetByMapIdAsync(map.Id);
+            var storedLayers = await repository.GetByMapIdAsync(_map.Id);
             await unitOfWork.CommitAsync();
 
             Assert.NotEmpty(storedLayers);
@@ -229,15 +229,15 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
         await using var unitOfWork = await UnitOfWorkFactory.CreateAsync();
         var usersRepository = unitOfWork.GetRepository<IUsersRepository>();
         var mapsRepository = unitOfWork.GetRepository<IMapsRepository>();
-        await usersRepository.AddAsync(user);
-        await mapsRepository.AddAsync(map);
+        await usersRepository.AddAsync(_user);
+        await mapsRepository.AddAsync(_map);
         await unitOfWork.CommitAsync();
     }
 
     [Fact]
     public async Task Update_WithSpecialMethod_Success()
     {
-        var layer = CreateLayer(map.Id);
+        var layer = CreateLayer(_map.Id);
 
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {
@@ -246,7 +246,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
             await unitOfWork.CommitAsync();
         }
 
-        var updatedLayer = CreateLayer(map.Id);
+        var updatedLayer = CreateLayer(_map.Id);
         updatedLayer.Id = layer.Id;
         await using (var unitOfWork = await UnitOfWorkFactory.CreateAsync())
         {

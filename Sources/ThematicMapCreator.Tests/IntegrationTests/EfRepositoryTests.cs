@@ -17,7 +17,7 @@ public abstract class EfRepositoryTests : IDisposable
 {
     protected readonly IUnitOfWorkFactory UnitOfWorkFactory;
 
-    private readonly ServiceProvider provider;
+    private readonly ServiceProvider _provider;
 
     protected EfRepositoryTests()
     {
@@ -28,20 +28,20 @@ public abstract class EfRepositoryTests : IDisposable
             .AddRepository<IMapsRepository, MapsRepository>()
             .AddRepository<ILayersRepository, LayersRepository>();
 
-        provider = services.BuildServiceProvider();
-        UnitOfWorkFactory = provider.GetRequiredService<IUnitOfWorkFactory>();
+        _provider = services.BuildServiceProvider();
+        UnitOfWorkFactory = _provider.GetRequiredService<IUnitOfWorkFactory>();
 
-        var contextFactory = provider.GetRequiredService<IDbContextFactory>();
+        var contextFactory = _provider.GetRequiredService<IDbContextFactory>();
         using var context = contextFactory.Create();
         context.Database.EnsureCreated();
     }
 
     public void Dispose()
     {
-        var contextFactory = provider.GetRequiredService<IDbContextFactory>();
+        var contextFactory = _provider.GetRequiredService<IDbContextFactory>();
         using var context = contextFactory.Create();
         context.Database.EnsureDeleted();
 
-        provider.Dispose();
+        _provider.Dispose();
     }
 }

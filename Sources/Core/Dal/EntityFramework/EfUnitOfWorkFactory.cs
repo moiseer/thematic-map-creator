@@ -6,16 +6,16 @@ namespace Core.Dal.EntityFramework;
 
 public sealed class EfUnitOfWorkFactory : IUnitOfWorkFactory
 {
-    private readonly IDbContextFactory contextFactory;
-    private readonly IServiceProvider serviceProvider;
+    private readonly IDbContextFactory _contextFactory;
+    private readonly IServiceProvider _serviceProvider;
 
     public EfUnitOfWorkFactory(IDbContextFactory contextFactory, IServiceProvider serviceProvider)
     {
-        this.contextFactory = contextFactory;
-        this.serviceProvider = serviceProvider;
+        _contextFactory = contextFactory;
+        _serviceProvider = serviceProvider;
     }
 
-    public IUnitOfWork Create() => new EfUnitOfWork(contextFactory.Create(), serviceProvider);
+    public IUnitOfWork Create() => new EfUnitOfWork(_contextFactory.Create(), _serviceProvider);
 
     public Task<IUnitOfWork> CreateAsync(CancellationToken cancellationToken = default)
     {

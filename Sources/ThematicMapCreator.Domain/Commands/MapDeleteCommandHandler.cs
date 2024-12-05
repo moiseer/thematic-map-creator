@@ -9,24 +9,24 @@ namespace ThematicMapCreator.Domain.Commands;
 
 public sealed class MapDeleteCommandHandler : IRequestHandler<MapDeleteCommand>
 {
-    private readonly ILogger<MapDeleteCommandHandler> logger;
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
+    private readonly ILogger<MapDeleteCommandHandler> _logger;
+    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
     public MapDeleteCommandHandler(ILogger<MapDeleteCommandHandler> logger, IUnitOfWorkFactory unitOfWorkFactory)
     {
-        this.logger = logger;
-        this.unitOfWorkFactory = unitOfWorkFactory;
+        _logger = logger;
+        _unitOfWorkFactory = unitOfWorkFactory;
     }
 
     public async Task Handle(MapDeleteCommand request, CancellationToken cancellationToken)
     {
-        await using var unitOfWork = await unitOfWorkFactory.CreateAsync(cancellationToken);
+        await using var unitOfWork = await _unitOfWorkFactory.CreateAsync(cancellationToken);
         var layerRepository = unitOfWork.GetRepository<ILayersRepository>();
         var mapRepository = unitOfWork.GetRepository<IMapsRepository>();
         await layerRepository.DeleteByMapIdAsync(request.MapId);
         await mapRepository.DeleteAsync(request.MapId, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
 
-        logger.LogInformation("Map {MapId} deleted", request.MapId);
+        _logger.LogInformation("Map {MapId} deleted", request.MapId);
     }
 }

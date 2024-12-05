@@ -14,25 +14,25 @@ namespace ThematicMapCreator.Domain.Commands;
 
 public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
 {
-    private readonly ILogger<MapSaveCommandHandler> logger;
-    private readonly IValidator<MapSaveCommand> saveMapValidator;
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
+    private readonly ILogger<MapSaveCommandHandler> _logger;
+    private readonly IValidator<MapSaveCommand> _saveMapValidator;
+    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
     public MapSaveCommandHandler(
         ILogger<MapSaveCommandHandler> logger,
         IValidator<MapSaveCommand> saveMapValidator,
         IUnitOfWorkFactory unitOfWorkFactory)
     {
-        this.logger = logger;
-        this.saveMapValidator = saveMapValidator;
-        this.unitOfWorkFactory = unitOfWorkFactory;
+        _logger = logger;
+        _saveMapValidator = saveMapValidator;
+        _unitOfWorkFactory = unitOfWorkFactory;
     }
 
     public async Task Handle(MapSaveCommand request, CancellationToken cancellationToken)
     {
-        await saveMapValidator.ValidateAsync(request, cancellationToken).ThrowOnErrorsAsync();
+        await _saveMapValidator.ValidateAsync(request, cancellationToken).ThrowOnErrorsAsync();
 
-        await using var unitOfWork = await unitOfWorkFactory.CreateAsync(cancellationToken);
+        await using var unitOfWork = await _unitOfWorkFactory.CreateAsync(cancellationToken);
         var mapsRepository = unitOfWork.GetRepository<IMapsRepository>();
 
         var existingMap = request.Id.HasValue
@@ -51,7 +51,7 @@ public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
 
         await unitOfWork.CommitAsync(cancellationToken);
 
-        logger.LogInformation("Map {MapId} saved", mapId);
+        _logger.LogInformation("Map {MapId} saved", mapId);
     }
 
     private static Layer CreateLayer(MapSaveCommand.Layer request, Guid mapId) => new()
@@ -86,7 +86,7 @@ public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
         var layers = request.Layers.ConvertAll(layer => CreateLayer(layer, map.Id));
         await layerRepository.AddAsync(layers);
 
-        logger.LogDebug("Map {MapId} added", map.Id);
+        _logger.LogDebug("Map {MapId} added", map.Id);
         return map.Id;
     }
 
@@ -121,7 +121,7 @@ public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
             await layerRepository.UpdateAsync(layer, ct);
         }
 
-        logger.LogDebug("Map {MapId} updated", map.Id);
+        _logger.LogDebug("Map {MapId} updated", map.Id);
         return map.Id;
     }
 }

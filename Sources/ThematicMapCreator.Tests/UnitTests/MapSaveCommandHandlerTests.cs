@@ -17,27 +17,27 @@ namespace ThematicMapCreator.Tests.UnitTests;
 
 public sealed class MapSaveCommandHandlerTests
 {
-    private readonly MapSaveCommandHandler handler;
-    private readonly Mock<ILayersRepository> layersRepositoryMock = new();
-    private readonly Mock<IMapsRepository> mapsRepositoryMock = new();
-    private readonly Mock<IUnitOfWorkFactory> unitOfWorkFactoryMock = new();
-    private readonly Mock<IValidator<MapSaveCommand>> validatorMock = new();
+    private readonly MapSaveCommandHandler _handler;
+    private readonly Mock<ILayersRepository> _layersRepositoryMock = new();
+    private readonly Mock<IMapsRepository> _mapsRepositoryMock = new();
+    private readonly Mock<IUnitOfWorkFactory> _unitOfWorkFactoryMock = new();
+    private readonly Mock<IValidator<MapSaveCommand>> _validatorMock = new();
 
     public MapSaveCommandHandlerTests()
     {
         var unitOfWorkMock = new Mock<IUnitOfWork>();
-        unitOfWorkMock.Setup(uow => uow.GetRepository<IMapsRepository>()).Returns(mapsRepositoryMock.Object);
-        unitOfWorkMock.Setup(uow => uow.GetRepository<ILayersRepository>()).Returns(layersRepositoryMock.Object);
+        unitOfWorkMock.Setup(uow => uow.GetRepository<IMapsRepository>()).Returns(_mapsRepositoryMock.Object);
+        unitOfWorkMock.Setup(uow => uow.GetRepository<ILayersRepository>()).Returns(_layersRepositoryMock.Object);
 
-        unitOfWorkFactoryMock
+        _unitOfWorkFactoryMock
             .Setup(factory => factory.CreateAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(unitOfWorkMock.Object);
 
-        validatorMock
+        _validatorMock
             .Setup(validator => validator.ValidateAsync(It.IsAny<MapSaveCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        handler = new MapSaveCommandHandler(Mock.Of<ILogger<MapSaveCommandHandler>>(), validatorMock.Object, unitOfWorkFactoryMock.Object);
+        _handler = new MapSaveCommandHandler(Mock.Of<ILogger<MapSaveCommandHandler>>(), _validatorMock.Object, _unitOfWorkFactoryMock.Object);
     }
 
     [Fact]
@@ -47,20 +47,20 @@ public sealed class MapSaveCommandHandlerTests
         request.Layers = Enumerable.Range(0, 3).Select(i => CreateMapSaveCommandLayer(i, LayerType.Point, isVisible: true)).ToList();
 
         Guid? mapId = null;
-        mapsRepositoryMock
+        _mapsRepositoryMock
             .Setup(repository => repository.AddAsync(It.IsAny<Map>(), It.IsAny<CancellationToken>()))
             .Callback((Map map, CancellationToken _) => mapId = map.Id);
 
-        await handler.Handle(request, CancellationToken.None);
+        await _handler.Handle(request, CancellationToken.None);
 
-        mapsRepositoryMock.Verify(repository => repository.AddAsync(It.Is<Map>(map =>
+        _mapsRepositoryMock.Verify(repository => repository.AddAsync(It.Is<Map>(map =>
                     map.Name == request.Name &&
                     map.Description == request.Description &&
                     map.UserId == request.UserId),
                 It.IsAny<CancellationToken>()),
             Times.Once);
 
-        layersRepositoryMock.Verify(repository => repository.AddAsync(It.Is<IEnumerable<Layer>>(layers =>
+        _layersRepositoryMock.Verify(repository => repository.AddAsync(It.Is<IEnumerable<Layer>>(layers =>
                 request.Layers.TrueForAll(requestLayer =>
                     layers.Any(layer =>
                         layer.Name == requestLayer.Name &&
@@ -79,11 +79,11 @@ public sealed class MapSaveCommandHandlerTests
         var existingMap = CreateMap();
         var layersToUpdate = Enumerable.Range(2, 2).Select(i => CreateLayer(existingMap, i)).ToList();
 
-        mapsRepositoryMock
+        _mapsRepositoryMock
             .Setup(repository => repository.GetAsync(existingMap.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingMap);
 
-        layersRepositoryMock
+        _layersRepositoryMock
             .Setup(repository => repository.GetAsync(It.IsAny<IEnumerable<Guid>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(layersToUpdate);
 
@@ -98,7 +98,7 @@ public sealed class MapSaveCommandHandlerTests
             return layerRequest;
         }));
 
-        await handler.Handle(request, CancellationToken.None);
+        await _handler.Handle(request, CancellationToken.None);
 
         Assert.Equal(request.Name, existingMap.Name);
         Assert.Equal(request.Description, existingMap.Description);
@@ -112,12 +112,12 @@ public sealed class MapSaveCommandHandlerTests
                 layer.IsVisible == layerRequest.IsVisible &&
                 layer.StyleOptions == layerRequest.StyleOptions));
 
-        layersRepositoryMock.Verify(repository => repository.DeleteByMapIdAsync(existingMap.Id,
+        _layersRepositoryMock.Verify(repository => repository.DeleteByMapIdAsync(existingMap.Id,
                 It.Is<IEnumerable<Guid>>(layerIds =>
                     layersToUpdate.TrueForAll(layer => layerIds.Any(layerId => layer.Id == layerId)))),
             Times.Once);
 
-        layersRepositoryMock.Verify(repository => repository.AddAsync(It.Is<IEnumerable<Layer>>(layers =>
+        _layersRepositoryMock.Verify(repository => repository.AddAsync(It.Is<IEnumerable<Layer>>(layers =>
                 request.Layers.Where(requestLayer => !requestLayer.Id.HasValue).All(requestLayer =>
                     layers.Any(layer =>
                         layer.Name == requestLayer.Name &&

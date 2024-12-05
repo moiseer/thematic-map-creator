@@ -47,6 +47,8 @@ public sealed class Startup
         services.AddControllers(options => options.Filters.AddService<TmcExceptionFilter>());
         services.AddSingleton<TmcExceptionFilter>();
 
+        services.AddSwaggerGen();
+
         AddDal(services);
         AddServices(services);
     }

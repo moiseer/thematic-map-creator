@@ -12,7 +12,7 @@ using Xunit;
 
 namespace ThematicMapCreator.Tests.IntegrationTests;
 
-[Collection("DatabaseTests")]
+[Collection("SqliteTests")]
 public sealed class DapperUnitOfWorkTests : IDisposable
 {
     private readonly ServiceProvider _provider;

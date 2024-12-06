@@ -12,7 +12,8 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
     private readonly Map _map;
     private readonly User _user;
 
-    public LayersRepositoryTests()
+    public LayersRepositoryTests(PostgreSqlFixture fixture)
+        : base(fixture)
     {
         _user = CreateUser();
         _map = CreateMap(_user.Id);
@@ -183,6 +184,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
         }
     }
 
+    /// <inheritdoc/>
     public Task DisposeAsync() => Task.CompletedTask;
 
     [Fact]
@@ -224,6 +226,7 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
         }
     }
 
+    /// <inheritdoc/>
     public async Task InitializeAsync()
     {
         await using var unitOfWork = await UnitOfWorkFactory.CreateAsync();

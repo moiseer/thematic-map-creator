@@ -8,6 +8,11 @@ namespace ThematicMapCreator.Tests.IntegrationTests;
 
 public sealed class UsersRepositoryTests : EfRepositoryTests
 {
+    public UsersRepositoryTests(PostgreSqlFixture fixture)
+        : base(fixture)
+    {
+    }
+
     [Fact]
     public async Task Add_NewEntity_Success()
     {

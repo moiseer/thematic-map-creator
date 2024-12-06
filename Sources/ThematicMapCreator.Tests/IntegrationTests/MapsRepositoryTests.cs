@@ -10,7 +10,9 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
 {
     private readonly User _user;
 
-    public MapsRepositoryTests() => _user = CreateUser();
+    public MapsRepositoryTests(PostgreSqlFixture fixture)
+        : base(fixture) =>
+        _user = CreateUser();
 
     [Fact]
     public async Task Add_NewEntity_Success()
@@ -67,6 +69,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
         }
     }
 
+    /// <inheritdoc/>
     public Task DisposeAsync() => Task.CompletedTask;
 
     [Fact]
@@ -153,6 +156,7 @@ public sealed class MapsRepositoryTests : EfRepositoryTests, IAsyncLifetime
         }
     }
 
+    /// <inheritdoc/>
     public async Task InitializeAsync()
     {
         await using var unitOfWork = await UnitOfWorkFactory.CreateAsync();

@@ -11,17 +11,17 @@ using Xunit;
 
 namespace ThematicMapCreator.Tests.IntegrationTests;
 
-[Collection("DatabaseTests")]
+[Collection("PostgreSqlTests")]
 public abstract class EfRepositoryTests : IDisposable
 {
     protected readonly IUnitOfWorkFactory UnitOfWorkFactory;
 
     private readonly ServiceProvider _provider;
 
-    protected EfRepositoryTests()
+    protected EfRepositoryTests(PostgreSqlFixture fixture)
     {
         _provider = new ServiceCollection()
-            .AddEfUnitOfWorkFactory<ThematicMapDbContext>(builder => builder.UseSqlite("Data Source=Test.db"))
+            .AddEfUnitOfWorkFactory<ThematicMapDbContext>(builder => builder.UseNpgsql(fixture.GetConnectionString("test")))
             .AddRepository<IUsersRepository, UsersRepository>()
             .AddRepository<IMapsRepository, MapsRepository>()
             .AddRepository<ILayersRepository, LayersRepository>()
@@ -34,6 +34,7 @@ public abstract class EfRepositoryTests : IDisposable
         context.Database.EnsureCreated();
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         var contextFactory = _provider.GetRequiredService<IDbContextFactory>();

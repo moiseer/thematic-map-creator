@@ -7,23 +7,21 @@ namespace Core.Dal.EntityFramework.Extensions;
 
 public static class EfDalExtensions
 {
-    public static IServiceCollection AddDbContextFactory<TContext>(this IServiceCollection services, Action<DbContextOptionsBuilder>? optionsAction)
+    public static IServiceCollection AddEfUnitOfWorkFactory<TContext>(this IServiceCollection services, Action<DbContextOptionsBuilder<TContext>>? optionsAction)
         where TContext : DbContext =>
-        services.AddSingleton<IDbContextFactory>(provider =>
-        {
-            var builder = new DbContextOptionsBuilder<TContext>(new DbContextOptions<TContext>());
-            optionsAction?.Invoke(builder);
+        services
+            .AddSingleton<IUnitOfWorkFactory, EfUnitOfWorkFactory>()
+            .AddSingleton<IDbContextFactory>(provider =>
+            {
+                var builder = new DbContextOptionsBuilder<TContext>();
+                optionsAction?.Invoke(builder);
 
-            return new DbContextFactory<TContext>(() => ActivatorUtilities.CreateInstance<TContext>(provider, builder.Options));
-        });
+                return new DbContextFactory<TContext>(() => ActivatorUtilities.CreateInstance<TContext>(provider, builder.Options));
+            });
 
     public static IServiceCollection AddRepository<TService, TImplementation>(this IServiceCollection services)
         where TService : IRepository
-        where TImplementation : EfRepository, TService
-    {
-        return services.AddSingleton<EfRepositoryFactory<TService>>(Factory);
-
-        static EfRepositoryFactory<TImplementation> Factory(IServiceProvider provider) =>
-            context => ActivatorUtilities.CreateInstance<TImplementation>(provider, context);
-    }
+        where TImplementation : EfRepository, TService =>
+        services.AddSingleton<EfRepository.Factory<TService>>(provider =>
+            context => ActivatorUtilities.CreateInstance<TImplementation>(provider, context));
 }

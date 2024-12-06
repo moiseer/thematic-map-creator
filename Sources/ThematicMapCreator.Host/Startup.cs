@@ -1,6 +1,5 @@
 using Core.Dal.EntityFramework;
 using Core.Dal.EntityFramework.Extensions;
-using Core.Dal.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -73,8 +72,7 @@ public sealed class Startup
     private void AddDal(IServiceCollection services)
     {
         services
-            .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
-            .AddDbContextFactory<ThematicMapDbContext>(builder => builder.UseSqlite(Configuration.GetConnectionString("ThematicMapDb")))
+            .AddEfUnitOfWorkFactory<ThematicMapDbContext>(builder => builder.UseSqlite(Configuration.GetConnectionString("ThematicMapDb")))
             .AddRepository<IUsersRepository, UsersRepository>()
             .AddRepository<IMapsRepository, MapsRepository>()
             .AddRepository<ILayersRepository, LayersRepository>();

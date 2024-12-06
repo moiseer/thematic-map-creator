@@ -2,7 +2,6 @@
 using Core.Dal;
 using Core.Dal.EntityFramework;
 using Core.Dal.EntityFramework.Extensions;
-using Core.Dal.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ThematicMapCreator.Domain.Repositories;
@@ -12,7 +11,7 @@ using Xunit;
 
 namespace ThematicMapCreator.Tests.IntegrationTests;
 
-[Collection("EfRepositoryTests")]
+[Collection("DatabaseTests")]
 public abstract class EfRepositoryTests : IDisposable
 {
     protected readonly IUnitOfWorkFactory UnitOfWorkFactory;
@@ -21,14 +20,13 @@ public abstract class EfRepositoryTests : IDisposable
 
     protected EfRepositoryTests()
     {
-        var services = new ServiceCollection()
-            .AddUnitOfWorkFactory<EfUnitOfWorkFactory>()
-            .AddDbContextFactory<ThematicMapDbContext>(builder => builder.UseSqlite("Data Source=Test.db"))
+        _provider = new ServiceCollection()
+            .AddEfUnitOfWorkFactory<ThematicMapDbContext>(builder => builder.UseSqlite("Data Source=Test.db"))
             .AddRepository<IUsersRepository, UsersRepository>()
             .AddRepository<IMapsRepository, MapsRepository>()
-            .AddRepository<ILayersRepository, LayersRepository>();
+            .AddRepository<ILayersRepository, LayersRepository>()
+            .BuildServiceProvider();
 
-        _provider = services.BuildServiceProvider();
         UnitOfWorkFactory = _provider.GetRequiredService<IUnitOfWorkFactory>();
 
         var contextFactory = _provider.GetRequiredService<IDbContextFactory>();

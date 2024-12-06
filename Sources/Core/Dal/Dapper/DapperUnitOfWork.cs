@@ -1,25 +1,24 @@
-﻿using System;
+using System;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Dal.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Nito.AsyncEx;
 
-namespace Core.Dal.EntityFramework;
+namespace Core.Dal.Dapper;
 
-public sealed class EfUnitOfWork : IUnitOfWork
+public sealed class DapperUnitOfWork : IUnitOfWork
 {
-    private readonly DbContext _context;
+    private readonly DbConnection _connection;
     private readonly AsyncLock _locker = new();
     private readonly IServiceProvider _serviceProvider;
-    private readonly IDbContextTransaction _transaction;
+    private readonly DbTransaction _transaction;
     private bool _committed;
 
-    public EfUnitOfWork(DbContext context, IDbContextTransaction transaction, IServiceProvider serviceProvider)
+    public DapperUnitOfWork(DbConnection connection, DbTransaction transaction, IServiceProvider serviceProvider)
     {
-        _context = context;
+        _connection = connection;
         _transaction = transaction;
         _serviceProvider = serviceProvider;
     }
@@ -29,7 +28,6 @@ public sealed class EfUnitOfWork : IUnitOfWork
     {
         using (_locker.Lock())
         {
-            _context.SaveChanges();
             _transaction.Commit();
             _committed = true;
         }
@@ -40,7 +38,6 @@ public sealed class EfUnitOfWork : IUnitOfWork
     {
         using (await _locker.LockAsync(cancellationToken))
         {
-            await _context.SaveChangesAsync(cancellationToken);
             await _transaction.CommitAsync(cancellationToken);
             _committed = true;
         }
@@ -57,7 +54,7 @@ public sealed class EfUnitOfWork : IUnitOfWork
             }
 
             _transaction.Dispose();
-            _context.Dispose();
+            _connection.Dispose();
         }
     }
 
@@ -72,12 +69,12 @@ public sealed class EfUnitOfWork : IUnitOfWork
             }
 
             await _transaction.DisposeAsync();
-            await _context.DisposeAsync();
+            await _connection.DisposeAsync();
         }
     }
 
     /// <inheritdoc/>
     public TRepository GetRepository<TRepository>()
         where TRepository : IRepository =>
-        _serviceProvider.GetRequiredService<EfRepository.Factory<TRepository>>().Invoke(_context);
+        _serviceProvider.GetRequiredService<DapperRepository.Factory<TRepository>>().Invoke(_connection, _transaction);
 }

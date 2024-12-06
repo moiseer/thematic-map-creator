@@ -15,11 +15,19 @@ public sealed class EfUnitOfWorkFactory : IUnitOfWorkFactory
         _serviceProvider = serviceProvider;
     }
 
-    public IUnitOfWork Create() => new EfUnitOfWork(_contextFactory.Create(), _serviceProvider);
-
-    public Task<IUnitOfWork> CreateAsync(CancellationToken cancellationToken = default)
+    /// <inheritdoc/>
+    public IUnitOfWork Create()
     {
-        cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult(Create());
+        var context = _contextFactory.Create();
+        var transaction = context.Database.BeginTransaction();
+        return new EfUnitOfWork(context, transaction, _serviceProvider);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IUnitOfWork> CreateAsync(CancellationToken cancellationToken = default)
+    {
+        var context = _contextFactory.Create();
+        var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+        return new EfUnitOfWork(context, transaction, _serviceProvider);
     }
 }

@@ -1,4 +1,3 @@
-using Core.Dal.EntityFramework;
 using Core.Dal.EntityFramework.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
@@ -61,12 +60,9 @@ public sealed class Startup
     private static void UseMigration(IApplicationBuilder app)
     {
         using var scope = app.ApplicationServices.CreateScope();
-        var contextFactories = scope.ServiceProvider.GetServices<IDbContextFactory>();
-        foreach (var contextFactory in contextFactories)
-        {
-            using var context = contextFactory.Create();
-            context.Database.EnsureCreated();
-        }
+        var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<ThematicMapDbContext>>();
+        using var context = contextFactory.CreateDbContext();
+        context.Database.EnsureCreated();
     }
 
     private void AddDal(IServiceCollection services)

@@ -7,17 +7,11 @@ namespace Core.Dal.EntityFramework.Extensions;
 
 public static class EfDalExtensions
 {
-    public static IServiceCollection AddEfUnitOfWorkFactory<TContext>(this IServiceCollection services, Action<DbContextOptionsBuilder<TContext>>? optionsAction)
+    public static IServiceCollection AddEfUnitOfWorkFactory<TContext>(this IServiceCollection services, Action<DbContextOptionsBuilder>? optionsAction)
         where TContext : DbContext =>
         services
-            .AddSingleton<IUnitOfWorkFactory, EfUnitOfWorkFactory>()
-            .AddSingleton<IDbContextFactory>(provider =>
-            {
-                var builder = new DbContextOptionsBuilder<TContext>();
-                optionsAction?.Invoke(builder);
-
-                return new DbContextFactory<TContext>(() => ActivatorUtilities.CreateInstance<TContext>(provider, builder.Options));
-            });
+            .AddSingleton<IUnitOfWorkFactory, EfUnitOfWorkFactory<TContext>>()
+            .AddDbContextFactory<TContext>(optionsAction);
 
     public static IServiceCollection AddRepository<TService, TImplementation>(this IServiceCollection services)
         where TService : IRepository

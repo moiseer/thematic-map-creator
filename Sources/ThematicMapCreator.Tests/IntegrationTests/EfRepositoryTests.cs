@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using Core.Dal;
-using Core.Dal.EntityFramework;
 using Core.Dal.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +11,7 @@ using Xunit;
 namespace ThematicMapCreator.Tests.IntegrationTests;
 
 [Collection("PostgreSqlTests")]
-public abstract class EfRepositoryTests : IDisposable
+public abstract class EfRepositoryTests : IAsyncLifetime
 {
     protected readonly IUnitOfWorkFactory UnitOfWorkFactory;
 
@@ -28,19 +27,23 @@ public abstract class EfRepositoryTests : IDisposable
             .BuildServiceProvider();
 
         UnitOfWorkFactory = _provider.GetRequiredService<IUnitOfWorkFactory>();
-
-        var contextFactory = _provider.GetRequiredService<IDbContextFactory>();
-        using var context = contextFactory.Create();
-        context.Database.EnsureCreated();
     }
 
     /// <inheritdoc/>
-    public void Dispose()
+    public virtual async Task DisposeAsync()
     {
-        var contextFactory = _provider.GetRequiredService<IDbContextFactory>();
-        using var context = contextFactory.Create();
-        context.Database.EnsureDeleted();
+        var contextFactory = _provider.GetRequiredService<IDbContextFactory<ThematicMapDbContext>>();
+        await using var context = await contextFactory.CreateDbContextAsync();
+        await context.Database.EnsureDeletedAsync();
 
-        _provider.Dispose();
+        await _provider.DisposeAsync();
+    }
+
+    /// <inheritdoc/>
+    public virtual async Task InitializeAsync()
+    {
+        var contextFactory = _provider.GetRequiredService<IDbContextFactory<ThematicMapDbContext>>();
+        await using var context = await contextFactory.CreateDbContextAsync();
+        await context.Database.EnsureCreatedAsync();
     }
 }

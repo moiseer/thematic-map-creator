@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ThematicMapCreator.Tests.IntegrationTests;
 
-public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
+public sealed class LayersRepositoryTests : EfRepositoryTests
 {
     private readonly Map _map;
     private readonly User _user;
@@ -184,9 +184,6 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
         }
     }
 
-    /// <inheritdoc/>
-    public Task DisposeAsync() => Task.CompletedTask;
-
     [Fact]
     public async Task GetByMapId_Empty_Success()
     {
@@ -227,8 +224,10 @@ public sealed class LayersRepositoryTests : EfRepositoryTests, IAsyncLifetime
     }
 
     /// <inheritdoc/>
-    public async Task InitializeAsync()
+    public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
+
         await using var unitOfWork = await UnitOfWorkFactory.CreateAsync();
         var usersRepository = unitOfWork.GetRepository<IUsersRepository>();
         var mapsRepository = unitOfWork.GetRepository<IMapsRepository>();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Core.Dal;
 using FluentValidation;
 using FluentValidation.Results;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using ThematicMapCreator.Domain.Commands;
@@ -37,7 +38,7 @@ public sealed class MapSaveCommandHandlerTests
             .Setup(validator => validator.ValidateAsync(It.IsAny<MapSaveCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        _handler = new MapSaveCommandHandler(Mock.Of<ILogger<MapSaveCommandHandler>>(), _validatorMock.Object, _unitOfWorkFactoryMock.Object);
+        _handler = new MapSaveCommandHandler(Mock.Of<ILogger<MapSaveCommandHandler>>(), Mock.Of<IPublisher>(), _validatorMock.Object, _unitOfWorkFactoryMock.Object);
     }
 
     [Fact]

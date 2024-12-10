@@ -11,6 +11,7 @@ using ThematicMapCreator.Domain.Commands;
 using ThematicMapCreator.Domain.Repositories;
 using ThematicMapCreator.Domain.Validators;
 using ThematicMapCreator.Host.Filters;
+using ThematicMapCreator.Host.Notifications;
 using ThematicMapCreator.Host.Persistence.Contexts;
 using ThematicMapCreator.Host.Persistence.Repositories;
 
@@ -35,7 +36,11 @@ public sealed class Startup
         app.UseHttpsRedirection();
 
         app.UseRouting();
-        app.UseEndpoints(endpoints => endpoints.MapControllers());
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHub<NotificationHub>("/api/notification-hub", options => options.AllowStatefulReconnects = true);
+        });
 
         UseMigration(app);
     }
@@ -46,6 +51,7 @@ public sealed class Startup
         services.AddSingleton<TmcExceptionFilter>();
 
         services.AddSwaggerGen();
+        services.AddSignalR();
 
         AddDal(services);
         AddServices(services);
@@ -53,7 +59,9 @@ public sealed class Startup
 
     private static void AddServices(IServiceCollection services)
     {
-        services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblyContaining<MapSaveCommand>());
+        services.AddMediatR(configuration => configuration
+            .RegisterServicesFromAssemblyContaining<MapSaveCommand>()
+            .RegisterServicesFromAssemblyContaining(typeof(SignalRNotificationHandler<>)));
         services.AddTransient<IValidator<MapSaveCommand>, MapSaveCommandValidator>();
     }
 

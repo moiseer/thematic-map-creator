@@ -15,15 +15,18 @@ namespace ThematicMapCreator.Domain.Commands;
 public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
 {
     private readonly ILogger<MapSaveCommandHandler> _logger;
+    private readonly IPublisher _publisher;
     private readonly IValidator<MapSaveCommand> _saveMapValidator;
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
     public MapSaveCommandHandler(
         ILogger<MapSaveCommandHandler> logger,
+        IPublisher publisher,
         IValidator<MapSaveCommand> saveMapValidator,
         IUnitOfWorkFactory unitOfWorkFactory)
     {
         _logger = logger;
+        _publisher = publisher;
         _saveMapValidator = saveMapValidator;
         _unitOfWorkFactory = unitOfWorkFactory;
     }
@@ -51,6 +54,7 @@ public sealed class MapSaveCommandHandler : IRequestHandler<MapSaveCommand>
 
         await unitOfWork.CommitAsync(cancellationToken);
 
+        await _publisher.Publish(new MapSaveNotification(mapId), cancellationToken);
         _logger.LogInformation("Map {MapId} saved", mapId);
     }
 

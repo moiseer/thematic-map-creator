@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{5079E486-816C-4499-B053-ED4078FBF979}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Sources\Core\Core.csproj", "{7E45A023-8FB9-48E3-B3B5-A38BCE2D2D22}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThematicMapCreator.Host", "Sources\ThematicMapCreator.Host\ThematicMapCreator.Host.csproj", "{5B1F70FC-3AAB-4E90-9DDE-A7DCE93799AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThematicMapCreator.Tests", "Sources\ThematicMapCreator.Tests\ThematicMapCreator.Tests.csproj", "{64158E75-8A20-4832-8619-FB4809CD7A3C}"
@@ -10,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThematicMapCreator.Domain",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThematicMapCreator.Contracts", "Sources\ThematicMapCreator.Contracts\ThematicMapCreator.Contracts.csproj", "{DCAD8FC8-3FDE-4EE8-8685-10113538CDF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Sources\Core\Core.csproj", "{7E45A023-8FB9-48E3-B3B5-A38BCE2D2D22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThematicMapCreator.Client", "Sources\ThematicMapCreator.Client\ThematicMapCreator.Client.csproj", "{3737E515-4418-42F0-AD98-8CC299816E48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{7E45A023-8FB9-48E3-B3B5-A38BCE2D2D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E45A023-8FB9-48E3-B3B5-A38BCE2D2D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E45A023-8FB9-48E3-B3B5-A38BCE2D2D22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3737E515-4418-42F0-AD98-8CC299816E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3737E515-4418-42F0-AD98-8CC299816E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3737E515-4418-42F0-AD98-8CC299816E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3737E515-4418-42F0-AD98-8CC299816E48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5B1F70FC-3AAB-4E90-9DDE-A7DCE93799AD} = {5079E486-816C-4499-B053-ED4078FBF979}
@@ -45,5 +51,6 @@ Global
 		{BE536E3C-7850-4AA6-91D4-436741EE3A8C} = {5079E486-816C-4499-B053-ED4078FBF979}
 		{DCAD8FC8-3FDE-4EE8-8685-10113538CDF1} = {5079E486-816C-4499-B053-ED4078FBF979}
 		{7E45A023-8FB9-48E3-B3B5-A38BCE2D2D22} = {5079E486-816C-4499-B053-ED4078FBF979}
+		{3737E515-4418-42F0-AD98-8CC299816E48} = {5079E486-816C-4499-B053-ED4078FBF979}
 	EndGlobalSection
 EndGlobal

@@ -39,7 +39,7 @@ public sealed class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
-            endpoints.MapHub<NotificationHub>("/api/notification-hub", options => options.AllowStatefulReconnects = true);
+            endpoints.MapHub<NotificationHub>("/hub/notification", options => options.AllowStatefulReconnects = true);
         });
 
         UseMigration(app);

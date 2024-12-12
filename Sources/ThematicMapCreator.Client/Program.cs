@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using ThematicMapCreator.Client.Notifications;
 
@@ -10,14 +10,15 @@ public static class Program
 {
     public static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-        builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+        var builder = Host.CreateDefaultBuilder(args);
+        builder.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
-        builder.Services.AddSingleton<SignalRNotificationClient>();
-        builder.Services.AddHostedService<NotificationBackgroundService>();
+        builder.ConfigureServices(services =>
+        {
+            services.AddSingleton<SignalRNotificationClient>();
+            services.AddHostedService<NotificationBackgroundService>();
+        });
 
-        var app = builder.Build();
-
-        await app.RunAsync();
+        await builder.RunConsoleAsync();
     }
 }

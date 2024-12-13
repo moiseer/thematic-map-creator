@@ -75,6 +75,6 @@ public static class Program
         using var scope = app.ApplicationServices.CreateScope();
         var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<ThematicMapDbContext>>();
         await using var context = await contextFactory.CreateDbContextAsync();
-        await context.Database.EnsureCreatedAsync();
+        await context.Database.MigrateAsync();
     }
 }

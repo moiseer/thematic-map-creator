@@ -1,0 +1,29 @@
+﻿name: thematic-map-creator
+
+services:
+  host:
+    image: thematic-map-creator/host:dev
+    ports:
+      - "5000:8080"
+    environment:
+      - Serilog__MinimumLevel__Default=Debug
+      - ConnectionStrings__ThematicMapDb=Data Source=/data/ThematicMapDb.db
+    volumes:
+      - tmc_db:/data
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: host
+
+  client:
+    image: thematic-map-creator/client:dev
+    environment:
+      - Serilog__MinimumLevel__Default=Debug
+      - NotificationHubUrl=http://host.docker.internal:5000/hub/notification
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: client
+
+volumes:
+  tmc_db:

@@ -44,8 +44,6 @@ public static class Program
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
-
         app.MapControllers();
         app.MapHub<NotificationHub>("/hub/notification", options => options.AllowStatefulReconnects = true);
 

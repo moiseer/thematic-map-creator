@@ -25,7 +25,6 @@ FROM build AS publish-client
 RUN dotnet publish Sources/ThematicMapCreator.Client/ThematicMapCreator.Client.csproj --no-build --configuration 'Release' --output '/publish'
 
 FROM base AS host
-WORKDIR /data
 WORKDIR /app
 COPY --from=publish-host /publish .
 ENTRYPOINT ["dotnet", "ThematicMapCreator.Host.dll"]

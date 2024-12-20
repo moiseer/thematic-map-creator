@@ -1,0 +1,46 @@
+﻿name: thematic-map-creator
+
+services:
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    ports:
+      - "15432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  host:
+    image: thematic-map-creator/host:dev
+    ports:
+      - "5000:8080"
+    environment:
+      - Serilog__MinimumLevel__Default=Debug
+      - ConnectionStrings__ThematicMapDb=Server=postgres;Port=5432;Database=tmc;User id=postgres;Password=postgres;
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: host
+
+  client:
+    image: thematic-map-creator/client:dev
+    environment:
+      - Serilog__MinimumLevel__Default=Debug
+      - NotificationHubUrl=http://host.docker.internal:5000/hub/notification
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: client
+
+volumes:
+  postgres_data:

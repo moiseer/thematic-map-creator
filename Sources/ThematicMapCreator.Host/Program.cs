@@ -44,8 +44,6 @@ public static class Program
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
-
         app.MapControllers();
         app.MapHub<NotificationHub>("/hub/notification", options => options.AllowStatefulReconnects = true);
 
@@ -56,7 +54,7 @@ public static class Program
 
     private static void AddDal(this IServiceCollection services, IConfiguration configuration) =>
         services
-            .AddEfUnitOfWorkFactory<ThematicMapDbContext>(builder => builder.UseSqlite(configuration.GetConnectionString("ThematicMapDb")))
+            .AddEfUnitOfWorkFactory<ThematicMapDbContext>(builder => builder.UseNpgsql(configuration.GetConnectionString("ThematicMapDb")))
             .AddRepository<IUsersRepository, UsersRepository>()
             .AddRepository<IMapsRepository, MapsRepository>()
             .AddRepository<ILayersRepository, LayersRepository>();

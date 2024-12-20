@@ -12,17 +12,17 @@ using Xunit;
 
 namespace ThematicMapCreator.Tests.IntegrationTests;
 
-[Collection("SqliteTests")]
+[Collection("PostgreSqlTests")]
 public sealed class DapperUnitOfWorkTests : IDisposable
 {
     private readonly ServiceProvider _provider;
     private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
-    public DapperUnitOfWorkTests()
+    public DapperUnitOfWorkTests(PostgreSqlFixture fixture)
     {
         _provider = new ServiceCollection()
             .AddDapperUnitOfWorkFactory()
-            .AddSingleton<IConnectionFactory>(_ => new SqliteConnectionFactory("Data Source=Test.db"))
+            .AddSingleton<IConnectionFactory>(new PostgreSqlConnectionFactory(fixture.GetConnectionString()))
             .AddRepository<IRepository, TestRepository>()
             .BuildServiceProvider();
 

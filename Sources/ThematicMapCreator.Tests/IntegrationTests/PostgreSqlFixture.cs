@@ -12,6 +12,8 @@ public sealed class PostgreSqlFixture : IAsyncLifetime
     /// <inheritdoc/>
     public async Task DisposeAsync() => await _container.DisposeAsync();
 
+    public string GetConnectionString() => _container.GetConnectionString();
+
     public string GetConnectionString(string database)
     {
         var connectionStringBuilder = new NpgsqlConnectionStringBuilder(_container.GetConnectionString())

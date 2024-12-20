@@ -15,10 +15,10 @@ namespace ThematicMapCreator.Host.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    email = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
-                    name = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
-                    password_hash = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    email = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    password_hash = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,10 +29,10 @@ namespace ThematicMapCreator.Host.Migrations
                 name: "maps",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    description = table.Column<string>(type: "TEXT", maxLength: 1024, nullable: true),
-                    name = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
-                    user_id = table.Column<Guid>(type: "TEXT", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    description = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,15 +48,15 @@ namespace ThematicMapCreator.Host.Migrations
                 name: "layers",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    data = table.Column<string>(type: "TEXT", nullable: false),
-                    description = table.Column<string>(type: "TEXT", maxLength: 1024, nullable: true),
-                    index = table.Column<int>(type: "INTEGER", nullable: false),
-                    is_visible = table.Column<bool>(type: "INTEGER", nullable: false),
-                    map_id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    name = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
-                    style_options = table.Column<string>(type: "TEXT", nullable: false),
-                    type = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    data = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    index = table.Column<int>(type: "integer", nullable: false),
+                    is_visible = table.Column<bool>(type: "boolean", nullable: false),
+                    map_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    style_options = table.Column<string>(type: "text", nullable: false),
+                    type = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {

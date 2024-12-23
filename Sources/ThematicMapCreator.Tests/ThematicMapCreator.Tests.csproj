@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.2" PrivateAssets="all"/>
-    <PackageReference Include="Dapper" Version="2.1.35"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0"/>
-    <PackageReference Include="Moq" Version="4.20.70"/>
-    <PackageReference Include="Testcontainers.PostgreSql" Version="4.0.0"/>
-    <PackageReference Include="xunit" Version="2.8.1"/>
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1" PrivateAssets="all"/>
+    <PackageReference Include="coverlet.collector" PrivateAssets="all"/>
+    <PackageReference Include="Dapper"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="Moq"/>
+    <PackageReference Include="Testcontainers.PostgreSql"/>
+    <PackageReference Include="xunit"/>
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all"/>
   </ItemGroup>
 
   <ItemGroup>

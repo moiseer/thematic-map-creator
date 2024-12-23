@@ -10,7 +10,7 @@ COPY Sources/ThematicMapCreator.Contracts/ThematicMapCreator.Contracts.csproj So
 COPY Sources/ThematicMapCreator.Domain/ThematicMapCreator.Domain.csproj Sources/ThematicMapCreator.Domain/
 COPY Sources/ThematicMapCreator.Host/ThematicMapCreator.Host.csproj Sources/ThematicMapCreator.Host/
 COPY Sources/ThematicMapCreator.Tests/ThematicMapCreator.Tests.csproj Sources/ThematicMapCreator.Tests/
-COPY ThematicMapCreator.sln Directory.Build.props stylecop.ruleset ./
+COPY ThematicMapCreator.sln Directory.Build.props Directory.Packages.props stylecop.ruleset ./
 RUN dotnet restore
 COPY Sources/ Sources/
 RUN dotnet build --no-restore --configuration 'Release'

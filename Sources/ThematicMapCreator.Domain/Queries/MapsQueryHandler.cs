@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Dal;
+﻿using Core.Dal;
 using MediatR;
 using ThematicMapCreator.Domain.Models;
 using ThematicMapCreator.Domain.Repositories;

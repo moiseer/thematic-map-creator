@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThematicMapCreator.Contracts;
+﻿namespace ThematicMapCreator.Contracts;
 
 public sealed record UserDto
 {

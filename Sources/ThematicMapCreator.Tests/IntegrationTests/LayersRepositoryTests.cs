@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ThematicMapCreator.Domain.Models;
+﻿using ThematicMapCreator.Domain.Models;
 using ThematicMapCreator.Domain.Repositories;
 using Xunit;
 

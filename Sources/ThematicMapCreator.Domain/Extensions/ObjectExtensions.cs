@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace ThematicMapCreator.Domain.Extensions;
+﻿namespace ThematicMapCreator.Domain.Extensions;
 
 public static class ObjectExtensions
 {

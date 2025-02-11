@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Core.Dal.Models;
+﻿using Core.Dal.Models;
 
 namespace Core.Dal.Repositories;
 

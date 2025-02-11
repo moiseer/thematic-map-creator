@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Core.Dal.Models;
+﻿using Core.Dal.Models;
 
 namespace ThematicMapCreator.Domain.Models;
 

@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Core.Dal;
+﻿using Core.Dal;
 using MediatR;
 using ThematicMapCreator.Domain.Exceptions;
 using ThematicMapCreator.Domain.Extensions;

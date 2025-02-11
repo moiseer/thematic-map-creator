@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Dal.EntityFramework;
+﻿using Core.Dal.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using ThematicMapCreator.Domain.Models;
 using ThematicMapCreator.Domain.Repositories;

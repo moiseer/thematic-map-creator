@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Dal;
+﻿using Core.Dal;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;

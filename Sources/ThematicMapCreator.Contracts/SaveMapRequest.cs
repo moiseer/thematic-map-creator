@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ThematicMapCreator.Contracts;
+﻿namespace ThematicMapCreator.Contracts;
 
 public sealed record SaveMapRequest
 {

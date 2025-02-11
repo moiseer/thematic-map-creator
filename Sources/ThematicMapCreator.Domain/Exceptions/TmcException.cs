@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThematicMapCreator.Domain.Exceptions;
+﻿namespace ThematicMapCreator.Domain.Exceptions;
 
 public sealed class TmcException : Exception
 {

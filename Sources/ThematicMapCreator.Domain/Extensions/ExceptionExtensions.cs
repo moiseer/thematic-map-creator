@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using ThematicMapCreator.Domain.Exceptions;
+﻿using ThematicMapCreator.Domain.Exceptions;
 
 namespace ThematicMapCreator.Domain.Extensions;
 

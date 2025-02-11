@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using ThematicMapCreator.Domain.Models;
 
 namespace ThematicMapCreator.Domain.Queries;

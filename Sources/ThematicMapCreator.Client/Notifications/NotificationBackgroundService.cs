@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-
-namespace ThematicMapCreator.Client.Notifications;
+﻿namespace ThematicMapCreator.Client.Notifications;
 
 public sealed class NotificationBackgroundService : BackgroundService
 {

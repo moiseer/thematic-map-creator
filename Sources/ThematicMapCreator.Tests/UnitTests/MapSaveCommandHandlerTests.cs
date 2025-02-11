@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Dal;
+﻿using Core.Dal;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;

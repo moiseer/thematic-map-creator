@@ -1,11 +1,6 @@
-using System.Threading.Tasks;
 using Core.Dal.EntityFramework.Extensions;
 using FluentValidation;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 using ThematicMapCreator.Domain.Commands;
 using ThematicMapCreator.Domain.Repositories;

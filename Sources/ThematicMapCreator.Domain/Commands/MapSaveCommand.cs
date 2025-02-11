@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using MediatR;
+﻿using MediatR;
 using ThematicMapCreator.Domain.Models;
 
 namespace ThematicMapCreator.Domain.Commands;

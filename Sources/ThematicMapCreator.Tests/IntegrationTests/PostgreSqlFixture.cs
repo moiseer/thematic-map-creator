@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Npgsql;
+﻿using Npgsql;
 using Testcontainers.PostgreSql;
 using Xunit;
 

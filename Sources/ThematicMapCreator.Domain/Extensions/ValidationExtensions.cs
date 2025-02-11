@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using ThematicMapCreator.Domain.Exceptions;
 
 namespace ThematicMapCreator.Domain.Extensions;

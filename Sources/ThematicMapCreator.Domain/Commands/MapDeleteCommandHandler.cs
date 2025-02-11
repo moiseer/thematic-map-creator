@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Core.Dal;
+﻿using Core.Dal;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using ThematicMapCreator.Domain.Repositories;

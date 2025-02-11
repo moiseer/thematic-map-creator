@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Core.Dal;
+﻿using Core.Dal;
 using Core.Dal.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

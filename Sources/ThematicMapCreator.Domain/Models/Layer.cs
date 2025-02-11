@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Dal.Models;
+﻿using Core.Dal.Models;
 
 namespace ThematicMapCreator.Domain.Models;
 

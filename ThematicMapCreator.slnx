@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Sources/Core/Core.csproj" />
+  <Project Path="Sources/ThematicMapCreator.Client/ThematicMapCreator.Client.csproj" />
+  <Project Path="Sources/ThematicMapCreator.Contracts/ThematicMapCreator.Contracts.csproj" />
+  <Project Path="Sources/ThematicMapCreator.Domain/ThematicMapCreator.Domain.csproj" />
+  <Project Path="Sources/ThematicMapCreator.Host/ThematicMapCreator.Host.csproj" />
+  <Project Path="Sources/ThematicMapCreator.Tests/ThematicMapCreator.Tests.csproj" />
+</Solution>

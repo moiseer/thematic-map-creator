@@ -8,7 +8,6 @@
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
     <NoWarn>$(NoWarn);SA1106;SA1600;SA1602;CS1591</NoWarn>
   </PropertyGroup>
 

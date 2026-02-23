@@ -12,5 +12,5 @@ public sealed class SignalRNotificationHandler<TNotification> : INotificationHan
 
     /// <inheritdoc/>
     public async Task Handle(TNotification notification, CancellationToken cancellationToken) =>
-        await _hubContext.Clients.All.Notify(notification.GetType().Name, notification, cancellationToken);
+        await _hubContext.Clients.All.NotifyAsync(notification.GetType().Name, notification, cancellationToken);
 }

@@ -27,13 +27,13 @@ public sealed class MapsController : ControllerBase
     }
 
     [HttpGet("{mapId:guid}")]
-    public async Task<MapDto> GetMap(Guid mapId, CancellationToken ct)
+    public async Task<MapDto> GetMapAsync(Guid mapId, CancellationToken ct)
     {
         var map = await _mediator.Send(new MapDetailsQuery(mapId), ct);
         return map.ToDto();
     }
 
     [HttpPut]
-    public async Task SaveMap([FromBody] SaveMapRequest request, CancellationToken ct) =>
+    public async Task SaveMapAsync([FromBody] SaveMapRequest request, CancellationToken ct) =>
         await _mediator.Send(request.ToCommand(), ct);
 }
